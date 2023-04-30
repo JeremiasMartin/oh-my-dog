@@ -1,0 +1,14 @@
+{% extends "OhMyDogApp/base.html" %}
+
+{% load static %}
+{% block content %}
+
+<h2>Login</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Login</button>
+        <a style="margin:15" href="/admin/"> Soy Administrador</a>
+    </form>
+    
+{% endblock %}

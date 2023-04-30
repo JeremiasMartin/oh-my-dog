@@ -1,0 +1,12 @@
+{% extends "OhMyDogApp/base.html" %}
+
+{% load static %}
+
+{% block content %}
+ 
+{% for c in clientes %}
+    <div><p>
+        {{c}}
+    </p></div>
+{% endfor %}
+{% endblock %}

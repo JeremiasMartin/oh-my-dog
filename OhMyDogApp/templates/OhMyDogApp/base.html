@@ -1,0 +1,101 @@
+<html>
+
+<head>
+
+    {% load static %}
+
+    <!-- Bootstrap -->
+    <link href="{% static 'OhMyDogApp/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+
+     <!-- Fonts -->
+    
+     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300&display=swap" rel="stylesheet"> 
+     <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i" rel="stylesheet">
+     
+
+    <!-- Styles -->
+    <link href="{% static 'OhMyDogApp/css/gestion.css' %}" rel="stylesheet">
+</head>
+
+<body>
+
+
+  <nav class="navbar navbar-expand-lg navbar-light" style='background-color:#80befb'>
+    <a class="navbar-brand" href="{% url 'Home' %}">
+      <img src="{% static 'OhMyDogApp/img/logo.png' %}" width="55" height="35" class="d-inline-block align-top" alt="Logo">
+      Oh My Dog!
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item {% if request.path == '/' %}active{%endif %}">
+          <a class="nav-link" href="{% url 'Home' %}">Inicio</a>
+        </li>
+        {% if user.is_authenticated %}
+          {% if user.is_staff %}
+          <li class="nav-item {% if request.path == '/usuarios/registrar_cliente' %}active{%endif %}">
+            <a class="nav-link" href="{% url 'Registro' %}">Registrar Cliente</a>
+          </li>
+          <li class="nav-item {% if request.path == '/clientes' %}active{%endif %}">
+            <a class="nav-link" href="{% url 'Clientes' %}">Clientes</a>
+          </li>  
+          {% endif %}
+        <li class="nav-item {% if request.path == '/usuarios/logout/' %}active{%endif %}">
+          <a class="nav-link" href="{% url 'Logout' %}">Cerrar Sesión</a>
+        </li>
+      </ul>
+    </div>
+    {% else %}
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item {% if request.path == '/usuarios/login/' %}active{% endif %}">
+          <a class="btn btn-primary" href="{% url 'Login' %}">Iniciar Sesión</a>
+        </li>
+      </ul>
+    </div>
+    {% endif %} 
+  </nav>
+  
+  
+  {% block content %}
+
+  {% endblock %}
+
+
+    <!-- Footer -->
+    <footer class="footer text-faded text-center py-5">
+      <div class="container">
+        <p class="m-0">
+	        <a href="#" class="link">
+	          <span class="fa-stack fa-lg">
+	            <i class="fa fa-circle fa-stack-2x"></i>
+	            <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+	          </span>
+	        </a>
+	        <a href="#" class="link">
+	          <span class="fa-stack fa-lg">
+	            <i class="fa fa-circle fa-stack-2x"></i>
+	            <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+	          </span>
+	        </a>
+	        <a href="#" class="link">
+	          <span class="fa-stack fa-lg">
+	            <i class="fa fa-circle fa-stack-2x"></i>
+	            <i class="fa fa-instagram fa-stack-1x fa-inverse"></i>
+	          </span>
+	        </a>
+	    </p>
+        <p class="m-0 mbt1" style="color:black; font-size: 20px;">&copy; EJTech</p>
+      </div>
+	</footer>
+
+    <!-- Bootstrap -->
+    <script src="{% static 'OhMyDogApp/vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'OhMyDogApp/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+</body>
+
+
+</html>
