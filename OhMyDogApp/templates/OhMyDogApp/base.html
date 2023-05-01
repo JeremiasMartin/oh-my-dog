@@ -15,6 +15,8 @@
 
     <!-- Styles -->
     <link href="{% static 'OhMyDogApp/css/gestion.css' %}" rel="stylesheet">
+
+    <title>Veterinaria ¡Oh My Dog</title>
 </head>
 
 <body>
@@ -46,9 +48,7 @@
           <a class="nav-link" href="{% url 'Logout' %}">Cerrar Sesión</a>
         </li>
       </ul>
-    </div>
     {% else %}
-    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
       <ul class="navbar-nav">
         <li class="nav-item {% if request.path == '/usuarios/login/' %}active{% endif %}">
           <a class="btn btn-primary" href="{% url 'Login' %}">Iniciar Sesión</a>
