@@ -3,7 +3,7 @@ from usuarios.models import Cliente, Usuario
 from .models import *
 from .forms import *
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate
 from django.contrib.auth import logout as django_logout
 from django.shortcuts import render, redirect
 from .forms import ClienteRegistroForm
@@ -11,6 +11,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import HttpResponseRedirect
 from django.http import HttpResponseRedirect
+from django.contrib import messages
 
 # Create your views here.
 
@@ -20,15 +21,23 @@ def listar_clientes(request):
 
 
 
-def user_login(request):
-    if request.method == 'POST':
-        form = AuthenticationForm(request, request.POST)
-        if form.is_valid():
-            login(request, form.get_user())
-            return redirect('/')
-    else:
-        form = AuthenticationForm()
-    return render(request, 'cliente/login.html', {'form': form})
+def user_login(request):   
+    if request.method == "POST":
+        form = UserSign(data=request.POST)
+        if form.is_valid(): 
+            mail = form.cleaned_data.get("email")
+            contraseña = form.cleaned_data.get("password")
+            user = authenticate(request, email=mail, password=contraseña)
+            if user is not None:
+                login(request, user)
+                return redirect('/')
+            else:
+                messages.error(request, "Alguna/s de las credenciales ingresadas son incorrectas.")  
+        else: 
+            messages.error(request, "informacion")
+    form = UserSign()     
+    context = {'form' : form}
+    return render(request, 'cliente/login.html', context)
 
 
 def user_logout(request):
@@ -38,6 +47,7 @@ def user_logout(request):
 
 
 
+@login_required
 def registrar_cliente(request):
     if request.method == 'POST':
         form = ClienteRegistroForm(request.POST)
@@ -56,12 +66,7 @@ def registrar_cliente(request):
                 telefono=form.cleaned_data.get('telefono')
             )
             # Redirigir a la lista de clientes
-            return redirect('/admin/listar_clientes')
-    else:
-        form = ClienteRegistroForm()
-
-    context = {'form': form}
-    return render(request, 'admin/registrar_cliente.html', context)
+            return redirect('/usuarios/clientes')
 
 
 
