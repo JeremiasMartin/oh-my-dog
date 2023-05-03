@@ -67,6 +67,11 @@ def registrar_cliente(request):
             )
             # Redirigir a la lista de clientes
             return redirect('/usuarios/clientes')
+    else:
+        form = ClienteRegistroForm()
+
+    context = {'form': form}
+    return render(request, 'admin/registrar_cliente.html', context)
 
 
 
