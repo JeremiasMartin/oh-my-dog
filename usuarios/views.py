@@ -66,12 +66,13 @@ def registrar_cliente(request):
                 telefono=form.cleaned_data.get('telefono')
             )
             # Redirigir a la lista de clientes
-            return redirect('/usuarios/clientes')
+            
+            return redirect("/")
     else:
         form = ClienteRegistroForm()
 
     context = {'form': form}
-    return render(request, 'admin/registrar_cliente.html', context)
+    return render(request, 'admin/registrar_cliente.html',context)
 
 
 
@@ -82,32 +83,26 @@ def ver_perfil(request):
     return render(request, 'ver_perfil_cliente.html', {"perfil":perfil})
 
 
-# @login_required
-# def editar_perfil(request):
+@login_required
+def editar_perfil(request):
 #     # dictionary for initial data with
 #     # field names as keys
-#     context ={}
- 
-#     usuario = request.user
+    context ={}
+    usuario = request.user
+    perfil = Cliente.objects.get(user=usuario) 
+    # pass the object as instance in form
+    form = EditarPerfilForm(request.POST or None , request.FILES , instance = perfil)
+    # save the data from the form and
+    # redirect to detail_view
+    if form.is_valid():
 
-#     perfil = Cliente.objects.get(user=usuario) 
-
- 
-#     # pass the object as instance in form
-#     form = EditarPerfilForm(request.POST or None , request.FILES , instance = perfil)
-
-
-#     # save the data from the form and
-#     # redirect to detail_view
-#     if form.is_valid():
-
-#         perfil.nombre = form.cleaned_data.get('nombre')
-#         perfil.apellido = form.cleaned_data.get('apellido')
-#         perfil.telefono = form.cleaned_data.get('telefono')
-#         perfil.save()
-#         return HttpResponseRedirect("/cliente/ver_perfil_cliente/")
+        perfil.nombre = form.cleaned_data.get('nombre')
+        perfil.apellido = form.cleaned_data.get('apellido')
+        perfil.telefono = form.cleaned_data.get('telefono')
+        perfil.save()
+        return HttpResponseRedirect("/cliente/ver_perfil_cliente/")
  
 #     # add form dictionary to context
-#     context["form"] = form
+    context["form"] = form
  
-#     return render(request,'ver_perfil_cliente.html', context) 
+    return render(request,'ver_perfil_cliente.html', context) 
