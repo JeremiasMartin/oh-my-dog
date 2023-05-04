@@ -4,9 +4,31 @@
 
 {% block content %}
  
-{% for c in clientes %}
-    <div><p>
-        {{c}}
-    </p></div>
-{% endfor %}
+<table>
+  <thead>
+    <tr>
+      <th>Nombre</th>
+      <th>Apellido</th>
+      <th>Telefono</th>
+      <th>Email</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for c in clientes %}
+      <tr>
+        <td>{{ c.nombre }}</td>
+        <td>{{ c.apellido }}</td>
+        <td>{{ c.telefono }}</td>
+        <td>{{ c.user.email }}</td>
+        <th>
+          <a href="#">
+            Registrar mascota
+          </a>
+        </th>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
 {% endblock %}
