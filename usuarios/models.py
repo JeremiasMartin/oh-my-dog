@@ -59,10 +59,10 @@ class Cliente(models.Model):
     user = models.OneToOneField(Usuario, on_delete=models.CASCADE)
     cliente_id = models.AutoField(primary_key=True)
     
-    dni = models.IntegerField('DNI', unique=True, blank=False, null=False)
-    nombre = models.CharField('Nombre', max_length=100, blank=False, null=False)
-    apellido = models.CharField('Apellido', max_length=100, blank=False, null=False)
-    telefono = models.CharField('Telefono', max_length=12, blank=False, null=False)
+    dni = models.PositiveIntegerField('DNI',unique=True, blank=False, null=False)
+    nombre = models.CharField('Nombre', max_length=20, blank=False, null=False)
+    apellido = models.CharField('Apellido', max_length=20, blank=False, null=False)
+    telefono = models.IntegerField('Telefono', max_length=12, blank=False, null=False)
     fecha_registro = models.DateTimeField(auto_now_add=True)
 
     class Meta:

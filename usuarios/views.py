@@ -100,7 +100,7 @@ def editar_perfil(request):
         perfil.apellido = form.cleaned_data.get('apellido')
         perfil.telefono = form.cleaned_data.get('telefono')
         perfil.save()
-        return HttpResponseRedirect("/cliente/ver_perfil_cliente/")
+        return HttpResponseRedirect("cliente/ver_perfil_cliente/")
  
 #     # add form dictionary to context
     context["form"] = form
