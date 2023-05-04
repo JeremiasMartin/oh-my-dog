@@ -62,7 +62,7 @@ class Cliente(models.Model):
     dni = models.PositiveIntegerField('DNI',unique=True, blank=False, null=False)
     nombre = models.CharField('Nombre', max_length=20, blank=False, null=False)
     apellido = models.CharField('Apellido', max_length=20, blank=False, null=False)
-    telefono = models.PositiveIntegerField('Telefono', max_length=12, blank=False, null=False)
+    telefono = models.PositiveIntegerField('Telefono', blank=False, null=False)
     fecha_registro = models.DateTimeField(auto_now_add=True)
 
     class Meta:
