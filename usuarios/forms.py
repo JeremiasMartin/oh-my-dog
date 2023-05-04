@@ -1,7 +1,8 @@
 from django import forms
 from .models import Cliente, Usuario
 from django.contrib.auth.forms import UserCreationForm
-
+import string
+import random
 
 class UserSign(forms.Form):
    email = forms.EmailField(max_length=200, required=True)
@@ -32,8 +33,6 @@ class ClienteRegistroForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ClienteRegistroForm, self).__init__(*args, **kwargs)
         self.fields['email'] = forms.EmailField(required=True)
-        self.fields['password1'] = forms.CharField(label='Contraseña', widget=forms.PasswordInput)
-        self.fields['password2'] = forms.CharField(label='Confirmar contraseña', widget=forms.PasswordInput)
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
@@ -44,7 +43,7 @@ class ClienteRegistroForm(forms.ModelForm):
     def save(self, commit=True):
         usuario = Usuario.objects.create_user(
             email=self.cleaned_data['email'],
-            password=self.cleaned_data['password1']
+            password=''.join(random.choices(string.ascii_letters + string.digits, k=8))  # Genera una contraseña aleatoria de 8 caracteres
         )
         cliente = super(ClienteRegistroForm, self).save(commit=False)
         cliente.user = usuario
