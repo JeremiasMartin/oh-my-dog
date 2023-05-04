@@ -276,3 +276,13 @@ ul.errorlist{
   font-style: italic;
   color: red;
 }
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
