@@ -1,0 +1,10 @@
+¡{{ nombre }}, Bienvenido a Oh My Dog! Tu cuenta fue creada con éxito.
+
+Para iniciar sesión, vas a necesitar la siguiente clave provisoria: {{ password }}
+
+Te recomendamos que lo guardes en un sitio seguro.
+
+¡Muchas gracias por elegirnos!
+
+
+Oh My Dog!
