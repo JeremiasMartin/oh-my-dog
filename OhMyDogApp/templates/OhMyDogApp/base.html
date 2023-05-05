@@ -51,9 +51,6 @@
           <li class="nav-item {% if request.path == '/usuarios/ver_perfil/' %}active{%endif %}">
             <a class="nav-link" href="{% url 'Ver_perfil' %}">Mi Perfil</a>
           </li>
-          <li class="nav-item {% if request.path == '/usuarios/editar_perfil/' %}active{%endif %}">
-              <a class="nav-link" href="{% url 'Editar_perfil' %}">Editar Perfil</a>
-          </li>
           <li class="nav-item {% if request.path == '/usuarios/logout/' %}active{%endif %}">
             <a class="nav-link" href="{% url 'Logout' %}">
               <i class="fa-solid fa-right-to-bracket"></i>
