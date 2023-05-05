@@ -111,13 +111,8 @@ def registrar_cliente(request):
 @login_required
 def ver_perfil(request):
     usuario = request.user
-    if usuario.is_staff:
-        perfil = Usuario.objects.get(id=usuario.id)
-        return render(request, 'admin/ver_perfil_admin.html', {"usuario":usuario})
-
-    else:
-        perfil = Cliente.objects.get(user_id=usuario.id)
-        return render(request, 'cliente/ver_perfil_cliente.html', {"usuario":perfil})
+    perfil = Usuario.objects.get(id=usuario.id)
+    return render(request, 'ver_perfil.html', {"usuario":perfil})
 
 
 @login_required
