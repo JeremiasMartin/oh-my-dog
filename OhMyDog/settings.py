@@ -37,11 +37,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Apps lcoales
+    
+    # Apps locales
     'OhMyDogApp',
     'usuarios',
     'crispy_forms',
     'perros',
+    'crispy_bootstrap4',
 ]
 
 MIDDLEWARE = [
