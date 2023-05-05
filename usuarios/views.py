@@ -103,6 +103,7 @@ def registrar_cliente(request):
                 email.attach(image)
 
             email.send(fail_silently=False)
+            messages.success(request, 'Registro exitoso')
             return redirect("/usuarios/clientes")
     else:
         form = ClienteRegistroForm()
