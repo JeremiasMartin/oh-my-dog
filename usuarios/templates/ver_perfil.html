@@ -1,0 +1,18 @@
+{% extends "OhMyDogApp/base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<h1>Perfil del Usuario</h1>
+
+{% if user.is_staff %}
+<p>Email: {{ usuario.email }}</p>
+{% else %}
+<p>Nombre: {{ usuario.cliente.nombre }}</p>
+<p>Apellido: {{ usuario.cliente.apellido }}</p>
+<p>DNI: {{ usuario.cliente.dni }}</p>
+<p>Teléfono: {{ usuario.cliente.telefono }}</p>
+<a href="#" class="btn btn-primary">Editar perfil</a>
+{% endif %}
+{% endblock %}
