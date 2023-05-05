@@ -1,0 +1,97 @@
+{% extends "OhMyDogApp/base.html" %}
+
+{% load static %}
+
+{% block content %}
+ 
+<section id="showcase-inner" class="py-4 text-black">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-md-12">
+          <h2 class="display-4">Listado de Mascotas</h2>
+        </div>
+      </div>
+    </div>
+  </section>
+<!-- Listado -->
+<section id="listado" class="py-4">
+    <div class="container">
+        <div class="row">
+            {% if mascotas %}
+                {% for mascota in mascotas %}
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card listing-preview">
+                            <div class="card-body">
+                                <div class="listing-heading text-center">
+                                    <h5 class="card-title">{{ mascota.nombre }}</h5>
+                                </div>
+                                <hr>
+                                <p class="card-text"><i class="fas fa-user" style="color: #e4a64e;"></i> Dueño: {{ mascota.cliente}}</p>
+                                <hr>
+                                <p class="card-text"><i class="fa-solid fa-calendar-days" style="color: #e4a64e;"></i> Nacimiento: {{ mascota.fecha_nac }}</p>
+                                <hr>
+                                <p class="card-text"><i class="fa-solid fa-dog" style="color: #e4a64e;"></i> Raza: {{ mascota.raza }}</p>
+                                <hr>
+                                <p class="card-text"><i class="fa-solid fa-ruler-vertical"style="color: #e4a64e;"></i> Tamaño: {{ mascota.tamanio }}</p>
+                                <hr>
+                                <p class="card-text"><i class="fa-solid fa-palette" style="color: #e4a64e;"></i> Color: {{ mascota.color }}</p>
+                                <hr>
+                                <a href="listar_mascotas.html" class="btn btn-primary btn-block">Registrar Atención</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+
+            {% else %}
+                <div class="col-md-12">
+                    <p>No Hay Resultados</p>
+                </div>
+            {% endif %}
+        </div> 
+    </div> 
+    <!-- Paginacion -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+            {% if mascotas.has_other_pages %}
+                <ul class="pagination">
+                    {% if mascotas.has_previous %}
+                        <li class='page-item'>
+                           <a href="?page={{mascotas.previous_page_number}}" class="page-link">&laquo;
+                           </a> 
+                        </li>
+                    {% else %}
+                        <li class= "page-item disabled">
+                           <a class="page-link">&laquo;
+                           </a> 
+                        </li>
+                    {% endif %}
+                    {% for i in mascotas.paginator.page_range %}
+                        {% if mascotas.number == i %}
+                            <li class='page-item active'>
+                                <a class="page-link">{{i}}</a> 
+                            </li>
+                        {% else %}
+                            <li class='page-item'>
+                                <a href="?page={{i}}" class="page-link">{{i}}</a>
+                            </li>
+                        {% endif%}
+                    {% endfor %}
+                    {% if mascotas.has_next %}
+                        <li class="page-item">
+                            <a href="?page={{mascotas.next_page_number}}" class="page-link">&raquo;</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link">&raquo;</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            {% endif %}
+            </div>
+        </div>
+    </div>
+  </section>
+
+{% endblock %}
+
