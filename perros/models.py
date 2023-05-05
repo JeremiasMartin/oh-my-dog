@@ -3,7 +3,7 @@ from OhMyDog import settings
 from usuarios.models import Cliente
 
 class Perro(models.Model):
-    id_dueño = models.ForeignKey(Cliente, on_delete=models.CASCADE, blank=False, null=False)
+    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, blank=False, null=False)
     nombre = models.CharField('Nombre', max_length=100, blank=False, null=False)
     raza = models.CharField('Raza', max_length=100, blank=False, null=False)
 

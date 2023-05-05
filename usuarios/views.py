@@ -17,13 +17,16 @@ from django.template.loader import get_template
 from OhMyDog import settings
 from django.core.mail import EmailMultiAlternatives
 import os
-
+from django.core.paginator import Paginator
 
 # Create your views here.
 
 def listar_clientes(request):
     clientes = Cliente.objects.all()
-    return render(request, 'admin/listar_clientes.html', {"clientes":clientes})
+    paginator = Paginator(clientes,3)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'admin/listar_clientes.html', {"clientes":page_obj})
 
 
 

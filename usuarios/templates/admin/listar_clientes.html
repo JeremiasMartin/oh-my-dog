@@ -3,32 +3,110 @@
 {% load static %}
 
 {% block content %}
- 
-<table>
-  <thead>
-    <tr>
-      <th>Nombre</th>
-      <th>Apellido</th>
-      <th>Telefono</th>
-      <th>Email</th>
-      <th>Acciones</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for c in clientes %}
-      <tr>
-        <td>{{ c.nombre }}</td>
-        <td>{{ c.apellido }}</td>
-        <td>{{ c.telefono }}</td>
-        <td>{{ c.user.email }}</td>
-        <th>
-          <a href="#">
-            Registrar mascota
-          </a>
-        </th>
-      </tr>
-    {% endfor %}
-  </tbody>
-</table>
-
+<section id="showcase-inner" class="py-5 text-black">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-md-12">
+          <h2 class="display-4">Listado de Clientes</h2>
+        </div>
+      </div>
+    </div>
+  </section>
+<!-- Listado -->
+<section id="listado" class="py-4">
+    <div class="container">
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <div id="msg"class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        <div class="card-deck">
+            {% if clientes %}
+                
+                {% for cliente in clientes %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="listing-heading text-center">
+                                    <h5 class="card-title">{{ cliente }}</h5>
+                                </div>
+                                <hr>
+                                <p class="card-text text-wrap"><i class="fa-solid fa-envelope" style="color: #e4a64e;"></i> Email: {{ cliente.user.email }}</p>
+                                <hr>
+                                <p class="card-text"><i class="fa-solid fa-id-card" style="color: #e4a64e;"></i> Dni: {{ cliente.dni }}</p>
+                                <hr>
+                                <p class="card-text"><i class="fa-solid fa-phone-volume" style="color: #e4a64e;"></i> Teléfono: {{ cliente.telefono }}</p>
+                                <hr>
+                                <div style="display: flex; flex-direction: column; align-items: center;"class="d-flex flex-column">
+                                    <a href= "{% url 'perros:Registro_mascota' cliente.cliente_id %}" class="btn btn-primary btn-block">Agregar Mascota</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                
+            {% else %}
+                <div class="col-md-12">
+                    <p>No Hay Resultados</p>
+                </div>
+            {% endif %}
+        </div> 
+    </div>
+    <!-- Paginacion -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+            {% if clientes.has_other_pages %}
+                <ul class="pagination">
+                    {% if clientes.has_previous %}
+                        <li class='page-item'>
+                           <a href="?page={{clientes.previous_page_number}}" class="page-link">&laquo;
+                           </a> 
+                        </li>
+                    {% else %}
+                        <li class= "page-item disabled">
+                           <a class="page-link">&laquo;
+                           </a> 
+                        </li>
+                    {% endif %}
+                    {% for i in clientes.paginator.page_range %}
+                        {% if clientes.number == i %}
+                            <li class='page-item active'>
+                                <a class="page-link">{{i}}</a> 
+                            </li>
+                        {% else %}
+                            <li class='page-item'>
+                                <a href="?page={{i}}" class="page-link">{{i}}</a>
+                            </li>
+                        {% endif%}
+                    {% endfor %}
+                    {% if clientes.has_next %}
+                        <li class="page-item">
+                            <a href="?page={{clientes.next_page_number}}" class="page-link">&raquo;</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link">&raquo;</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            {% endif %}
+            </div>
+        </div>
+    </div>
+  </section>
+  
+  
+  
+  <script>
+      setTimeout(function(){
+        if ($('#msg').length > 0) {
+            $('#msg').remove();
+        }
+    }, 1000)    // 2000 millisecond
+    </script>
 {% endblock %}
