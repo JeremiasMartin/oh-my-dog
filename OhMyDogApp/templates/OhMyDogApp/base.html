@@ -6,6 +6,7 @@
 
     <!-- Bootstrap -->
     <link href="{% static 'OhMyDogApp/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/803ea84c99.js" crossorigin="anonymous"></script>
 
      <!-- Fonts -->
     
@@ -38,20 +39,30 @@
         {% if user.is_authenticated %}
           {% if user.is_staff %}
           <li class="nav-item {% if request.path == '/usuarios/registrar_cliente' %}active{%endif %}">
-            <a class="nav-link" href="{% url 'Registro' %}">Registrar Cliente</a>
-          </li>
+              <a class="nav-link" href="{% url 'Registro' %}">Registrar Cliente</a>
+            </li>
           <li class="nav-item {% if request.path == '/clientes' %}active{%endif %}">
-            <a class="nav-link" href="{% url 'Clientes' %}">Clientes</a>
-          </li>  
+              <a class="nav-link" href="{% url 'Clientes' %}">Clientes</a>
+            </li>  
+            <li class="nav-item {% if request.path == '/perros/listar_mascotas/' %}active{%endif %}">
+              <a class="nav-link" href="{% url 'perros:Mascotas' %}">Mascotas</a>
+            </li>  
           {% endif %}
-        <li class="nav-item {% if request.path == '/usuarios/logout/' %}active{%endif %}">
-          <a class="nav-link" href="{% url 'Logout' %}">Cerrar Sesión</a>
-        </li>
+          <li class="nav-item {% if request.path == '/usuarios/editar_perfil/' %}active{%endif %}">
+              <a class="nav-link" href="{% url 'Editar_perfil' %}">Editar Perfil</a>
+          </li>
+          <li class="nav-item {% if request.path == '/usuarios/logout/' %}active{%endif %}">
+            <a class="nav-link" href="{% url 'Logout' %}">
+              <i class="fa-solid fa-right-to-bracket"></i>
+            </a>
+          </li>
       </ul>
     {% else %}
       <ul class="navbar-nav">
         <li class="nav-item {% if request.path == '/usuarios/login/' %}active{% endif %}">
-          <a class="btn btn-primary" href="{% url 'Login' %}">Iniciar Sesión</a>
+          <a class="btn btn-primary" href="{% url 'Login' %}">
+            <i class="fa-solid fa-right-to-bracket"></i>
+          </a>
         </li>
       </ul>
     </div>
@@ -67,26 +78,6 @@
     <!-- Footer -->
     <footer class="footer text-faded text-center py-5">
       <div class="container">
-        <p class="m-0">
-	        <a href="#" class="link">
-	          <span class="fa-stack fa-lg">
-	            <i class="fa fa-circle fa-stack-2x"></i>
-	            <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
-	          </span>
-	        </a>
-	        <a href="#" class="link">
-	          <span class="fa-stack fa-lg">
-	            <i class="fa fa-circle fa-stack-2x"></i>
-	            <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
-	          </span>
-	        </a>
-	        <a href="#" class="link">
-	          <span class="fa-stack fa-lg">
-	            <i class="fa fa-circle fa-stack-2x"></i>
-	            <i class="fa fa-instagram fa-stack-1x fa-inverse"></i>
-	          </span>
-	        </a>
-	    </p>
         <p class="m-0 mbt1" style="color:black; font-size: 20px;">&copy; EJTech</p>
       </div>
 	</footer>
