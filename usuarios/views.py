@@ -120,24 +120,22 @@ def ver_perfil(request):
 
 @login_required
 def editar_perfil(request):
-#     # dictionary for initial data with
-#     # field names as keys
-    context ={}
+    context = {}
     usuario = request.user
-    perfil = Cliente.objects.get(user=usuario) 
-    # pass the object as instance in form
-    form = EditarPerfilForm(request.POST or None , request.FILES , instance = perfil)
-    # save the data from the form and
-    # redirect to detail_view
+    perfil = Cliente.objects.get(user=usuario)
+    form = EditarPerfilForm(request.POST or None, request.FILES or None, instance=perfil)
     if form.is_valid():
-
+        
         perfil.nombre = form.cleaned_data.get('nombre')
         perfil.apellido = form.cleaned_data.get('apellido')
         perfil.telefono = form.cleaned_data.get('telefono')
         perfil.save()
-        return HttpResponseRedirect("cliente/ver_perfil_cliente/")
- 
-#     # add form dictionary to context
+        messages.success(request, 'Tu perfil ha sido actualizado.')
+        return HttpResponseRedirect("/cliente/ver_perfil_cliente/")
     context["form"] = form
- 
-    return render(request,'ver_perfil_cliente.html', context) 
+    return render(request, 'ver_perfil_cliente.html', context)
+
+
+
+
+
