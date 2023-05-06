@@ -85,7 +85,13 @@
     <!-- Bootstrap -->
     <script src="{% static 'OhMyDogApp/vendor/jquery/jquery.min.js' %}"></script>
     <script src="{% static 'OhMyDogApp/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-
+    <script>
+      setTimeout(function(){
+        if ($('#msg').length > 0) {
+            $('#msg').remove();
+        }
+    }, 2000)    // 2000 millisecond
+    </script>
 </body>
 
 

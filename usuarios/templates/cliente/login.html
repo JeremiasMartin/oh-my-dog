@@ -10,5 +10,13 @@
         <button type="submit">Login</button>
         <a style="margin:15" href="/usuarios/restablecer_contrasenia/"> No recuerdo mi clave</a>
     </form>
-    
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <div id="msg"class="alert alert-{{ message.tags }} ">
+                    {{ message|safe }}
+                </div>
+            {% endfor %}
+        </ul>
+    {% endif %}
 {% endblock %}
