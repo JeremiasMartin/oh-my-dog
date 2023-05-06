@@ -1,0 +1,12 @@
+{% extends "OhMyDogApp/base.html" %}
+{% load static %}
+{% block title %} Cambiar Contraseña {%endblock%}
+{% block content %}
+   
+<form method="post"> 
+    {% csrf_token %} 
+    {{ form.as_p}} 
+   <button> <input type="submit" value="cambiar contraseña"> </button> 
+</form> 
+<a href="/usuarios/editar_perfil">Cancelar</a>
+{%endblock%}
