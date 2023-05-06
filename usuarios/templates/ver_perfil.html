@@ -13,6 +13,7 @@
 <p>Apellido: {{ usuario.cliente.apellido }}</p>
 <p>DNI: {{ usuario.cliente.dni }}</p>
 <p>Teléfono: {{ usuario.cliente.telefono }}</p>
-<a href="#" class="btn btn-primary">Editar perfil</a>
+<a href="{% url 'Editar_perfil' %}" class="btn btn-primary">Editar perfil</a>
+<a href="/usuarios/cambiar_contrasenia" class="btn btn-primary">Cambiar Clave</a>
 {% endif %}
 {% endblock %}
