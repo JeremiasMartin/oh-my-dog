@@ -3,13 +3,16 @@
 {% load crispy_forms_tags %}
 {% block content %}
 
-<h1>Editar perfil del cliente {{ usuario.cliente }}</h1>
+<h1>Editar Perfil</h1>
 
 <form method="post" action="" style="color: black;">
     {% csrf_token %}
-    {{ form.as_p }}
+    <p>Nombre: {{ form.nombre }}</p>
+    <p>Apellido: {{ form.apellido }}</p>
+    <p>Tel&eacute;ono: {{ form.telefono }}</p>
     <button type="submit" class="btn btn-primary">Guardar cambios</button>
 </form>
+<a href="/usuarios/ver_perfil/">Cancelar</a>
 
 {% endblock %}
 
