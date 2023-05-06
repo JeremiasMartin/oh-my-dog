@@ -20,6 +20,9 @@ import os
 from django.core.paginator import Paginator
 from django.contrib.auth.views import PasswordResetConfirmView
 from django.contrib.auth.forms import PasswordResetForm,SetPasswordForm
+from django.contrib.auth.views import PasswordChangeView
+from django.contrib.auth.forms import PasswordChangeForm
+from django.urls import reverse_lazy
 
 # Create your views here.
 
@@ -123,20 +126,31 @@ def ver_perfil(request):
 
 @login_required
 def editar_perfil(request):
-    context = {}
-    usuario = request.user
-    perfil = Cliente.objects.get(user=usuario)
-    form = EditarPerfilForm(request.POST or None, request.FILES or None, instance=perfil)
-    if form.is_valid():
-        
-        perfil.nombre = form.cleaned_data.get('nombre')
-        perfil.apellido = form.cleaned_data.get('apellido')
-        perfil.telefono = form.cleaned_data.get('telefono')
-        perfil.save()
-        messages.success(request, 'Tu perfil ha sido actualizado.')
-        return HttpResponseRedirect("/cliente/ver_perfil_cliente/")
-    context["form"] = form
-    return render(request, 'ver_perfil_cliente.html', context)
+    perfil = request.user.cliente
+    if request.method == 'POST':
+        form = EditarPerfilForm(request.POST, request.FILES, instance=perfil)
+        if form.is_valid():
+            perfil = form.save(commit=False)
+            perfil.user = request.user
+            perfil.save()
+            return redirect('Ver_perfil')
+    else:
+        form = EditarPerfilForm(instance=perfil)
+    return render(request, 'cliente/editar_perfil.html', {'form': form})
+
+
+
+
+class cambiar_contrasenia(PasswordChangeView):
+      form_class = PasswordChangeForm
+      success_url ="/usuarios/ver_perfil/"
+
+class LoginAfterPasswordChangeView(PasswordChangeView):
+    @property
+    def success_url(self):
+        return reverse_lazy('/usuarios/login/')
+
+login_after_password_change = login_required(LoginAfterPasswordChangeView.as_view())
 
 
 
