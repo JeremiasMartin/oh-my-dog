@@ -18,6 +18,8 @@ from OhMyDog import settings
 from django.core.mail import EmailMultiAlternatives
 import os
 from django.core.paginator import Paginator
+from django.contrib.auth.views import PasswordResetConfirmView
+from django.contrib.auth.forms import PasswordResetForm,SetPasswordForm
 
 # Create your views here.
 
@@ -138,5 +140,28 @@ def editar_perfil(request):
 
 
 
+def restablecer_contraseña(request):   
+    if request.method == "POST":
+        form = PasswordResetForm(data=request.POST)
+        if form.is_valid(): 
+            mail = form.cleaned_data.get("email")
+            if Usuario.objects.filter(email=mail).exists():
+                form.save(from_email='blabla@blabla.com', email_template_name='registration/password_reset_email.html', request=request)
+                return redirect('/usuarios/restablecer_contrasenia_enviado')          
+            else:
+                messages.error(request, " El mail ingresado no se encuentra registrado en el sistema ")  
+        else: 
+              messages.error(request, " No existe ese mail") 
+    form =  PasswordResetForm()     
+    context = {'form' : form}
+    return render(request, 'cliente/restablecer_contrasenia.html', context)     
+     
+      
+class restPasswordConfirm(PasswordResetConfirmView):
+      form_class = SetPasswordForm
+     
 
+def restDone(request):
+    
+    return render(request, 'cliente/restablecer_contrasenia_enviado.html') 
 

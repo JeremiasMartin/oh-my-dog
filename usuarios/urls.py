@@ -1,5 +1,6 @@
 from django.urls import path
 from usuarios.views import *
+from django.contrib.auth import views
 
 urlpatterns = [
     path('', listar_clientes, name="Clientes"),
@@ -8,5 +9,9 @@ urlpatterns = [
     path('registrar_cliente/', registrar_cliente, name='Registro'),
     path('clientes/', listar_clientes, name='Clientes'),
     path('ver_perfil/', ver_perfil, name='Ver_perfil'),
-    path('editar_perfil/', editar_perfil, name='editar_perfil'),
+    path('editar_perfil/', editar_perfil, name='Editar_perfil'),
+    path('restablecer_contrasenia/',restablecer_contraseña, name='Restablecer_contrasenia'),
+    path('restablecer_contrasenia_enviado/',restDone, name='restablecer_contrasenia_enviado'),
+    path('reset/<uidb64>/<token>', restPasswordConfirm.as_view(template_name='cliente/rest-contra-conf.html'), name='password_reset_confirm'),
+    path('reset_password_complete/', views.PasswordResetCompleteView.as_view(template_name="cliente/restablecer_contrasenia_exitoso.html"), name='password_reset_complete'),
 ]
