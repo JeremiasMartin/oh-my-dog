@@ -53,14 +53,14 @@ class ClienteRegistroForm(forms.ModelForm):
         
 
 class EditarPerfilForm(forms.ModelForm):
-   class Meta:
+    class Meta:
         model = Cliente
         fields = ['nombre', 'apellido', 'telefono']
-        def save(self, commit=True):
-            cliente = super().save(commit=False)
-            cliente.nombre = self.cleaned_data['nombre']
-            cliente.apellido = self.cleaned_data['apellido']
-            cliente.telefono = self.cleaned_data['telefono']
-            if commit:
-             cliente.save()
-            return cliente
+    def save(self, commit=True):
+        cliente = super().save(commit=False)
+        cliente.nombre = self.cleaned_data['nombre']
+        cliente.apellido = self.cleaned_data['apellido']
+        cliente.telefono = self.cleaned_data['telefono']
+        if commit:
+            cliente.save()
+        return cliente
