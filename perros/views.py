@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Perro 
 from usuarios.models import Cliente
-from .forms import registrar_perro
+from .forms import registrar_perro, editar_pefil_mascota
 from django.contrib import messages
 from django.core.paginator import Paginator
 
@@ -12,7 +12,6 @@ def listar_mascotas(request):
     page_obj = paginator.get_page(page_number)
     return render(request, 'listar_mascotas.html', {"mascotas":page_obj})
 
-#def registrar_atencion(request):
 
 def registrar_mascota(request, cliente_id):
     cliente = get_object_or_404(Cliente, cliente_id=cliente_id)
@@ -35,3 +34,21 @@ def registrar_mascota(request, cliente_id):
         'cliente':cliente,
     }
     return render(request, 'admin/registrar_mascota.html', context)
+
+def editar_perfil_mascota(request, id):
+    perro = get_object_or_404(Perro, id=id)
+    if request.method == 'POST':
+        form = editar_pefil_mascota(request.POST, instance=perro)
+        if form.is_valid():
+            form.save()
+            messages.success(request, '¡Información actualizada correctamente!')
+            return redirect("/perros/listar_mascotas/")
+    else:
+        form = editar_pefil_mascota(instance=perro)
+    
+    context = {
+        'form': form, 
+        'perro': perro
+    }
+    
+    return render(request, 'editar_perfil_mascota.html', context)

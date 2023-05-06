@@ -16,6 +16,15 @@
 <!-- Listado -->
 <section id="listado" class="py-4">
     <div class="container">
+         {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <div id="msg"class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </ul>
+        {% endif %}
         <div class="row">
             {% if mascotas %}
                 {% for mascota in mascotas %}
@@ -36,7 +45,8 @@
                                 <hr>
                                 <p class="card-text"><i class="fa-solid fa-palette" style="color: #e4a64e;"></i> Color: {{ mascota.color }}</p>
                                 <hr>
-                                <a href="listar_mascotas.html" class="btn btn-primary btn-block">Registrar Atención</a>
+                                <a href="/perros/editar_perfil_mascota/{{ mascota.id }}/" class="btn btn-primary btn-block">Editar Información</a>
+                                <!--<a href="listar_mascotas.html" class="btn btn-primary btn-block">Registrar Atención</a> -->
                             </div>
                         </div>
                     </div>
