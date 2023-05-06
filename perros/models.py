@@ -41,8 +41,8 @@ class Tipo_atencion(models.Model):
         return '%s' % (self.tipo)
 
 class Atencion(models.Model):
-    id_mascota = models.ForeignKey(Perro, on_delete=models.CASCADE)
-    id_tipo = models.ForeignKey(Tipo_atencion, on_delete=models.CASCADE)
+    mascota = models.ForeignKey(Perro, on_delete=models.CASCADE)
+    tipo = models.ForeignKey(Tipo_atencion, on_delete=models.CASCADE)
     peso = models.DecimalField('Peso', max_digits=5, decimal_places=2, blank=False, null=False)
     fecha = models.DateField('Fecha', blank=False, null=False)
     observacion = models.TextField('Observacion', blank=False, null=True)
