@@ -12,6 +12,12 @@ def listar_mascotas(request):
     page_obj = paginator.get_page(page_number)
     return render(request, 'listar_mascotas.html', {"mascotas":page_obj})
 
+def listar_mascotas_cliente(request, cliente_id):
+    mascotas = Perro.objects.filter(cliente_id=cliente_id)
+    paginator = Paginator(mascotas,3)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'listar_mascotas.html', {"mascotas":page_obj})
 
 def registrar_mascota(request, cliente_id):
     cliente = get_object_or_404(Cliente, cliente_id=cliente_id)
