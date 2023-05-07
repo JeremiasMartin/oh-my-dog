@@ -48,7 +48,7 @@ def editar_perfil_mascota(request, id):
         if form.is_valid():
             form.save()
             messages.success(request, '¡Información actualizada correctamente!')
-            return redirect("/perros/listar_mascotas/")
+            return redirect("/perros/listar-mascotas/")
     else:
         form = editar_pefil_mascota(instance=perro)
     
@@ -62,7 +62,7 @@ def editar_perfil_mascota(request, id):
 def registrar_atencion(request, id_mascota):
     perro = get_object_or_404(Perro, id=id_mascota)
     if request.method == 'POST':
-        form = registrar_atencion_form(request.POST, instance = perro)
+        form = registrar_atencion_form(request.POST)
         if form.is_valid():
             atencion = form.save(commit=False)
             atencion.mascota = perro
@@ -70,7 +70,7 @@ def registrar_atencion(request, id_mascota):
             messages.success(request, 'Atención registrada exitosamente')
             return redirect(f'/perros/listar-mascotas-cliente/{perro.cliente.cliente_id}/')
     else:
-        form = registrar_atencion_form(instance = perro)
+        form = registrar_atencion_form()
     context={
         'form': form,
         'perro': perro,
