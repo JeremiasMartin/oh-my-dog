@@ -4,20 +4,32 @@
 {% block content %}
 
 <h1>Editar Perfil</h1>
-
-<form method="post" action="" style="color: black;">
-    {% csrf_token %}
-    <p>Nombre: {{ form.nombre }}</p>
-    <p>Apellido: {{ form.apellido }}</p>
-    <p>Tel&eacute;ono: {{ form.telefono }}</p>
-    <button type="submit" class="btn btn-primary">Guardar cambios</button>
-</form>
-<a href="/usuarios/ver_perfil/">Cancelar</a>
+<div class="container" >
+    <div class="card-deck">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="listing-heading text-center">
+                        <h5 class="card-title">Perfil</h5>
+                    </div>
+                    <form method="post" action="" style="color: black;">
+                    {% csrf_token %}
+                        <p class="card-text"><i class="fa-solid fa-user" style="color: #e4a64e;"></i> Nombre: {{ form.nombre }} </p>
+                        <hr>
+                        <p class="card-text"><i class="fa-solid fa-user" style="color: #e4a64e;"></i> Apellido: {{ form.apellido }} </p>
+                        <hr>
+                        <p class="card-text"><i class="fa-solid fa-phone-volume" style="color: #e4a64e;"></i> Teléfono: {{ form.telefono }}</p>
+                        <hr>
+                        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                    </form>
+                    <a href="/usuarios/ver_perfil/" class="btn btn-primary">Cancelar</a>
+                </div>
+            </div>
+        </div>
+    </div> 
+</div>
 
 {% endblock %}
-
-
-
 
 
 

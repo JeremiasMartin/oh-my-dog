@@ -10,8 +10,11 @@
 {{ form|crispy }}
 
 <button type="submit" class="btn btn-success">Confirmar</button>
+<!-- deberia redirigir al link donde estaba antes (listado mascotas de un cliente o listado de mascotas)-->
+<a href="{% url "perros:Mascotas" %}" class="btn btn-primary">Cancelar</a>
 </div>
 
 </form>
+
 
 {% endblock %}

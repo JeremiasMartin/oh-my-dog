@@ -47,6 +47,10 @@
             <li class="nav-item {% if request.path == '/perros/listar_mascotas/' %}active{%endif %}">
               <a class="nav-link" href="{% url 'perros:Mascotas' %}">Mascotas</a>
             </li>  
+          {% else %}
+          <li class="nav-item {% if request.path == '/perros/listar_mascotas/' %}active{%endif %}">
+              <a class="nav-link" href="{% url 'perros:Listar_mascotas_cliente' user.id %}">Mis Mascotas</a>
+          </li>  
           {% endif %}
           <li class="nav-item {% if request.path == '/usuarios/ver_perfil/' %}active{%endif %}">
             <a class="nav-link" href="{% url 'Ver_perfil' %}">Mi Perfil</a>

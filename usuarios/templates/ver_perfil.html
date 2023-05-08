@@ -5,15 +5,43 @@
 {% block content %}
 
 <h1>Perfil del Usuario</h1>
-
-{% if user.is_staff %}
-<p>Email: {{ usuario.email }}</p>
-{% else %}
-<p>Nombre: {{ usuario.cliente.nombre }}</p>
-<p>Apellido: {{ usuario.cliente.apellido }}</p>
-<p>DNI: {{ usuario.cliente.dni }}</p>
-<p>Teléfono: {{ usuario.cliente.telefono }}</p>
-<a href="{% url 'Editar_perfil' %}" class="btn btn-primary">Editar perfil</a>
-<a href="/usuarios/cambiar_contrasenia" class="btn btn-primary">Cambiar Clave</a>
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <div id="msg"class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </ul>
 {% endif %}
+<section id="listado" class="py-4">
+    <div class="container" >
+        <div class="card-deck">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <div class="listing-heading text-center">
+                            <h5 class="card-title">Perfil</h5>
+                        </div>
+                        {% if user.is_staff %}
+                        <p class="card-text text-wrap"><i class="fa-solid fa-envelope" style="color: #e4a64e;"></i> Email: {{ usuario.email }}</p>
+                        {% else %}
+                        <p class="card-text"><i class="fa-solid fa-user" style="color: #e4a64e;"></i> Nombre: {{ usuario.cliente.nombre }}</p>
+                        <hr>
+                        <p class="card-text"><i class="fa-solid fa-user" style="color: #e4a64e;"></i> Apellido: {{ usuario.cliente.apellido }}</p>
+                        <hr>
+                        <p class="card-text"><i class="fa-solid fa-id-card" style="color: #e4a64e;"></i> Dni: {{ usuario.cliente.dni }}</p>
+                        <hr>
+                        <p class="card-text"><i class="fa-solid fa-phone-volume" style="color: #e4a64e;"></i> Teléfono: {{ usuario.cliente.telefono }}</p>
+                        <hr>
+                        <a href="{% url 'Editar_perfil' %}" class="btn btn-primary">Editar perfil</a>
+                        <a href="/usuarios/cambiar_contrasenia" class="btn btn-primary">Cambiar Clave</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div> 
+    </div>
+</section>
+
 {% endblock %}
