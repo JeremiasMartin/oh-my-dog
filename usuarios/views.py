@@ -133,6 +133,7 @@ def editar_perfil(request):
             perfil = form.save(commit=False)
             perfil.user = request.user
             perfil.save()
+            messages.success(request,"¡Información actualizada correctamente!")
             return redirect('Ver_perfil')
     else:
         form = EditarPerfilForm(instance=perfil)
