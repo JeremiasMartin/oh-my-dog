@@ -1,13 +1,6 @@
 from django.db import models
 from usuarios.models import Cliente
-
-class Turno(models.Model):
-    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
-    tipo_atencion=models.ForeignKey(TipoAtencion,on_delete=models.CASCADE)
-    fecha = models.DateTimeField()
-    estado = models.ForeignKey(EstadoTurno, on_delete=models.CASCADE)
-
-
+from perros.forms import Tipo_atencion
 
 
 class EstadoTurno(models.Model):
@@ -21,4 +14,15 @@ class EstadoTurno(models.Model):
     def __str__(self):
         return self.estado
   
+
+
+class Turno(models.Model):
+    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
+    tipo_atencion=models.ForeignKey(Tipo_atencion,on_delete=models.CASCADE)
+    fecha = models.DateTimeField()
+    estado = models.ForeignKey(EstadoTurno, on_delete=models.CASCADE)
+
+
+    def __str__(self):
+        return f"Turno de {self.usuario} para {self.tipo_servicio} el día {self.fecha}"
   
