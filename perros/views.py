@@ -5,12 +5,6 @@ from .forms import registrar_perro, editar_pefil_mascota, registrar_atencion_for
 from django.contrib import messages
 from django.core.paginator import Paginator
 
-def listar_mascotas(request):
-    mascotas = Perro.objects.all()
-    paginator = Paginator(mascotas,3)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    return render(request, 'listar_mascotas.html', {"mascotas":page_obj})
 
 def listar_mascotas_cliente(request, cliente_id):
     mascotas = Perro.objects.filter(cliente_id=cliente_id)
@@ -48,7 +42,7 @@ def editar_perfil_mascota(request, id):
         if form.is_valid():
             form.save()
             messages.success(request, '¡Información actualizada correctamente!')
-            return redirect("/perros/listar-mascotas/")
+            return redirect(f"/perros/listar-mascotas-cliente/{perro.cliente.cliente_id}/")
     else:
         form = editar_pefil_mascota(instance=perro)
     
