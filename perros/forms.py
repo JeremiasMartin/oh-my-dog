@@ -16,5 +16,4 @@ class registrar_atencion_form(forms.ModelForm):
 
     class Meta:
         model = Atencion
-        fields = ['tipo', 'peso', 'fecha', 'observacion']
-        widgets = {'fecha': forms.SelectDateWidget}
+        fields = ['tipo', 'peso', 'observacion']

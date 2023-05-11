@@ -4,6 +4,7 @@ from usuarios.models import Cliente
 from .forms import registrar_perro, editar_pefil_mascota, registrar_atencion_form
 from django.contrib import messages
 from django.core.paginator import Paginator
+from datetime import datetime
 
 
 def listar_mascotas_cliente(request, cliente_id):
@@ -60,6 +61,7 @@ def registrar_atencion(request, id_mascota):
         if form.is_valid():
             atencion = form.save(commit=False)
             atencion.mascota = perro
+            atencion.fecha = datetime.now()
             atencion.save()
             messages.success(request, 'Atención registrada exitosamente')
             return redirect(f'/perros/listar-mascotas-cliente/{perro.cliente.cliente_id}/')
