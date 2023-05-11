@@ -3,11 +3,11 @@
 {% load static %}
 {% block content %}
 
-<h2>Login</h2>
+<h2>Iniciar Sesión</h2>
     <form method="POST">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Login</button>
+        <button type="submit">Iniciar sesión</button>
         <a style="margin:15" href="/usuarios/restablecer_contrasenia/"> No recuerdo mi clave</a>
     </form>
     {% if messages %}
