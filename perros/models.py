@@ -1,6 +1,7 @@
 from django.db import models
-from OhMyDog import settings
 from usuarios.models import Cliente
+from django.core.validators import MaxValueValidator
+from datetime import date
 
 class Perro(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, blank=False, null=False)
@@ -13,7 +14,9 @@ class Perro(models.Model):
         ('Grande','Grande'),
     )
     tamanio = models.CharField('Tamanio', max_length=10, blank=False, null=False, choices= opciones_tamanio)
-    fecha_nac = models.DateField('Nacimiento', blank=False, null=False)
+    fecha_nac = models.DateField('Nacimiento',
+                                 validators=[MaxValueValidator((date.today), message="La fecha ingresada no puede ser futura")], 
+                                 blank=False, null=False)
     color = models.CharField('Color', max_length=100, blank=False, null=False)
 
     class Meta:
