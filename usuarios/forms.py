@@ -3,6 +3,7 @@ from .models import Cliente, Usuario
 from django.contrib.auth.forms import UserCreationForm
 import string
 import random
+from django.core.validators import RegexValidator
 
 class UserSign(forms.Form):
    email = forms.EmailField(max_length=200, required=True)
@@ -26,6 +27,8 @@ class UsuarioRegistroForm(forms.ModelForm):
 
 
 class ClienteRegistroForm(forms.ModelForm):
+    nombre = forms.CharField(validators=[RegexValidator((r'^[a-zA-Z]+$'), message="Por favor ingrese solo letras sin acentos.")])
+    apellido = forms.CharField(validators=[RegexValidator((r'^[a-zA-Z]+$'), message="Por favor ingrese solo letras sin acentos.")])
     class Meta:
         model = Cliente
         fields = ['dni', 'nombre', 'apellido', 'telefono']
@@ -53,6 +56,8 @@ class ClienteRegistroForm(forms.ModelForm):
         
 
 class EditarPerfilForm(forms.ModelForm):
+    nombre = forms.CharField(validators=[RegexValidator((r'^[a-zA-Z]+$'), message="Solo se permite el ingreso de letras")])
+    apellido = forms.CharField(validators=[RegexValidator((r'^[a-zA-Z]+$'), message="Solo se permite el ingreso de letras")])
     class Meta:
         model = Cliente
         fields = ['nombre', 'apellido', 'telefono']
