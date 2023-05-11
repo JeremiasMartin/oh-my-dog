@@ -8,6 +8,7 @@
   {% csrf_token %}
   {{ form.as_p }}
   <button type="submit">Guardar</button>
+  <a href='/perros/listar-mascotas-cliente/{{perro.cliente_id}}/' class="btn btn-primary">Cancelar</a>
 </form>
 
-{% endblock %}
+{% endblock %} 
