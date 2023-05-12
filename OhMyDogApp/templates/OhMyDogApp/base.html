@@ -48,6 +48,9 @@
           <li class="nav-item {% if request.path == '/perros/listar_mascotas/' %}active{%endif %}">
               <a class="nav-link" href="{% url 'perros:Listar_mascotas_cliente' user.id %}">Mis Mascotas</a>
             </li>  
+          <li class="nav-item {% if request.path == '/turnos/solicitar_turno/' %}active{%endif %}">
+              <a class="nav-link" href="{% url 'solicitar_turno' %}">Solicitar turno</a>
+            </li>    
           {% endif %}
           <li class="nav-item {% if request.path == '/usuarios/ver_perfil/' %}active{%endif %}">
             <a class="nav-link" href="{% url 'Ver_perfil' %}">Mi Perfil</a>
