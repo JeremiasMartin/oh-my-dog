@@ -14,19 +14,19 @@
     </div>
   </section>
 <!-- Listado -->
-<section id="listado" class="py-4">
-    <div class="container">
-         {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-            <div id="msg"class="alert alert-{{ message.tags }}">
-                {{ message }}
-            </div>
-            {% endfor %}
-        </ul>
-        {% endif %}
-        <div class="row">
-            {% if mascotas %}
+{% if mascotas %}
+    <section id="listado" class="py-4">
+        <div class="container">
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <div id="msg"class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            <div class="row">
                 {% for mascota in mascotas %}
                     <div class="col-md-6 col-lg-4 mb-4">
                         <div class="card listing-preview">
@@ -47,61 +47,63 @@
                                 <hr>
                                 <a href="/perros/editar-perfil-mascota/{{ mascota.id }}/" class="btn btn-primary btn-block">Editar Información</a>
                                 <a href="/perros/registrar-atencion/{{ mascota.id }}/" class="btn btn-primary btn-block">Registrar Atención</a>
+                                <a href="/perros/ver-historia-clinica/{{ mascota.id }}/" class="btn btn-primary btn-block">Ver Historia Clínica</a>
                             </div>
                         </div>
                     </div>
                 {% endfor %}
-
-            {% else %}
-                <div class="col-md-12">
-                    <p>No Hay Resultados</p>
-                </div>
-            {% endif %}
+            </div> 
         </div> 
-    </div> 
-    <!-- Paginacion -->
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-            {% if mascotas.has_other_pages %}
-                <ul class="pagination">
-                    {% if mascotas.has_previous %}
-                        <li class='page-item'>
-                           <a href="?page={{mascotas.previous_page_number}}" class="page-link">&laquo;
-                           </a> 
-                        </li>
-                    {% else %}
-                        <li class= "page-item disabled">
-                           <a class="page-link">&laquo;
-                           </a> 
-                        </li>
-                    {% endif %}
-                    {% for i in mascotas.paginator.page_range %}
-                        {% if mascotas.number == i %}
-                            <li class='page-item active'>
-                                <a class="page-link">{{i}}</a> 
+        <!-- Paginacion -->
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                {% if mascotas.has_other_pages %}
+                    <ul class="pagination">
+                        {% if mascotas.has_previous %}
+                            <li class='page-item'>
+                            <a href="?page={{mascotas.previous_page_number}}" class="page-link">&laquo;
+                            </a> 
                             </li>
                         {% else %}
-                            <li class='page-item'>
-                                <a href="?page={{i}}" class="page-link">{{i}}</a>
+                            <li class= "page-item disabled">
+                            <a class="page-link">&laquo;
+                            </a> 
                             </li>
-                        {% endif%}
-                    {% endfor %}
-                    {% if mascotas.has_next %}
-                        <li class="page-item">
-                            <a href="?page={{mascotas.next_page_number}}" class="page-link">&raquo;</a>
-                        </li>
-                    {% else %}
-                        <li class="page-item disabled">
-                            <a class="page-link">&raquo;</a>
-                        </li>
-                    {% endif %}
-                </ul>
-            {% endif %}
+                        {% endif %}
+                        {% for i in mascotas.paginator.page_range %}
+                            {% if mascotas.number == i %}
+                                <li class='page-item active'>
+                                    <a class="page-link">{{i}}</a> 
+                                </li>
+                            {% else %}
+                                <li class='page-item'>
+                                    <a href="?page={{i}}" class="page-link">{{i}}</a>
+                                </li>
+                            {% endif%}
+                        {% endfor %}
+                        {% if mascotas.has_next %}
+                            <li class="page-item">
+                                <a href="?page={{mascotas.next_page_number}}" class="page-link">&raquo;</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link">&raquo;</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                {% endif %}
+                </div>
             </div>
         </div>
+    </section>
+{% else %}
+    <div id="no-results" class="py-4">
+        <div class="container">
+            <p>No Hay Resultados</p>
+        </div>
     </div>
-  </section>
+{% endif %}
 
 {% endblock %}
 

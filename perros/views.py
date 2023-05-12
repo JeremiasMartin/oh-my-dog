@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Perro 
+from .models import Perro, Atencion 
 from usuarios.models import Cliente
 from .forms import registrar_perro, editar_pefil_mascota, registrar_atencion_form
 from django.contrib import messages
@@ -72,3 +72,12 @@ def registrar_atencion(request, id_mascota):
         'perro': perro,
     }
     return render(request, 'admin/registrar_atencion.html', context)
+
+def ver_historia_clinica(request, id_mascota):
+    perro = get_object_or_404(Perro, id=id_mascota)
+    atenciones = Atencion.objects.filter(mascota_id=id_mascota)
+    context = {
+        "perro":perro,
+        "atenciones":atenciones
+    }
+    return render(request, 'ver_historia_clinica.html', context)

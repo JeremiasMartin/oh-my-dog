@@ -1,0 +1,52 @@
+{% extends 'OhMyDogApp/base.html' %}
+{% load static %}
+
+
+{% block content %}
+
+<section id="showcase-inner" class="py-4 text-black">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-md-12">
+          <h2 class="display-4">Historia clínica</h2>
+        </div>
+      </div>
+    </div>
+</section>
+
+<section id="historia-clinica" class="py-4 text-black">
+    <div class='col-12'>
+        <div class="card listing-preview">
+            <div class="card-body">
+                <div class="listing-heading text-center">
+                    <h5 class="card-title">{{ perro.nombre }}</h5>
+                </div>
+                <hr>
+                <p class="card-text"><i class="fas fa-user" style="color: #e4a64e;"></i> Dueño: {{ mascota.cliente}}</p>
+                <hr>
+                <p class="card-text"><i class="fa-solid fa-calendar-days" style="color: #e4a64e;"></i> Edad: {{ mascota.fecha_nac }}</p>
+                <hr>
+                <p class="card-text"><i class="fa-solid fa-dog" style="color: #e4a64e;"></i> Raza: {{ mascota.raza }}</p>
+                <hr>
+                <p class="card-text"><i class="fa-solid fa-ruler-vertical"style="color: #e4a64e;"></i> Tamaño: {{ mascota.tamanio }}</p>
+                <hr>
+                <p class="card-text"><i class="fa-solid fa-palette" style="color: #e4a64e;"></i> Color: {{ mascota.color }}</p>
+            </div>
+        </div>
+    </div>
+    {% if atenciones %}
+    <section id="atenciones" class="py-4 text-black">
+        <div class="rectangle">
+            <p>prueba</p>
+        </div>
+    </section>
+    {% else %}
+        <div id="no-results" class="py-4">
+            <div class="container">
+                <p>No Hay Resultados</p>
+            </div>
+        </div>
+    {% endif %}
+</section>
+
+{% endblock %}
