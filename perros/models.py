@@ -31,8 +31,8 @@ class Perro(models.Model):
 
 class Tipo_atencion(models.Model):
     tipos = (
-        ('Vacuna antiviral A','Vacuna antiviral A' ),
-        ('Vacuna antiviral B','Vacuna antiviral B'),
+        ('Vacuna antiviral','Vacuna antiviral' ),
+        ('Vacuna antirrábica','Vacuna antirrábica'),
         ('Castración','Castración'),
         ('Vacuna Desparasitante', 'Vacuna Desparasitante'),
         ('Atención Clínica','Atención Clínica'),
