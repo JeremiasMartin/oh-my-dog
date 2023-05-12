@@ -34,7 +34,7 @@ class Tipo_atencion(models.Model):
         ('Vacuna antiviral','Vacuna antiviral' ),
         ('Vacuna antirrábica','Vacuna antirrábica'),
         ('Castración','Castración'),
-        ('Vacuna Desparasitante', 'Vacuna Desparasitante'),
+        ('Desparasitante', 'Desparasitante'),
         ('Atención Clínica','Atención Clínica'),
     )
     tipo = models.CharField('Tipo', unique=True, max_length=25, blank=False, null=False, choices=tipos)
