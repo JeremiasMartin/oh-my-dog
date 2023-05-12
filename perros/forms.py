@@ -19,8 +19,15 @@ class editar_pefil_mascota(forms.ModelForm):
         fields = ['nombre', 'raza', 'fecha_nac', 'color'] 
 
 class registrar_atencion_form(forms.ModelForm):
-    tipo = forms.ModelChoiceField(queryset=Tipo_atencion.objects.all(), empty_label=None)
-    peso = forms.DecimalField(validators=[MinValueValidator(0)])
     class Meta:
         model = Atencion
         fields = ['tipo', 'peso', 'observacion']
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['tipo'].label = "Tipo*"
+        self.fields['tipo'].queryset = Tipo_atencion.objects.all()
+        self.fields['peso'].label = "Peso*"
+        self.fields['peso'].validators = [MinValueValidator(0)]
+        self.fields['observacion'].label = "Observacion*"
+        self.fields['observacion'].widget.attrs.update({"rows": 3})

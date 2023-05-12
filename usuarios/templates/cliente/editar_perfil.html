@@ -14,11 +14,11 @@
                     </div>
                     <form method="post" action="" style="color: black;">
                     {% csrf_token %}
-                        <p class="card-text"><i class="fa-solid fa-user" style="color: #e4a64e;"></i> Nombre: {{ form.nombre }} </p>
+                        <p class="card-text"><i class="fa-solid fa-user" style="color: #e4a64e;"></i> Nombre*: {{ form.nombre }} </p>
                         <hr>
-                        <p class="card-text"><i class="fa-solid fa-user" style="color: #e4a64e;"></i> Apellido: {{ form.apellido }} </p>
+                        <p class="card-text"><i class="fa-solid fa-user" style="color: #e4a64e;"></i> Apellido*: {{ form.apellido }} </p>
                         <hr>
-                        <p class="card-text"><i class="fa-solid fa-phone-volume" style="color: #e4a64e;"></i> Teléfono: {{ form.telefono }}</p>
+                        <p class="card-text"><i class="fa-solid fa-phone-volume" style="color: #e4a64e;"></i> Teléfono*: {{ form.telefono }}</p>
                         <hr>
                         <button type="submit" class="btn btn-primary">Guardar cambios</button>
                     </form>
