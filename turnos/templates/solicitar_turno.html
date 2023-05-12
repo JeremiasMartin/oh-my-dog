@@ -1,10 +1,19 @@
+{% extends 'OhMyDogApp/base.html' %}
 
-{% extends "OhMyDogApp/base.html" %}
 {% block content %}
   <h1>Solicitar turno</h1>
+    {% if messages %}
+   <ul class="messages">
+       {% for message in messages %}
+       <div id="msg"class="alert alert-{{ message.tags }}">
+           {{ message }}
+       </div>
+       {% endfor %}
+   </ul>
+   {% endif %}
   <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Enviar</button>
+    <button type="submit" class="btn btn-primary">Enviar</button>
   </form>
 {% endblock %}
