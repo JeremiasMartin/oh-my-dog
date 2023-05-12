@@ -2,7 +2,7 @@
 {% load static %}
 {% load crispy_forms_tags %}
 {% block content %}
-
+ 
 <h1>Editar Perfil</h1>
 <div class="container" >
     <div class="card-deck">
@@ -14,9 +14,25 @@
                     </div>
                     <form method="post" action="" style="color: black;">
                     {% csrf_token %}
-                        <p class="card-text"><i class="fa-solid fa-user" style="color: #e4a64e;"></i> Nombre*: {{ form.nombre }} </p>
+                        <p class="card-text">
+                            <i class="fa-solid fa-user" style="color: #e4a64e;"></i> 
+                            Nombre*: {{ form.nombre }} 
+                            <p>
+                                {% for error in form.nombre.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                            </p>
+                        </p>
                         <hr>
-                        <p class="card-text"><i class="fa-solid fa-user" style="color: #e4a64e;"></i> Apellido*: {{ form.apellido }} </p>
+                        <p class="card-text">
+                            <i class="fa-solid fa-user" style="color: #e4a64e;"></i> 
+                            Apellido*: {{ form.apellido }} 
+                            <p>
+                                {% for error in form.apellido.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                            </p>
+                        </p>
                         <hr>
                         <p class="card-text"><i class="fa-solid fa-phone-volume" style="color: #e4a64e;"></i> Teléfono*: {{ form.telefono }}</p>
                         <hr>
