@@ -1,23 +1,22 @@
 from django import forms
 from .models import Perro, Atencion, Tipo_atencion
-from django.core.validators import RegexValidator, MinValueValidator
+from django.utils.encoding import force_str
+from datetime import date
 
 class registrar_perro(forms.ModelForm):
-    nombre = forms.CharField(validators=[RegexValidator((r'^[a-zA-Z ]+$'), message="Por favor ingrese solo letras sin acentos.")])
-    raza = forms.CharField(validators=[RegexValidator((r'^[a-zA-Z ]+$'), message="Por favor ingrese solo letras sin acentos.")])
-    color = forms.CharField(validators=[RegexValidator((r'^[a-zA-Z ]+$'), message="Por favor ingrese solo letras sin acentos.")])
     class Meta:
         model = Perro
-        fields = ['nombre', 'raza', 'tamanio', 'fecha_nac', 'color']  
+        fields = ['nombre', 'raza', 'tamanio', 'fecha_nac', 'color'] 
+    
+        
+
 
 class editar_pefil_mascota(forms.ModelForm):
-    nombre = forms.CharField(validators=[RegexValidator((r'^[a-zA-Z ]+$'), message="Por favor ingrese solo letras sin acentos.")])
-    raza = forms.CharField(validators=[RegexValidator((r'^[a-zA-Z ]+$'), message="Por favor ingrese solo letras sin acentos.")])
-    color = forms.CharField(validators=[RegexValidator((r'^[a-zA-Z ]+$'), message="Por favor ingrese solo letras sin acentos.")])
     class Meta:
         model = Perro
         fields = ['nombre', 'raza', 'fecha_nac', 'color'] 
-
+    
+        
 class registrar_atencion_form(forms.ModelForm):
     class Meta:
         model = Atencion
@@ -28,6 +27,5 @@ class registrar_atencion_form(forms.ModelForm):
         self.fields['tipo'].label = "Tipo*"
         self.fields['tipo'].queryset = Tipo_atencion.objects.all()
         self.fields['peso'].label = "Peso*"
-        self.fields['peso'].validators = [MinValueValidator(0)]
-        self.fields['observacion'].label = "Observacion*"
+        self.fields['observacion'].label = force_str('Observación*')
         self.fields['observacion'].widget.attrs.update({"rows": 3})

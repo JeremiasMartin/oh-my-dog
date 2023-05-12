@@ -4,6 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 import string
 import random
 from django.core.validators import RegexValidator
+from django.utils.encoding import force_str
 
 class UserSign(forms.Form):
    email = forms.EmailField(max_length=200, required=True)
@@ -27,8 +28,6 @@ class UsuarioRegistroForm(forms.ModelForm):
 
 
 class ClienteRegistroForm(forms.ModelForm):
-    nombre = forms.CharField(validators=[RegexValidator((r'^[a-zA-Z ]+$'), message="Por favor ingrese solo letras sin acentos.")])
-    apellido = forms.CharField(validators=[RegexValidator((r'^[a-zA-Z ]+$'), message="Por favor ingrese solo letras sin acentos.")])
     class Meta:
         model = Cliente
         fields = ['dni', 'nombre', 'apellido', 'telefono']
@@ -36,6 +35,7 @@ class ClienteRegistroForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(ClienteRegistroForm, self).__init__(*args, **kwargs)
         self.fields['email'] = forms.EmailField(required=True)
+        self.fields['telefono'].label = force_str("Teléfono")
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
@@ -56,8 +56,6 @@ class ClienteRegistroForm(forms.ModelForm):
         
 
 class EditarPerfilForm(forms.ModelForm):
-    nombre = forms.CharField(validators=[RegexValidator((r'^[a-zA-Z ]+$'), message="Solo se permite el ingreso de letras")])
-    apellido = forms.CharField(validators=[RegexValidator((r'^[a-zA-Z ]+$'), message="Solo se permite el ingreso de letras")])
     class Meta:
         model = Cliente
         fields = ['nombre', 'apellido', 'telefono']

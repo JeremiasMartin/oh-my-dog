@@ -3,6 +3,7 @@ from time import time
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.core.validators import RegexValidator
 
 class UsuarioManager(BaseUserManager):
 
@@ -60,8 +61,10 @@ class Cliente(models.Model):
     cliente_id = models.AutoField(primary_key=True)
     
     dni = models.PositiveIntegerField('DNI',unique=True, blank=False, null=False)
-    nombre = models.CharField('Nombre', max_length=20, blank=False, null=False)
-    apellido = models.CharField('Apellido', max_length=20, blank=False, null=False)
+    nombre = models.CharField('Nombre', validators=[RegexValidator((r'^[a-zA-Z ]+$'), message="Por favor ingrese solo letras sin acentos.")],
+                              max_length=20, blank=False, null=False)
+    apellido = models.CharField('Apellido', validators=[RegexValidator((r'^[a-zA-Z ]+$'), message="Por favor ingrese solo letras sin acentos.")],
+                                max_length=20, blank=False, null=False)
     telefono = models.PositiveIntegerField('Telefono', blank=False, null=False)
     fecha_registro = models.DateTimeField(auto_now_add=True)
 
