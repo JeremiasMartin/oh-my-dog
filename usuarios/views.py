@@ -137,7 +137,8 @@ def editar_perfil(request):
             return redirect('Ver_perfil')
     else:
         form = EditarPerfilForm(instance=perfil)
-    return render(request, 'cliente/editar_perfil.html', {'form': form})
+    context = {'form': form, 'errors': form.errors}
+    return render(request, 'cliente/editar_perfil.html', context)
 
 
 
