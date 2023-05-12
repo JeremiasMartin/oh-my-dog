@@ -21,7 +21,7 @@ urlpatterns = [
     path('usuarios/', include('usuarios.urls')),
     path('', include('OhMyDogApp.urls')),
     path('perros/', include(('perros.urls', 'perros'), namespace='perros')),
-    path('', include('turnos.urls')),
+    path('turnos/', include('turnos.urls')),
 
 
 
