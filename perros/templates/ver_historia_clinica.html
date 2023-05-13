@@ -3,50 +3,163 @@
 
 
 {% block content %}
+	<style>
+		/* Estilos para los rectángulos */
+		.rectangle {
+			width: 100%;
+			height: 40px;
+			background-color: #ECECEC;
+			margin-bottom: 20px;
+			border-radius: 5px;
+			padding: 10px;
+		}
+        .observacion {
+			width: 100%;
+			height: 100px;
+			background-color: #ECECEC;
+			margin-bottom: 20px;
+			border-radius: 5px;
+			padding: 10px;
+		}
+		/* Estilos para las secciones */
+		.section {
+			margin-bottom: 20px;
+			padding-bottom: 20px;
+			border-bottom: 1px solid #ECECEC;
+		}
+        /* Estilos para los dos rectángulos que deben ir juntos */
+        .inline-block {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .inline-block .rectangle {
+            width: calc(33.33% - 10px); /* set the width of each rectangle in the group */
+            margin-right: 20px;
+        }
 
-<section id="showcase-inner" class="py-4 text-black">
+            .inline-block .rectangle:last-child {
+            margin-right: 0;
+        }
+        .inline-block-two {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .inline-block-two .rectangle {
+            width: 49%;
+            margin: 0;
+        }   
+	</style>
+
+    <section id="showcase-inner" class="py-4 text-black">
     <div class="container">
       <div class="row text-center">
         <div class="col-md-12">
-          <h2 class="display-4">Historia clínica</h2>
+          <h3 class="display-4">Historia Clínica</h3>
         </div>
       </div>
     </div>
-</section>
-
-<section id="historia-clinica" class="py-4 text-black">
-    <div class='col-12'>
-        <div class="card listing-preview">
-            <div class="card-body">
-                <div class="listing-heading text-center">
-                    <h5 class="card-title">{{ perro.nombre }}</h5>
+  </section>
+{% if vacunas or clinicas %}
+<div class="container">
+    <div class="card listing-preview">	
+        <div class="container">
+            <section class="section">
+                <h2>Datos de la Mascota</h2>
+                <div class="rectangle">
+                    <p>Nombre:  {{perro.nombre}}</p>
                 </div>
-                <hr>
-                <p class="card-text"><i class="fas fa-user" style="color: #e4a64e;"></i> Dueño: {{ mascota.cliente}}</p>
-                <hr>
-                <p class="card-text"><i class="fa-solid fa-calendar-days" style="color: #e4a64e;"></i> Edad: {{ mascota.fecha_nac }}</p>
-                <hr>
-                <p class="card-text"><i class="fa-solid fa-dog" style="color: #e4a64e;"></i> Raza: {{ mascota.raza }}</p>
-                <hr>
-                <p class="card-text"><i class="fa-solid fa-ruler-vertical"style="color: #e4a64e;"></i> Tamaño: {{ mascota.tamanio }}</p>
-                <hr>
-                <p class="card-text"><i class="fa-solid fa-palette" style="color: #e4a64e;"></i> Color: {{ mascota.color }}</p>
-            </div>
+                <div class="inline-block-two">
+                    <div class="rectangle">
+                        <p>Raza:  {{perro.raza}}</p>
+                    </div>
+                    <div class="rectangle">
+                        <p>Fecha de nacimiento: {{perro.fecha_nac}}</p>
+                    </div>
+                </div>
+                <div class="rectangle">
+                    <p>Nombre del dueño:  {{perro.cliente}}</p>
+                </div>
+                <div class="rectangle">
+                    <p>Teléfono del dueño:  {{perro.cliente.telefono}}</p>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>Vacunas</h2>
+                {% if vacunas %}
+                    {% for vacuna in vacunas %}
+                    <div class="inline-block">
+                        <div class="rectangle">
+                            <p>Fecha: {{vacuna.fecha}} </p>
+                        </div>
+                        <div class="rectangle">
+                            <p>Tipo: {{vacuna.tipo}} </p>
+                        </div>
+                        <div class="rectangle">
+                            <p>Peso: {{vacuna.peso}} </p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="inline-block">
+                        <div class="rectangle">
+                            <p>Fecha: </p>
+                        </div>
+                        <div class="rectangle">
+                            <p>Tipo: </p>
+                        </div>
+                        <div class="rectangle">
+                            <p>Peso: </p>
+                        </div>
+                    </div>
+                {% endif%}
+            </section>
+
+            <section class="section">
+                <h2>Atenciones</h2>
+                {% if clinicas %}
+                    {% for atencion in clinicas %}
+                        <div class="inline-block-two">
+                            <div class="rectangle">
+                                <p>Fecha: {{atencion.fecha}} </p>
+                            </div>
+                            <div class="rectangle">
+                                <p>Tipo: {{atencion.tipo}} </p>
+                            </div>
+                        </div>    
+                        <div class="observacion">
+                            <p>Observaciones: {{atencion.observacion}} </p>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="inline-block-two">
+                        <div class="rectangle">
+                            <p>Fecha: </p>
+                        </div>
+                        <div class="rectangle">
+                                <p>Tipo: </p>
+                            </div>
+                    </div>    
+                    <div class="observacion">
+                        <p>Observaciones: </p>
+                    </div>
+                    
+                {% endif%}
+            </section>
+
         </div>
     </div>
-    {% if atenciones %}
-    <section id="atenciones" class="py-4 text-black">
-        <div class="rectangle">
-            <p>prueba</p>
-        </div>
-    </section>
-    {% else %}
-        <div id="no-results" class="py-4">
-            <div class="container">
-                <p>No Hay Resultados</p>
-            </div>
-        </div>
-    {% endif %}
-</section>
-
+</div>
+{% else %}
+<div class="rectangle">
+	No Hay Resultados</p>
+</div>
+{% endif %}
 {% endblock %}

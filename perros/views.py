@@ -1,11 +1,12 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Perro, Atencion 
+from .models import Perro, Atencion, Tipo_atencion 
 from usuarios.models import Cliente
 from .forms import registrar_perro, editar_pefil_mascota, registrar_atencion_form
 from django.contrib import messages
 from django.core.paginator import Paginator
 from datetime import datetime, date, timedelta
 from turnos.models import Turno
+from django.db.models import Q
 
 
 def listar_mascotas_cliente(request, cliente_id):
@@ -115,8 +116,16 @@ def registrar_atencion(request, id_mascota):
 def ver_historia_clinica(request, id_mascota):
     perro = get_object_or_404(Perro, id=id_mascota)
     atenciones = Atencion.objects.filter(mascota_id=id_mascota)
+    # Para filtrar las atenciones
+    tipos = Tipo_atencion.objects.all()
+    tipos_dict = {}
+    for tipo in tipos:
+        tipos_dict[tipo.tipo] = tipo.id
+    vacunas = atenciones.filter(Q(tipo_id=tipos_dict['Vacuna antiviral']) | Q(tipo_id=tipos_dict['Vacuna antirrábica']))
+    clinicas = atenciones.exclude(Q(tipo_id=tipos_dict['Vacuna antiviral']) & ~Q(tipo_id=tipos_dict['Vacuna antirrábica']))
     context = {
-        "perro":perro,
-        "atenciones":atenciones
+        "perro": perro,
+        "clinicas": clinicas,
+        'vacunas': vacunas
     }
     return render(request, 'ver_historia_clinica.html', context)
