@@ -97,9 +97,10 @@ def registrar_atencion(request, id_mascota):
             else:
                 if atencion.tipo.tipo == 'Vacuna antirrábica':
                     messages.error(request, 'Esta mascota es menor de 4 meses, no puede recibir la vacuna antirrábica')
-                else:
-                    messages.error(request, 'Esta mascota es menor de 2 meses, no puede recibir la vacuna antiviral')
-                tiene_error = True
+                    tiene_error = True
+                elif(atencion.tipo.tipo == 'Vacuna antiviral'):
+                        messages.error(request, 'Esta mascota es menor de 2 meses, no puede recibir la vacuna antiviral')
+                        tiene_error = True
             
             if not tiene_error:
                 atencion.save()
