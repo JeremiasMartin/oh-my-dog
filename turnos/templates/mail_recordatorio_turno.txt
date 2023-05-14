@@ -1,0 +1,8 @@
+Estimado(a) {{ nombre }},
+
+Le recordamos que tiene un turno programado para el día {{ fecha }}. Este correo electrónico es un recordatorio para asegurarnos de que no se olvide de su cita.
+
+&iexcl;Muchas gracias por elegirnos!
+
+
+Oh My Dog!

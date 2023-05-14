@@ -1,0 +1,10 @@
+Estimado(a) {{ nombre }},
+
+Nos complace informarle que su solicitud de turno ha sido aceptada. Su turno está programado para el {{ fecha }}.
+
+Por favor, llegue a tiempo y no dude en contactarnos ante cualquier inconveniente.
+
+&iexcl;Muchas gracias por elegirnos!
+
+
+Oh My Dog!
