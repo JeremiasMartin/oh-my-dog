@@ -1,0 +1,60 @@
+{% extends "OhMyDogApp/base.html" %}
+
+{% load static %}
+
+{% block content %}
+<section id="showcase-inner" class="py-5 text-black">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-md-12">
+          <h2 class="display-4">Listado de Turnos</h2>
+        </div>
+      </div>
+    </div>
+  </section>
+<!-- Listado -->
+<section id="listado" class="py-4">
+    <div class="container">
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <div id="msg"class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        <div class="card-deck">
+            {% if turnos %}
+                
+                {% for turno in turnos %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <hr>
+                                <p class="card-text text-wrap"><i class="fa fa-calendar" style="color: #e4a64e;"></i> Fecha: {{ turno.fecha }}</p>
+                                <hr>
+                                <p class="card-text"><i class="fa-solid fa-id-card" style="color: #e4a64e;"></i> Cliente: {{ turno.cliente }}</p>
+                                <hr>
+                                <p class="card-text"><i class="fa fa-info-circle" style="color: #e4a64e;"></i> Estado: {{ turno.estado.estado }}</p>
+                                <hr>
+                                <p class="card-text"><i class="fa fa-stethoscope" style="color: #e4a64e;"></i> Tipo de Atenci&oacute;n: {{ turno.tipo_atencion.tipo }}</p>
+                                <hr>
+                                <div style="display: flex; flex-direction: column; align-items: center;"class="d-flex flex-column">
+                                    <a href= "{% url 'aceptar_solicitud' turno.id  %}" class="btn btn-primary btn-block">Registrar Atención</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                
+            {% else %}
+                <div class="col-md-12">
+                    <p>No Hay Resultados</p>
+                </div>
+            {% endif %}
+        </div> 
+    </div>
+  </section>
+  
+{% endblock %}

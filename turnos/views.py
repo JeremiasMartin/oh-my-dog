@@ -39,11 +39,11 @@ def solicitar_turno(request):
 @login_required
 def listar_turnos_pendientes(request):
     turnos = Turno.objects.filter(estado_id=3)
-    return render(request, 'listar_turnos.html', {'turnos': turnos})
+    return render(request, 'listar_pendientes.html', {'turnos': turnos})
 
 def listar_turnos_confirmados(request):
     turnos = Turno.objects.filter(estado_id=1)
-    return render(request, 'listar_turnos.html', {'turnos': turnos})
+    return render(request, 'listar_confirmados.html', {'turnos': turnos})
 
 
 
@@ -64,7 +64,7 @@ def enviar_recordatorio(turno):
     image_name = 'logo.png'
 
     context = {
-        'nombre': turno.cliente.nombre,
+        'nombre': turno.cliente.user.nombre,
         'fecha': turno.fecha,
     }
 
@@ -102,7 +102,7 @@ def aceptar_solicitud(request, id_turno):
     image_name = 'logo.png'
 
     context = {
-                'nombre' : turno.cliente.nombre,
+                'nombre' : turno.cliente.user.nombre,
                 'fecha'  : turno.fecha
             }
     text_content = get_template('mail_confirmacion_turno.txt')
