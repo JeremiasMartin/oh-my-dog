@@ -52,7 +52,7 @@
           </li> 
           {% else %}
           <li class="nav-item {% if request.path == '/perros/listar_mascotas/' %}active{%endif %}">
-              <a class="nav-link" href="{% url 'perros:Listar_mascotas_cliente' user.id %}">Mis Mascotas</a>
+              <a class="nav-link" href="{% url 'perros:Listar_mascotas_cliente' user.id %}">Ver Mascotas</a>
             </li>  
           <li class="nav-item {% if request.path == '/turnos/solicitar_turno/' %}active{%endif %}">
               <a class="nav-link" href="{% url 'solicitar_turno' %}">Solicitar turno</a>
@@ -95,13 +95,6 @@
     <!-- Bootstrap -->
     <script src="{% static 'OhMyDogApp/vendor/jquery/jquery.min.js' %}"></script>
     <script src="{% static 'OhMyDogApp/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-    <script>
-      setTimeout(function(){
-        if ($('#msg').length > 0) {
-            $('#msg').remove();
-        }
-    }, 2000)    // 2000 millisecond
-    </script>
 </body>
 
 
