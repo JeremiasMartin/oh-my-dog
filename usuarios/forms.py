@@ -29,7 +29,7 @@ class UsuarioRegistroForm(forms.ModelForm):
 
 class ClienteRegistroForm(forms.ModelForm):
     class Meta:
-        model = Cliente
+        model = Usuario
         fields = ['dni', 'nombre', 'apellido', 'telefono']
 
     def __init__(self, *args, **kwargs):
@@ -57,13 +57,13 @@ class ClienteRegistroForm(forms.ModelForm):
 
 class EditarPerfilForm(forms.ModelForm):
     class Meta:
-        model = Cliente
+        model = Usuario
         fields = ['nombre', 'apellido', 'telefono']
     def save(self, commit=True):
-        cliente = super().save(commit=False)
-        cliente.nombre = self.cleaned_data['nombre']
-        cliente.apellido = self.cleaned_data['apellido']
-        cliente.telefono = self.cleaned_data['telefono']
+        user = super().save(commit=False)
+        user.nombre = self.cleaned_data['nombre']
+        user.apellido = self.cleaned_data['apellido']
+        user.telefono = self.cleaned_data['telefono']
         if commit:
-            cliente.save()
-        return cliente
+            user.save()
+        return user

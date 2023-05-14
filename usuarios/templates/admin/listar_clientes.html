@@ -37,9 +37,9 @@
                                 <hr>
                                 <p class="card-text text-wrap"><i class="fa-solid fa-envelope" style="color: #e4a64e;"></i> Email: {{ cliente.user.email }}</p>
                                 <hr>
-                                <p class="card-text"><i class="fa-solid fa-id-card" style="color: #e4a64e;"></i> Dni: {{ cliente.dni }}</p>
+                                <p class="card-text"><i class="fa-solid fa-id-card" style="color: #e4a64e;"></i> Dni: {{ cliente.user.dni }}</p>
                                 <hr>
-                                <p class="card-text"><i class="fa-solid fa-phone-volume" style="color: #e4a64e;"></i> Teléfono: {{ cliente.telefono }}</p>
+                                <p class="card-text"><i class="fa-solid fa-phone-volume" style="color: #e4a64e;"></i> Teléfono: {{ cliente.user.telefono }}</p>
                                 <hr>
                                 <div style="display: flex; flex-direction: column; align-items: center;"class="d-flex flex-column">
                                     <a href= "{% url 'perros:Registro_mascota' cliente.cliente_id %}" class="btn btn-primary btn-block">Agregar Mascota</a>

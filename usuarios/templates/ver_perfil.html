@@ -23,20 +23,18 @@
                         <div class="listing-heading text-center">
                             <h5 class="card-title">Perfil</h5>
                         </div>
-                        {% if user.is_staff %}
                         <p class="card-text text-wrap"><i class="fa-solid fa-envelope" style="color: #e4a64e;"></i> Email: {{ usuario.email }}</p>
-                        {% else %}
-                        <p class="card-text"><i class="fa-solid fa-user" style="color: #e4a64e;"></i> Nombre: {{ usuario.cliente.nombre }}</p>
                         <hr>
-                        <p class="card-text"><i class="fa-solid fa-user" style="color: #e4a64e;"></i> Apellido: {{ usuario.cliente.apellido }}</p>
+                        <p class="card-text"><i class="fa-solid fa-user" style="color: #e4a64e;"></i> Nombre: {{ usuario.nombre }}</p>
                         <hr>
-                        <p class="card-text"><i class="fa-solid fa-id-card" style="color: #e4a64e;"></i> Dni: {{ usuario.cliente.dni }}</p>
+                        <p class="card-text"><i class="fa-solid fa-user" style="color: #e4a64e;"></i> Apellido: {{ usuario.apellido }}</p>
                         <hr>
-                        <p class="card-text"><i class="fa-solid fa-phone-volume" style="color: #e4a64e;"></i> Teléfono: {{ usuario.cliente.telefono }}</p>
+                        <p class="card-text"><i class="fa-solid fa-id-card" style="color: #e4a64e;"></i> Dni: {{ usuario.dni }}</p>
+                        <hr>
+                        <p class="card-text"><i class="fa-solid fa-phone-volume" style="color: #e4a64e;"></i> Teléfono: {{ usuario.telefono }}</p>
                         <hr>
                         <a href="{% url 'Editar_perfil' %}" class="btn btn-primary">Editar perfil</a>
                         <a href="/usuarios/cambiar_contrasenia" class="btn btn-primary">Cambiar Clave</a>
-                        {% endif %}
                     </div>
                 </div>
             </div>

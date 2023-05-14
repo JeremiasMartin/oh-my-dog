@@ -69,14 +69,14 @@ def registrar_cliente(request):
             passwd = ''.join(random.choices('abcdefghijklmnopqrstuvwxyz0123456789', k=8))
             usuario = Usuario.objects.create_user(
                 email=form.cleaned_data.get('email'),
-                password = passwd
-            )
-            cliente = Cliente.objects.create(
-                user=usuario,
+                password = passwd,
                 dni=form.cleaned_data.get('dni'),
                 nombre=form.cleaned_data.get('nombre'),
                 apellido=form.cleaned_data.get('apellido'),
                 telefono=form.cleaned_data.get('telefono')
+            )
+            cliente = Cliente.objects.create(
+                user=usuario,
             )
             subject = 'Registro de Usuario Exitoso'
             from_email = 'Ejtech <%s>' % (settings.EMAIL_HOST_USER)
@@ -126,7 +126,7 @@ def ver_perfil(request):
 
 @login_required
 def editar_perfil(request):
-    perfil = request.user.cliente
+    perfil = request.user
     if request.method == 'POST':
         form = EditarPerfilForm(request.POST, request.FILES, instance=perfil)
         if form.is_valid():
@@ -138,7 +138,7 @@ def editar_perfil(request):
     else:
         form = EditarPerfilForm(instance=perfil)
     context = {'form': form, 'errors': form.errors}
-    return render(request, 'cliente/editar_perfil.html', context)
+    return render(request, 'editar_perfil.html', context)
 
 
 
