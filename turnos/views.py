@@ -41,6 +41,10 @@ def listar_turnos_pendientes(request):
     turnos = Turno.objects.filter(estado_id=3)
     return render(request, 'listar_turnos.html', {'turnos': turnos})
 
+def listar_turnos_confirmados(request):
+    turnos = Turno.objects.filter(estado_id=1)
+    return render(request, 'listar_turnos.html', {'turnos': turnos})
+
 
 
 def enviar_recordatorio(turno):

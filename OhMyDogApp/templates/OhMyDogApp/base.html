@@ -45,8 +45,11 @@
               <a class="nav-link" href="{% url 'Clientes' %}">Clientes</a>
           </li>
           <li class="nav-item {% if request.path == '/turnos/listar_turnos_pendientes/' %}active{%endif %}">
-          <a class="nav-link" href="{% url 'listar_turnos_pendientes' %}">Turnos</a>   
+            <a class="nav-link" href="{% url 'listar_turnos_pendientes' %}">Turnos Pendientes</a>   
           </li>  
+          <li class="nav-item {% if request.path == '/turnos/listar_turnos_confirmados/' %}active{%endif %}">
+            <a class="nav-link" href="{% url 'listar_turnos_confirmados' %}">Turnos Confirmados</a>   
+          </li> 
           {% else %}
           <li class="nav-item {% if request.path == '/perros/listar_mascotas/' %}active{%endif %}">
               <a class="nav-link" href="{% url 'perros:Listar_mascotas_cliente' user.id %}">Mis Mascotas</a>
