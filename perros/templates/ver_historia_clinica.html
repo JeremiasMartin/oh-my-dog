@@ -66,7 +66,7 @@
       </div>
     </div>
   </section>
-{% if vacunas or clinicas %}
+
 <div class="container">
     <div class="card listing-preview">	
         <div class="container">
@@ -90,7 +90,6 @@
                     <p>Teléfono del dueño:  {{perro.cliente.user.telefono}}</p>
                 </div>
             </section>
-
             <section class="section">
                 <h2>Vacunas</h2>
                 {% if vacunas %}
@@ -150,16 +149,9 @@
                     <div class="observacion">
                         <p>Observaciones: </p>
                     </div>
-                    
                 {% endif%}
             </section>
-
         </div>
     </div>
 </div>
-{% else %}
-<div class="rectangle">
-	No Hay Resultados</p>
-</div>
-{% endif %}
 {% endblock %}
