@@ -34,7 +34,15 @@
                             </p>
                         </p>
                         <hr>
-                        <p class="card-text"><i class="fa-solid fa-phone-volume" style="color: #e4a64e;"></i> Teléfono*: {{ form.telefono }}</p>
+                        <p class="card-text">
+                            <i class="fa-solid fa-phone-volume" style="color: #e4a64e;"></i>
+                            Teléfono*: {{ form.telefono }}
+                            <p>
+                                {% for error in form.telefono.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                            </p>
+                        </p>
                         <hr>
                         <button type="submit" class="btn btn-primary">Guardar cambios</button>
                     </form>
