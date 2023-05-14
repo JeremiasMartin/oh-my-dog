@@ -131,9 +131,9 @@ def aceptar_solicitud(request, id_turno):
     return redirect('/turnos/listar_turnos_pendientes/')
 
 @login_required
-def rechazar_solicitud(request, turno_id):
-    turno = get_object_or_404(Turno, id=turno_id)
+def rechazar_solicitud(request, id_turno):
+    turno = get_object_or_404(Turno, id=id_turno)
     turno.estado_id = 2
     turno.save()
     messages.success(request, 'Turno rechazado correctamente.')
-    return redirect('/turnos/listar_turnos')
+    return redirect('/turnos/listar_turnos_pendientes/')
