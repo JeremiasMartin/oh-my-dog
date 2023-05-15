@@ -10,7 +10,7 @@ from django.db.models import Q
 
 
 def listar_mascotas_cliente(request, cliente_id):
-    mascotas = Perro.objects.filter(cliente_id=cliente_id)
+    mascotas = Perro.objects.filter(cliente_id__user_id=cliente_id)
     paginator = Paginator(mascotas,3)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -45,7 +45,7 @@ def editar_perfil_mascota(request, id):
         if form.is_valid():
             form.save()
             messages.success(request, '¡Información actualizada correctamente!')
-            return redirect(f"/perros/listar-mascotas-cliente/{perro.cliente.cliente_id}/")
+            return redirect(f"/perros/listar-mascotas-cliente/{perro.cliente.user}/")
     else:
         form = editar_pefil_mascota(instance=perro)
     
