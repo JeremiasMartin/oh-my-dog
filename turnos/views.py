@@ -147,10 +147,9 @@ def aceptar_solicitud(request, id_turno):
         email.attach(image)
 
     email.send(fail_silently=False)
-    # Programar correo de recordatorio 3 días antes del turno
-    fecha_recordatorio = turno.fecha.replace(tzinfo=None) - datetime.timedelta(hours=1)
+    fecha_recordatorio = turno.fecha.replace(tzinfo=None) - datetime.timedelta(days=3)   # el recordatorio se debe mandar 3 días antes del turno
     now = timezone.localtime().replace(tzinfo=None)  # Convertir a un objeto datetime sin información de desplazamiento
-    if ((now < fecha_recordatorio)):
+    if ((now < fecha_recordatorio) and ((turno.fecha - now) >= datetime.timedelta(days=3))): # si todavía falta para el urno y esa diferencia es mayor o igual a 3 días, se debe mandar recordatorio, sino, la fecha es muy cercana y no tiene sentido mandarlo.
         print("ENTRÓ")
         schedule.every().day.at(fecha_recordatorio.strftime('%H:%M')).do(enviar_recordatorio, turno)
 
