@@ -32,17 +32,27 @@
                         <div class="card h-100">
                             <div class="card-body">
                                 <hr>
-                                <p class="card-text text-wrap"><i class="fa fa-calendar" style="color: #e4a64e;"></i> Fecha: {{ turno.fecha }}</p>
+                                <p class="card-text text-wrap"><i class="fa fa-calendar" style="color: #e4a64e;"></i> Fecha: {{ turno.fecha|date }}</p>
                                 <hr>
                                 <p class="card-text"><i class="fa-solid fa-id-card" style="color: #e4a64e;"></i> Cliente: {{ turno.cliente }}</p>
                                 <hr>
                                 <p class="card-text"><i class="fa fa-info-circle" style="color: #e4a64e;"></i> Estado: {{ turno.estado.estado }}</p>
                                 <hr>
                                 <p class="card-text"><i class="fa fa-stethoscope" style="color: #e4a64e;"></i> Tipo de Atenci&oacute;n: {{ turno.tipo_atencion.tipo }}</p>
-                                <hr>
-                                <div style="display: flex; flex-direction: column; align-items: center;"class="d-flex flex-column">
-                                    <a href= "{% url 'aceptar_solicitud' turno.id  %}" class="btn btn-primary btn-block">Aceptar</a>
-                                    <a href= "{% url 'rechazar_solicitud' turno.id %}" class="btn btn-primary btn-block">Rechazar</a>
+                                <div style="display: flex; flex-direction: column; align-items: center;" class="d-flex flex-column">
+                                    <form method="POST" action="{% url 'aceptar_solicitud' turno.id %}">
+                                        {% csrf_token %}
+                                        <label for="hora_turno">Seleccione la hora del turno:</label><br>
+                                        <input type="time" id="hora_turno" name="hora_turno" required><br><br>
+                                        <input type="submit" class="btn btn-primary btn-block" value="Aceptar">
+                                    </form>
+                                    <form method="POST" action="{% url 'rechazar_solicitud' id_turno=turno.id %}">
+                                        {% csrf_token %}
+                                        <br>
+                                        <input type="submit" class="btn btn-primary btn-block" value="Rechazar turno">
+                                        <label for="motivo">Motivo de rechazo:</label><br>
+                                        <textarea id="motivo" name="motivo" rows="4" cols="30"></textarea>
+                                    </form>
                                 </div>
                             </div>
                         </div>
