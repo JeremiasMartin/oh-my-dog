@@ -1,0 +1,16 @@
+Estimado(a) {{ nombre }},
+
+Te informamos que tu turno para la atenci&oacute;n "{{ atencion }}" programada para el {{ fecha }} ha sido cancelado.
+{% if motivo %}
+El motivo de la cancelaci&oacute;n es: 
+{{ motivo }}
+{% endif %}
+{% if esVacuna %}
+Recuerde que es importante completar el calendario de vacunación, por tal motivo le sugerimos aplicar la siguiente dosis de {{ atencion }} en una fecha cercana al {{ fecha }}.
+{% else %}
+No dudes en contactarnos ante cualquier inconveniente.
+{% endif %}
+
+&iexcl;Muchas gracias por elegirnos!
+
+Oh My Dog!
