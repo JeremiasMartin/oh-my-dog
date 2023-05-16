@@ -19,7 +19,7 @@ class EstadoTurno(models.Model):
 class Turno(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
     tipo_atencion=models.ForeignKey(Tipo_atencion,on_delete=models.CASCADE)
-    fecha = models.DateField()
+    fecha = models.DateTimeField()
     estado = models.ForeignKey(EstadoTurno, on_delete=models.CASCADE)
 
 

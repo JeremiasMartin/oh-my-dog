@@ -12,6 +12,9 @@ import os
 import datetime
 from django.utils import timezone
 import schedule
+import threading
+import time
+from pytz import timezone as tz
 
 # Create your views here.
 
@@ -52,13 +55,16 @@ def listar_confirmados_del_dia(request):
 
 
 
-def enviar_recordatorio(turno):
-    # Calcular la fecha del recordatorio (3 días antes de la fecha del turno)
-    fecha_recordatorio = turno.fecha - datetime.timedelta(days=1)
+def run_scheduler():
+    # Función que ejecuta el planificador en un bucle continuo
+    while True:
+        ("entra al run scheduler")
+        schedule.run_pending()
+        time.sleep(1)  # Pausa para evitar consumo excesivo de recursos
 
-    # Comprobar si el la fecha_recordatorio ya pasó o la fecha del turno es antes de que transcurran 3 días (por lo tanto no envíar mail de recordatorio)
-    if (timezone.now() >= fecha_recordatorio) or (timezone.now() >= turno.fecha - datetime.timedelta(days=1)):
-        return
+
+def enviar_recordatorio(turno):
+    print("enviar recordatorio..")
 
     subject = 'Recordatorio de Turno'
     from_email = 'Ejtech <%s>' % (settings.EMAIL_HOST_USER)
@@ -70,7 +76,7 @@ def enviar_recordatorio(turno):
 
     context = {
         'nombre': turno.cliente.user.nombre,
-        'fecha': turno.fecha,
+        'fecha': turno.fecha.astimezone(tz('America/Argentina/Buenos_Aires')),
     }
 
     text_content = get_template('mail_recordatorio_turno.txt').render(context)
@@ -94,6 +100,19 @@ def enviar_recordatorio(turno):
 @login_required
 def aceptar_solicitud(request, id_turno):
     turno = get_object_or_404(Turno, id=id_turno)
+
+    # Obtener la hora seleccionada del formulario
+    hora_turno = request.POST.get('hora_turno')
+
+    # Obtener la fecha actual en la zona horaria 'America/Argentina/Buenos_Aires'
+    tz_buenos_aires = tz('America/Argentina/Buenos_Aires')
+    fecha_actual = timezone.now().astimezone(tz_buenos_aires).date()
+
+    # Crear un objeto datetime con la fecha y hora seleccionadas
+    fecha_hora_elegida = datetime.datetime.combine(fecha_actual, datetime.datetime.strptime(hora_turno, '%H:%M').time())
+
+    # Asignar la fecha y hora elegidas al turno
+    turno.fecha = tz_buenos_aires.localize(fecha_hora_elegida)   
     turno.estado_id = 1
     turno.save()
 
@@ -108,8 +127,8 @@ def aceptar_solicitud(request, id_turno):
 
     context = {
                 'nombre' : turno.cliente.user.nombre,
-                'fecha'  : turno.fecha
-            }
+                'fecha'  : turno.fecha.astimezone(tz('America/Argentina/Buenos_Aires')),
+                }
     text_content = get_template('mail_confirmacion_turno.txt')
     html_content = get_template('mail_confirmacion_turno.html')
     text_content = text_content.render(context)
@@ -129,19 +148,62 @@ def aceptar_solicitud(request, id_turno):
 
     email.send(fail_silently=False)
     # Programar correo de recordatorio 3 días antes del turno
-    fecha_recordatorio = turno.fecha - datetime.timedelta(days=1)
-    fecha_recordatorio_aware = timezone.make_aware(datetime.datetime.combine(fecha_recordatorio, datetime.time(hour=9)))
-    if (timezone.now().date() < fecha_recordatorio) and ((turno.fecha - timezone.now().date()) >= datetime.timedelta(days=1)):
-        schedule.every().day.at(fecha_recordatorio_aware.strftime('%H:%M')).do(enviar_recordatorio, turno)
+    fecha_recordatorio = turno.fecha.replace(tzinfo=None) - datetime.timedelta(hours=1)
+    now = timezone.localtime().replace(tzinfo=None)  # Convertir a un objeto datetime sin información de desplazamiento
+    if ((now < fecha_recordatorio)):
+        print("ENTRÓ")
+        schedule.every().day.at(fecha_recordatorio.strftime('%H:%M')).do(enviar_recordatorio, turno)
+
      # Ejecutar las tareas pendientes en el objeto `schedule.jobs`
-    for job in schedule.jobs:
-        job.run()
+    if not schedule.jobs:
+        threading.Thread(target=run_scheduler, daemon=True).start()
+
     messages.success(request, 'Turno aceptado correctamente.')
     return redirect('/turnos/listar_turnos_pendientes/')
 
 @login_required
 def rechazar_solicitud(request, id_turno):
     turno = get_object_or_404(Turno, id=id_turno)
+    if request.method == 'POST':
+        motivo = request.POST.get('motivo')
+        if not motivo:
+            motivo = False
+
+    subject = 'Solicitud de Turno Rechazada'
+    from_email = 'Ejtech <%s>' % (settings.EMAIL_HOST_USER)
+    to_email = '%s' % (turno.cliente.user.email)
+    reply_to_email = 'noreply@ejtechsoft.com'
+
+    image_dir = os.path.join(settings.BASE_DIR, 'OhMyDogApp', 'static', 'OhMyDogApp', 'img')
+    image_name = 'logo.png'
+
+    context = {
+                'nombre' : turno.cliente.user.nombre,
+                'atencion'  : turno.tipo_atencion.tipo,
+                'fecha'  : turno.fecha.astimezone(tz('America/Argentina/Buenos_Aires')),
+                'esVacuna' : 'Vacuna' in turno.tipo_atencion.tipo,
+                'motivo' : motivo,
+            }
+    text_content = get_template('mail_turno_rechazado.txt')
+    html_content = get_template('mail_turno_rechazado.html')
+    text_content = text_content.render(context)
+    html_content = html_content.render(context)
+
+    email = EmailMultiAlternatives(subject, text_content, from_email, to=[to_email,], reply_to=[reply_to_email,])
+    email.mixed_subtype = 'related'
+    email.content_subtype = 'html'
+    email.attach_alternative(html_content, 'text/html')
+
+    file_path = os.path.join(image_dir, image_name)
+    with open(file_path, 'rb') as f:
+        image = MIMEImage(f.read())
+        image.add_header('Content-ID', '<%s>' % (image_name))
+        image.add_header('Content-Disposition', 'inline', filename=image_name)
+        email.attach(image)
+
+    email.send(fail_silently=False)
+    
+    
     turno.estado_id = 2
     turno.save()
     messages.success(request, 'Turno rechazado correctamente.')
