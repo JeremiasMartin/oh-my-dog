@@ -42,8 +42,13 @@ def listar_turnos_pendientes(request):
     return render(request, 'listar_pendientes.html', {'turnos': turnos})
 
 def listar_turnos_confirmados(request):
-    turnos = Turno.objects.filter(estado_id=1)
-    return render(request, 'listar_confirmados.html', {'turnos': turnos})
+    #turnos = Turno.objects.filter(estado_id=1)
+    return render(request, 'listar_confirmados.html')#, {'turnos': turnos})
+
+def listar_confirmados_del_dia(request):
+    fecha_actual = date.today()
+    turnos = Turno.objects.filter(estado_id=1, fecha=fecha_actual)
+    return render(request, 'listar_confirmados_dia.html', {'turnos': turnos})
 
 
 
