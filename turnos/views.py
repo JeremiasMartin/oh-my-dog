@@ -101,18 +101,16 @@ def enviar_recordatorio(turno):
 def aceptar_solicitud(request, id_turno):
     turno = get_object_or_404(Turno, id=id_turno)
 
-    # Obtener la hora seleccionada del formulario
     hora_turno = request.POST.get('hora_turno')
 
-    # Obtener la fecha actual en la zona horaria 'America/Argentina/Buenos_Aires'
-    tz_buenos_aires = tz('America/Argentina/Buenos_Aires')
-    fecha_actual = timezone.now().astimezone(tz_buenos_aires).date()
-
     # Crear un objeto datetime con la fecha y hora seleccionadas
-    fecha_hora_elegida = datetime.datetime.combine(fecha_actual, datetime.datetime.strptime(hora_turno, '%H:%M').time())
+    fecha_hora_elegida = datetime.datetime.combine(turno.fecha.date(), datetime.datetime.strptime(hora_turno, '%H:%M').time())
 
+    # Convertir la fecha y hora elegidas a la zona horaria configurada en Django
+    fecha_hora_elegida = timezone.make_aware(fecha_hora_elegida, timezone.get_current_timezone())
+    print("fecha hora elegida",fecha_hora_elegida)
     # Asignar la fecha y hora elegidas al turno
-    turno.fecha = tz_buenos_aires.localize(fecha_hora_elegida)   
+    turno.fecha = fecha_hora_elegida
     turno.estado_id = 1
     turno.save()
 
@@ -147,9 +145,23 @@ def aceptar_solicitud(request, id_turno):
         email.attach(image)
 
     email.send(fail_silently=False)
-    fecha_recordatorio = turno.fecha.replace(tzinfo=None) - datetime.timedelta(days=3)   # el recordatorio se debe mandar 3 días antes del turno
-    now = timezone.localtime().replace(tzinfo=None)  # Convertir a un objeto datetime sin información de desplazamiento
-    if ((now < fecha_recordatorio) and ((turno.fecha - now) >= datetime.timedelta(days=3))): # si todavía falta para el urno y esa diferencia es mayor o igual a 3 días, se debe mandar recordatorio, sino, la fecha es muy cercana y no tiene sentido mandarlo.
+
+    # Obtener la fecha y hora del turno sin información de desplazamiento
+    fecha_turno = turno.fecha.replace(tzinfo=None)
+
+    # Obtener la fecha y hora actual en la zona horaria configurada en Django
+    fecha_actual = timezone.localtime().replace(tzinfo=None)
+
+    # Calculo de la fecha y hora del recordatorio (3 días antes del turno)
+    fecha_recordatorio = fecha_turno - datetime.timedelta(days=3)
+
+    # Calcular la diferencia de tiempo
+    diferencia_tiempo = fecha_turno - fecha_actual
+    print("fecha actual", fecha_actual)
+    print("fecha recordatorio", fecha_recordatorio)
+    print("diferencia de tiempo", diferencia_tiempo)
+    # Verificar si todavía falta para el turno y la diferencia es mayor o igual a 3 días
+    if (fecha_actual < fecha_turno) and (diferencia_tiempo >= datetime.timedelta(days=3)):
         print("ENTRÓ")
         schedule.every().day.at(fecha_recordatorio.strftime('%H:%M')).do(enviar_recordatorio, turno)
 
