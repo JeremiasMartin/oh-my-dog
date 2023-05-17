@@ -49,8 +49,8 @@ def listar_turnos_confirmados(request):
     return render(request, 'listar_confirmados.html')#, {'turnos': turnos})
 
 def listar_confirmados_del_dia(request):
-    fecha_actual = date.today()
-    turnos = Turno.objects.filter(estado_id=1, fecha=fecha_actual)
+    fecha_actual = timezone.localtime().date()
+    turnos = Turno.objects.filter(estado_id=1, fecha__date=fecha_actual)
     return render(request, 'listar_confirmados_dia.html', {'turnos': turnos})
 
 
