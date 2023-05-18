@@ -10,7 +10,7 @@
         {{ form|crispy }}
 
         <button type="submit" class="btn btn-success">Confirmar</button>
-        <a href="{% url 'perros:Listar_mascotas_cliente' cliente_id=perro.cliente.cliente_id %}" class="btn btn-primary">Cancelar</a>
+        <a href="{% url 'perros:Listar_mascotas_cliente' cliente_id=perro.cliente.user_id %}" class="btn btn-primary">Cancelar</a>
     </div>
 </form>
 

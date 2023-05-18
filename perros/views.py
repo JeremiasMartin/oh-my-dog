@@ -45,7 +45,7 @@ def editar_perfil_mascota(request, id):
         if form.is_valid():
             form.save()
             messages.success(request, '¡Información actualizada correctamente!')
-            return redirect(f"/perros/listar-mascotas-cliente/{perro.cliente.user}/")
+            return redirect(f"/perros/listar-mascotas-cliente/{perro.cliente.user_id}/")
     else:
         form = editar_pefil_mascota(instance=perro)
     
