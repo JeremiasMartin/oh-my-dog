@@ -15,6 +15,7 @@ import schedule
 import threading
 import time
 from pytz import timezone as tz
+from django.core.paginator import Paginator
 
 # Create your views here.
 
@@ -42,16 +43,25 @@ def solicitar_turno(request):
 @login_required
 def listar_turnos_pendientes(request):
     turnos = Turno.objects.filter(estado_id=3)
-    return render(request, 'listar_pendientes.html', {'turnos': turnos})
+    paginator = Paginator(turnos,6)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'listar_pendientes.html', {'turnos': page_obj})
 
 def listar_turnos_confirmados(request):
     #turnos = Turno.objects.filter(estado_id=1)
+    #paginator = Paginator(turnos,6)
+    #page_number = request.GET.get('page')
+    #page_obj = paginator.get_page(page_number)
     return render(request, 'listar_confirmados.html')#, {'turnos': turnos})
 
 def listar_confirmados_del_dia(request):
     fecha_actual = timezone.localtime().date()
     turnos = Turno.objects.filter(estado_id=1, fecha__date=fecha_actual)
-    return render(request, 'listar_confirmados_dia.html', {'turnos': turnos})
+    paginator = Paginator(turnos,6)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'listar_confirmados_dia.html', {'turnos': page_obj})
 
 
 

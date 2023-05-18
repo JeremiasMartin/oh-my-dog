@@ -61,11 +61,53 @@
                 
             {% else %}
                 <div class="col-md-12">
-                    <p>No Hay Resultados</p>
+                    <p>No hay turnos pendientes</p>
                 </div>
             {% endif %}
         </div> 
     </div>
-  </section>
+    <!-- Paginacion -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+            {% if turnos.has_other_pages %}
+                <ul class="pagination">
+                    {% if turnos.has_previous %}
+                        <li class='page-item'>
+                            <a href="?page={{turnos.previous_page_number}}" class="page-link">&laquo;
+                            </a> 
+                        </li>
+                    {% else %}
+                        <li class= "page-item disabled">
+                            <a class="page-link">&laquo;
+                            </a> 
+                        </li>
+                    {% endif %}
+                    {% for i in turnos.paginator.page_range %}
+                        {% if turnos.number == i %}
+                            <li class='page-item active'>
+                                <a class="page-link">{{i}}</a> 
+                            </li>
+                        {% else %}
+                            <li class='page-item'>
+                                <a href="?page={{i}}" class="page-link">{{i}}</a>
+                            </li>
+                        {% endif%}
+                    {% endfor %}
+                    {% if turnos.has_next %}
+                        <li class="page-item">
+                            <a href="?page={{turnos.next_page_number}}" class="page-link">&raquo;</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link">&raquo;</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
   
 {% endblock %}

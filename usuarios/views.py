@@ -28,7 +28,7 @@ from django.urls import reverse_lazy
 
 def listar_clientes(request):
     clientes = Cliente.objects.all()
-    paginator = Paginator(clientes,3)
+    paginator = Paginator(clientes,6)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return render(request, 'admin/listar_clientes.html', {"clientes":page_obj})
