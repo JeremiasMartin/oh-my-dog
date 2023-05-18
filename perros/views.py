@@ -11,7 +11,7 @@ from django.db.models import Q
 
 def listar_mascotas_cliente(request, cliente_id):
     mascotas = Perro.objects.filter(cliente_id__user_id=cliente_id)
-    paginator = Paginator(mascotas,3)
+    paginator = Paginator(mascotas,6)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return render(request, 'listar_mascotas.html', {"mascotas":page_obj})
@@ -72,6 +72,7 @@ def registrar_atencion(request, id_mascota):
                 tiene_error = True
             
             if atencion.tipo.tipo == 'Vacuna antirrábica' and Atencion.objects.filter(mascota=perro, tipo__tipo='Vacuna antirrábica').exists():
+                # tiene mas de 4 meses porque recibió vacuna
                 ultima_vacuna = Atencion.objects.filter(mascota=perro, tipo__tipo='Vacuna antirrábica').latest('fecha')
                 ultima_vacuna_datetime = datetime.combine(ultima_vacuna.fecha, datetime.min.time())
                 if (datetime.now() - ultima_vacuna_datetime) < timedelta(days=365):
@@ -81,12 +82,18 @@ def registrar_atencion(request, id_mascota):
             if atencion.tipo.tipo == 'Vacuna antiviral' and Atencion.objects.filter(mascota=perro, tipo__tipo='Vacuna antiviral').exists():
                 ultima_vacuna = Atencion.objects.filter(mascota=perro, tipo__tipo='Vacuna antiviral').latest('fecha')
                 ultima_vacuna_datetime = datetime.combine(ultima_vacuna.fecha, datetime.min.time())
-                if (date.today() - perro.fecha_nac).days < 120 and (datetime.now() - ultima_vacuna_datetime) < timedelta(days=21):
-                    messages.error(request, 'La mascota ya recibió una vacuna antiviral hace menos de 21 días')
-                    tiene_error = True
+                if (date.today() - perro.fecha_nac).days < 120:
+                    # tiene entre 2 y 4 meses
+                    if(datetime.now() - ultima_vacuna_datetime) < timedelta(days=21):
+                        # recibio la vacuna hace menos de 21
+                        messages.error(request, 'La mascota ya recibió una vacuna antiviral hace menos de 21 días')
+                        tiene_error = True
                 else:
-                    messages.error(request, 'La mascota ya recibió una vacuna antiviral hace menos de un año')
-                    tiene_error = True
+                    # tiene mas de 4 meses
+                    if(datetime.now() - ultima_vacuna_datetime) < timedelta(days=365):
+                        # recibio la vacuna hace menos de 1 año
+                        messages.error(request, 'La mascota ya recibió una vacuna antiviral hace menos de un año')
+                        tiene_error = True
 
             elif atencion.tipo.tipo == 'Vacuna antirrábica' and (date.today() - perro.fecha_nac).days > 120:
                 turno = Turno.objects.create(
@@ -97,14 +104,17 @@ def registrar_atencion(request, id_mascota):
                 )
             
             elif atencion.tipo.tipo == 'Vacuna antiviral' and (date.today() - perro.fecha_nac).days > 60:
-                if (date.today()-perro.fecha_nac).days > 60 and (date.today()-perro.fecha_nac).days < 120:
+                # tiene mas de 2 meses y no recibio vacuna en último periodo
+                # Generación de turno 
+                if (date.today()-perro.fecha_nac).days < 120:
+                    # tiene menos de 4 meses
                     turno = Turno.objects.create(
                         cliente_id=perro.cliente_id,
                         tipo_atencion_id=atencion.tipo.id,
                         fecha=date.today() + timedelta(days=21),
                         estado_id=3,
                     )
-                elif (date.today()-perro.fecha_nac).days > 120:
+                else:
                     turno = Turno.objects.create(
                         cliente_id=perro.cliente_id,
                         tipo_atencion_id=atencion.tipo.id,
