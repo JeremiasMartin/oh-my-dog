@@ -187,45 +187,43 @@ def rechazar_solicitud(request, id_turno):
     turno = get_object_or_404(Turno, id=id_turno)
     if request.method == 'POST':
         motivo = request.POST.get('motivo')
-        if not motivo:
-            motivo = False
+        if motivo:
+            subject = 'Solicitud de Turno Rechazada'
+            from_email = 'Ejtech <%s>' % (settings.EMAIL_HOST_USER)
+            to_email = '%s' % (turno.cliente.user.email)
+            reply_to_email = 'noreply@ejtechsoft.com'
 
-    subject = 'Solicitud de Turno Rechazada'
-    from_email = 'Ejtech <%s>' % (settings.EMAIL_HOST_USER)
-    to_email = '%s' % (turno.cliente.user.email)
-    reply_to_email = 'noreply@ejtechsoft.com'
+            image_dir = os.path.join(settings.BASE_DIR, 'OhMyDogApp', 'static', 'OhMyDogApp', 'img')
+            image_name = 'logo.png'
 
-    image_dir = os.path.join(settings.BASE_DIR, 'OhMyDogApp', 'static', 'OhMyDogApp', 'img')
-    image_name = 'logo.png'
+            context = {
+                        'nombre' : turno.cliente.user.nombre,
+                        'atencion'  : turno.tipo_atencion.tipo,
+                        'fecha'  : turno.fecha.astimezone(tz('America/Argentina/Buenos_Aires')),
+                        'esVacuna' : 'Vacuna' in turno.tipo_atencion.tipo,
+                        'motivo' : motivo,
+                    }
+            text_content = get_template('mail_turno_rechazado.txt')
+            html_content = get_template('mail_turno_rechazado.html')
+            text_content = text_content.render(context)
+            html_content = html_content.render(context)
 
-    context = {
-                'nombre' : turno.cliente.user.nombre,
-                'atencion'  : turno.tipo_atencion.tipo,
-                'fecha'  : turno.fecha.astimezone(tz('America/Argentina/Buenos_Aires')),
-                'esVacuna' : 'Vacuna' in turno.tipo_atencion.tipo,
-                'motivo' : motivo,
-            }
-    text_content = get_template('mail_turno_rechazado.txt')
-    html_content = get_template('mail_turno_rechazado.html')
-    text_content = text_content.render(context)
-    html_content = html_content.render(context)
+            email = EmailMultiAlternatives(subject, text_content, from_email, to=[to_email,], reply_to=[reply_to_email,])
+            email.mixed_subtype = 'related'
+            email.content_subtype = 'html'
+            email.attach_alternative(html_content, 'text/html')
 
-    email = EmailMultiAlternatives(subject, text_content, from_email, to=[to_email,], reply_to=[reply_to_email,])
-    email.mixed_subtype = 'related'
-    email.content_subtype = 'html'
-    email.attach_alternative(html_content, 'text/html')
+            file_path = os.path.join(image_dir, image_name)
+            with open(file_path, 'rb') as f:
+                image = MIMEImage(f.read())
+                image.add_header('Content-ID', '<%s>' % (image_name))
+                image.add_header('Content-Disposition', 'inline', filename=image_name)
+                email.attach(image)
 
-    file_path = os.path.join(image_dir, image_name)
-    with open(file_path, 'rb') as f:
-        image = MIMEImage(f.read())
-        image.add_header('Content-ID', '<%s>' % (image_name))
-        image.add_header('Content-Disposition', 'inline', filename=image_name)
-        email.attach(image)
-
-    email.send(fail_silently=False)
-    
-    
-    turno.estado_id = 2
-    turno.save()
-    messages.success(request, 'Turno rechazado correctamente.')
+            email.send(fail_silently=False)
+            
+            
+            turno.estado_id = 2
+            turno.save()
+            messages.success(request, 'Turno rechazado correctamente.')
     return redirect('/turnos/listar_turnos_pendientes/')
