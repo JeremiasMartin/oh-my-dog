@@ -3,15 +3,12 @@
 {% load crispy_forms_tags %}
 {% block content %}
 
-<h1>Editar Perfil</h1>
+<h1>Registrar Cliente</h1>
 <div class="container">
     <div class="card-deck">
-        <div class="col-md-4 mb-4">
+        <div class="col-md-5 mb-5">
             <div class="card h-100">
                 <div class="card-body">
-                    <div class="listing-heading text-center">
-                        <h5 class="card-title">Perfil</h5>
-                    </div>
                     <form method="post" action="" style="color: black;" onsubmit="return validarFormulario()">
                         {% csrf_token %}
                         <p class="card-text">
@@ -64,9 +61,11 @@
                             </p>
                         </p>
                         <hr>
-                        <button type="submit" id="btn-registrar" class="btn btn-primary" disabled>Guardar cambios</button>
-                    </form>
-                    <a href="/usuarios/ver_perfil/" class="btn btn-primary">Cancelar</a>
+                      <div>
+                        <button type="submit" id="btn-registrar" class="btn btn-primary" disabled>Registrar</button>
+                        </form>
+                        <a href="/usuarios/ver_perfil/" class="btn btn-primary">Cancelar</a>
+                      </div>
                 </div>
             </div>
         </div>
