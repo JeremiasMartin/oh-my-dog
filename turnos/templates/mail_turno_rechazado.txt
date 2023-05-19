@@ -1,6 +1,6 @@
 Estimado(a) {{ nombre }},
 
-Te informamos que tu turno para la atenci&oacute;n "{{ atencion }}" programada para el {{ fecha }} ha sido cancelado.
+Te informamos que tu turno para la atenci&oacute;n "{{ atencion }}" programada para el {{ fecha|date:'d/m/Y' }} ha sido cancelado.
 {% if motivo %}
 El motivo de la cancelaci&oacute;n es: 
 {{ motivo }}
