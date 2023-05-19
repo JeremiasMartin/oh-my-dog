@@ -1,22 +1,62 @@
 {% extends "OhMyDogApp/base.html" %}
-
 {% load static %}
 {% block content %}
 
 <h2>Iniciar Sesión</h2>
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Iniciar sesión</button>
-        <a style="margin:15" href="/usuarios/restablecer_contrasenia/"> No recuerdo mi clave</a>
-    </form>
-    {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-                <div id="msg"class="alert alert-{{ message.tags }} ">
-                    {{ message|safe }}
-                </div>
-            {% endfor %}
-        </ul>
-    {% endif %}
+<form method="POST" id="login-form">
+    {% csrf_token %}
+    <input type="email" id="email" name="email" placeholder="Correo electrónico" required>
+    <input type="password" id="password" name="password" placeholder="Contraseña" required>
+    <button type="submit" id="submit-btn" disabled>Iniciar sesión</button>
+    <a style="margin:15" href="/usuarios/restablecer_contrasenia/">No recuerdo mi clave</a>
+</form>
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <div id="msg" class="alert alert-{{ message.tags }} ">
+        {{ message|safe }}
+    </div>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<script>
+    const form = document.getElementById('login-form');
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const submitButton = document.getElementById('submit-btn');
+
+    form.addEventListener('input', function() {
+        const isValidEmail = validateEmail(emailInput.value);
+        const isNotEmpty = !isEmpty(emailInput.value) && !isEmpty(passwordInput.value);
+
+        if (isValidEmail && isNotEmpty) {
+            submitButton.disabled = false;
+        } else {
+            submitButton.disabled = true;
+        }
+    });
+
+    form.addEventListener('submit', function(event) {
+        if (!validateEmail(emailInput.value)) {
+            event.preventDefault();
+            alert('El formato de correo electrónico no es válido.');
+        } else if (isEmpty(emailInput.value) || isEmpty(passwordInput.value)) {
+            event.preventDefault();
+            alert('Por favor, completa todos los campos.');
+        }
+    });
+
+    function validateEmail(email) {
+        // Validación de formato de correo electrónico utilizando una expresión regular
+        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return emailPattern.test(email);
+    }
+
+    function isEmpty(value) {
+        return value.trim() === '';
+    }
+</script>
+
 {% endblock %}
