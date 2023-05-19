@@ -54,56 +54,63 @@
 </div>
 
 <script>
-    function validarFormulario() {
-      var nombre = document.getElementById('id_nombre').value;
-      var apellido = document.getElementById('id_apellido').value;
-      var telefono = document.getElementById('id_telefono').value;
-    
-      if (nombre.trim() === '' || apellido.trim() === '' || telefono.trim() === '') {
-        alert('Por favor, completa todos los campos.');
-        return false;
-      }
-    
-      if (telefono.trim().length < 10) {
-        alert('El teléfono debe tener al menos 10 dígitos.');
-        return false;
-      }
-    
-      // Validar que nombre y apellido no contengan números
-      if (contieneNumeros(nombre) || contieneNumeros(apellido)) {
-        alert('El nombre y apellido no pueden contener números.');
-        return false;
-      }
-    
-      return true; // todo ok
+  function validarFormulario() {
+    var nombre = document.getElementById('id_nombre').value;
+    var apellido = document.getElementById('id_apellido').value;
+    var telefono = document.getElementById('id_telefono').value;
+  
+    if (nombre.trim() === '' || apellido.trim() === '' || telefono.trim() === '') {
+      alert('Por favor, completa todos los campos.');
+      return false;
     }
-    
-    function contieneNumeros(cadena) {
-      var numeros = /[0-9]/;
-      return numeros.test(cadena);
+  
+    if (telefono.trim().length < 10) {
+      alert('El teléfono debe tener al menos 10 dígitos.');
+      return false;
     }
-    
-    // Validar campos en tiempo real
-    var formInputs = document.querySelectorAll('input[type="text"], input[type="number"]');
-    var btnRegistrar = document.getElementById('btn-registrar');
-    
-    formInputs.forEach(function(input) {
-      input.addEventListener('input', function() {
-        validarCampos();
-      });
+  
+    // Validación de campos no numéricos
+    var regex = /^[a-zA-Z\s]*$/; // Expresión regular para solo letras y espacios
+    if (!regex.test(nombre) || !regex.test(apellido)) {
+      alert('Los campos "Nombre" y "Apellido" no pueden contener números.');
+      return false;
+    }
+  
+    // Validar que DNI y teléfono sean números
+    var numeros = /^[0-9]+$/;
+    if (!telefono.match(numeros)) {
+      alert('El teléfono deben contener solo números.');
+      return false;
+    }
+  
+    return true; // todo ok
+  }
+  
+  // Validar campos en tiempo real
+  var formInputs = document.querySelectorAll('input[type="text"], input[type="number"]');
+  var btnRegistrar = document.getElementById('btn-registrar');
+  
+  formInputs.forEach(function(input) {
+    input.addEventListener('input', function() {
+      validarCampos();
     });
-    
-    function validarCampos() {
-      var isFormValid = Array.from(formInputs).every(function(input) {
-        return input.value.trim() !== '' && input.checkValidity();
-      });
-    
-      btnRegistrar.disabled = !isFormValid;
+  });
+  
+  function validarCampos() {
+    var isFormValid = Array.from(formInputs).every(function(input) {
+      return input.value.trim() !== '' && input.checkValidity();
+    });
+
+    var regex = /^[a-zA-Z\s]*$/; // Expresión regular para solo letras y espacios
+    if (!regex.test(document.getElementById('id_nombre').value) || !regex.test(document.getElementById('id_apellido').value)) {
+      isFormValid = false;
     }
-    
-    // Validar campos al cargar la página
-    validarCampos();
-    </script>
-    
+  
+    btnRegistrar.disabled = !isFormValid;
+  }
+  
+  // Validar campos al cargar la página
+  validarCampos();
+</script>    
 
 {% endblock %}

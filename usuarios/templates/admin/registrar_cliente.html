@@ -73,76 +73,81 @@
 </div>
 
 <script>
-    function validarFormulario() {
-      var nombre = document.getElementById('id_nombre').value;
-      var apellido = document.getElementById('id_apellido').value;
-      var email = document.getElementById('id_email').value;
-      var dni = document.getElementById('id_dni').value;
-      var telefono = document.getElementById('id_telefono').value;
-    
-      if (nombre.trim() === '' || apellido.trim() === '' || email.trim() === '' || dni.trim() === '' || telefono.trim() === '') {
-        alert('Por favor, completa todos los campos.');
-        return false;
-      }
-    
-      if (dni.trim().length < 7) {
-        alert('El DNI debe tener al menos 7 dígitos.');
-        return false;
-      }
-    
-      if (telefono.trim().length < 10) {
-        alert('El teléfono debe tener al menos 10 dígitos.');
-        return false;
-      }
-    
-      // Validar formato de nombre y apellido (no se permiten números)
-      var letras = /^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/;
-      if (!nombre.match(letras) || !apellido.match(letras)) {
-        alert('El nombre y apellido solo deben contener letras.');
-        return false;
-      }
-    
-      // Validar formato de email
-      var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-      if (!email.match(emailPattern)) {
-        alert('Ingresa un email válido.');
-        return false;
-      }
-    
-      // Validar que DNI y teléfono sean números
-      var numeros = /^[0-9]+$/;
-      if (!dni.match(numeros) || !telefono.match(numeros)) {
-        alert('El DNI y el teléfono deben contener solo números.');
-        return false;
-      }
-    
-      return true; // todo ok
+  function validarFormulario() {
+    var nombre = document.getElementById('id_nombre').value;
+    var apellido = document.getElementById('id_apellido').value;
+    var email = document.getElementById('id_email').value;
+    var dni = document.getElementById('id_dni').value;
+    var telefono = document.getElementById('id_telefono').value;
+  
+    if (nombre.trim() === '' || apellido.trim() === '' || email.trim() === '' || dni.trim() === '' || telefono.trim() === '') {
+      alert('Por favor, completa todos los campos.');
+      return false;
     }
-    
-    // Validar campos en tiempo real
-    var formInputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="number"]');
-    var btnRegistrar = document.getElementById('btn-registrar');
-    
-    formInputs.forEach(function(input) {
-      input.addEventListener('input', function() {
-        validarCampos();
-      });
+  
+    if (dni.trim().length < 7) {
+      alert('El DNI debe tener al menos 7 dígitos.');
+      return false;
+    }
+  
+    if (telefono.trim().length < 10) {
+      alert('El teléfono debe tener al menos 10 dígitos.');
+      return false;
+    }
+  
+    // Validación de campos no numéricos
+    var regex = /^[a-zA-Z\s]*$/; // Expresión regular para solo letras y espacios
+    if (!regex.test(nombre) || !regex.test(apellido)) {
+      alert('Los campos "Nombre" y "Apellido" no pueden contener números.');
+      return false;
+    }
+  
+    // Validar formato de email
+    var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!email.match(emailPattern)) {
+      alert('Ingresa un email válido.');
+      return false;
+    }
+  
+    // Validar que DNI y teléfono sean números
+    var numeros = /^[0-9]+$/;
+    if (!dni.match(numeros) || !telefono.match(numeros)) {
+      alert('El DNI y el teléfono deben contener solo números.');
+      return false;
+    }
+  
+    return true; // todo ok
+  }
+  
+  // Validar campos en tiempo real
+  var formInputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="number"]');
+  var btnRegistrar = document.getElementById('btn-registrar');
+  
+  formInputs.forEach(function(input) {
+    input.addEventListener('input', function() {
+      validarCampos();
     });
-    
-    function validarCampos() {
-      var isFormValid = Array.from(formInputs).every(function(input) {
-        return input.value.trim() !== '' && input.checkValidity();
-      });
-    
-      if (document.getElementById('id_dni').value.trim().length < 7) {
-        isFormValid = false;
-      }
-    
-      btnRegistrar.disabled = !isFormValid;
+  });
+  
+  function validarCampos() {
+    var isFormValid = Array.from(formInputs).every(function(input) {
+      return input.value.trim() !== '' && input.checkValidity();
+    });
+  
+    if (document.getElementById('id_dni').value.trim().length < 7) {
+      isFormValid = false;
     }
-    
-    // Validar campos al cargar la página
-    validarCampos();
+
+    var regex = /^[a-zA-Z\s]*$/; // Expresión regular para solo letras y espacios
+    if (!regex.test(document.getElementById('id_nombre').value) || !regex.test(document.getElementById('id_apellido').value)) {
+      isFormValid = false;
+    }
+  
+    btnRegistrar.disabled = !isFormValid;
+  }
+  
+  // Validar campos al cargar la página
+  validarCampos();
 </script>
 
 {% endblock %}

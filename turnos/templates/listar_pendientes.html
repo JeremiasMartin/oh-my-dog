@@ -5,20 +5,20 @@
 {% block content %}
 <section id="showcase-inner" class="py-5 text-black">
     <div class="container">
-      <div class="row text-center">
-        <div class="col-md-12">
-          <h2 class="display-4">Listado de Turnos</h2>
+        <div class="row text-center">
+            <div class="col-md-12">
+                <h2 class="display-4">Listado de Turnos</h2>
+            </div>
         </div>
-      </div>
     </div>
-  </section>
+</section>
 <!-- Listado -->
 <section id="listado" class="py-4">
     <div class="container">
         {% if messages %}
         <ul class="messages">
             {% for message in messages %}
-            <div id="msg"class="alert alert-{{ message.tags }}">
+            <div id="msg" class="alert alert-{{ message.tags }}">
                 {{ message }}
             </div>
             {% endfor %}
@@ -26,88 +26,131 @@
         {% endif %}
         <div class="card-deck">
             {% if turnos %}
-                
-                {% for turno in turnos %}
-                    <div class="col-md-4 mb-4">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <hr>
-                                <p class="card-text text-wrap"><i class="fa fa-calendar" style="color: #e4a64e;"></i> Fecha: {{ turno.fecha|date }}</p>
-                                <hr>
-                                <p class="card-text"><i class="fa-solid fa-id-card" style="color: #e4a64e;"></i> Cliente: {{ turno.cliente }}</p>
-                                <hr>
-                                <p class="card-text"><i class="fa fa-info-circle" style="color: #e4a64e;"></i> Estado: {{ turno.estado.estado }}</p>
-                                <hr>
-                                <p class="card-text"><i class="fa fa-stethoscope" style="color: #e4a64e;"></i> Tipo de Atenci&oacute;n: {{ turno.tipo_atencion.tipo }}</p>
-                                <div style="display: flex; flex-direction: column; align-items: center;" class="d-flex flex-column">
-                                    <form method="POST" action="{% url 'aceptar_solicitud' turno.id %}">
-                                        {% csrf_token %}
-                                        <label for="hora_turno">Seleccione la hora del turno:</label><br>
-                                        <input type="time" id="hora_turno" name="hora_turno" required><br><br>
-                                        <input type="submit" class="btn btn-primary btn-block" value="Aceptar">
-                                    </form>
-                                    <form method="POST" action="{% url 'rechazar_solicitud' id_turno=turno.id %}">
-                                        {% csrf_token %}
-                                        <br>
-                                        <input type="submit" class="btn btn-primary btn-block" value="Rechazar turno">
-                                        <label for="motivo">Motivo de rechazo:</label><br>
-                                        <textarea id="motivo" name="motivo" rows="4" cols="30"></textarea>
-                                    </form>
-                                </div>
-                            </div>
+            {% for turno in turnos %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <hr>
+                        <p class="card-text text-wrap"><i class="fa fa-calendar" style="color: #e4a64e;"></i> Fecha: {{ turno.fecha|date }}</p>
+                        <hr>
+                        <p class="card-text"><i class="fa-solid fa-id-card" style="color: #e4a64e;"></i> Cliente: {{ turno.cliente }}</p>
+                        <hr>
+                        <p class="card-text"><i class="fa fa-info-circle" style="color: #e4a64e;"></i> Estado: {{ turno.estado.estado }}</p>
+                        <hr>
+                        <p class="card-text"><i class="fa fa-stethoscope" style="color: #e4a64e;"></i> Tipo de Atenci&oacute;n: {{ turno.tipo_atencion.tipo }}</p>
+                        <div style="display: flex; flex-direction: column; align-items: center;" class="d-flex flex-column">
+                            <form method="POST" action="{% url 'aceptar_solicitud' turno.id %}">
+                                {% csrf_token %}
+                                <label for="hora_turno">Seleccione la hora del turno:</label><br>
+                                <input type="time" id="hora_turno" name="hora_turno" required><br><br>
+                                <button type="submit" class="btn btn-primary btn-block" disabled>Aceptar</button>
+                            </form>
+                            <form method="POST" action="{% url 'rechazar_solicitud' id_turno=turno.id %}">
+                                {% csrf_token %}
+                                <br>
+                                <button type="submit" class="btn btn-primary btn-block" disabled>Rechazar turno</button>
+                                <label for="motivo">Motivo de rechazo:</label><br>
+                                <textarea id="motivo" name="motivo" rows="4" cols="30"></textarea>
+                            </form>
                         </div>
                     </div>
-                {% endfor %}
-                
-            {% else %}
-                <div class="col-md-12">
-                    <p>No hay turnos pendientes</p>
                 </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="col-md-12">
+                <p>No hay turnos pendientes</p>
+            </div>
             {% endif %}
-        </div> 
+        </div>
     </div>
     <!-- Paginacion -->
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-            {% if turnos.has_other_pages %}
+                {% if turnos.has_other_pages %}
                 <ul class="pagination">
                     {% if turnos.has_previous %}
-                        <li class='page-item'>
-                            <a href="?page={{turnos.previous_page_number}}" class="page-link">&laquo;
-                            </a> 
-                        </li>
+                    <li class='page-item'>
+                        <a href="?page={{turnos.previous_page_number}}" class="page-link">&laquo;
+                        </a>
+                    </li>
                     {% else %}
-                        <li class= "page-item disabled">
-                            <a class="page-link">&laquo;
-                            </a> 
-                        </li>
+                    <li class="page-item disabled">
+                        <a class="page-link">&laquo;
+                        </a>
+                    </li>
                     {% endif %}
                     {% for i in turnos.paginator.page_range %}
-                        {% if turnos.number == i %}
-                            <li class='page-item active'>
-                                <a class="page-link">{{i}}</a> 
-                            </li>
-                        {% else %}
-                            <li class='page-item'>
-                                <a href="?page={{i}}" class="page-link">{{i}}</a>
-                            </li>
-                        {% endif%}
+                    {% if turnos.number == i %}
+                    <li class='page-item active'>
+                        <a class="page-link">{{i}}</a>
+                    </li>
+                    {% else %}
+                    <li class='page-item'>
+                        <a href="?page={{i}}" class="page-link">{{i}}</a>
+                    </li>
+                    {% endif%}
                     {% endfor %}
                     {% if turnos.has_next %}
-                        <li class="page-item">
-                            <a href="?page={{turnos.next_page_number}}" class="page-link">&raquo;</a>
-                        </li>
+                    <li class="page-item">
+                        <a href="?page={{turnos.next_page_number}}" class="page-link">&raquo;</a>
+                    </li>
                     {% else %}
-                        <li class="page-item disabled">
-                            <a class="page-link">&raquo;</a>
-                        </li>
+                    <li class="page-item disabled">
+                        <a class="page-link">&raquo;</a>
+                    </li>
                     {% endif %}
                 </ul>
-            {% endif %}
+                {% endif %}
             </div>
         </div>
     </div>
 </section>
-  
+<script>
+    function validarFormulario() {
+        var horaTurno = document.getElementById('hora_turno').value;
+        var motivoRechazo = document.getElementById('motivo').value;
+
+        if (horaTurno.trim() === '') {
+            alert('Por favor, seleccione la hora del turno.');
+            return false;
+        }
+
+        if (motivoRechazo.trim() === '') {
+            alert('Por favor, ingrese el motivo de rechazo del turno.');
+            return false;
+        }
+
+        return true; // Envía el formulario si todas las validaciones son exitosas
+    }
+
+    // Obtener los elementos de los campos y botones
+    var horaTurnoInput = document.getElementById('hora_turno');
+    var motivoRechazoInput = document.getElementById('motivo');
+    var aceptarBtn = document.querySelector('form[action*="aceptar_solicitud"] button[type="submit"]');
+    var rechazarBtn = document.querySelector('form[action*="rechazar_solicitud"] button[type="submit"]');
+
+    // Deshabilitar los botones al cargar la página
+    aceptarBtn.disabled = true;
+    rechazarBtn.disabled = true;
+
+    // Habilitar o deshabilitar el botón de aceptar según el contenido del campo de hora de turno
+    horaTurnoInput.addEventListener('input', function () {
+        aceptarBtn.disabled = horaTurnoInput.value.trim() === '';
+    });
+
+    // Habilitar o deshabilitar el botón de rechazar según el contenido del campo de motivo de rechazo
+    motivoRechazoInput.addEventListener('input', function () {
+        rechazarBtn.disabled = motivoRechazoInput.value.trim() === '';
+    });
+
+    // Asociar la función de validación al evento submit del formulario de aceptar turno
+    var formAceptarTurno = document.querySelector('form[action*="aceptar_solicitud"]');
+    formAceptarTurno.addEventListener('submit', validarFormulario);
+
+    // Asociar la función de validación al evento submit del formulario de rechazar turno
+    var formRechazarTurno = document.querySelector('form[action*="rechazar_solicitud"]');
+    formRechazarTurno.addEventListener('submit', validarFormulario);
+</script>
 {% endblock %}
