@@ -3,20 +3,48 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-{% if messages %}
-<ul class="messages">
-  {% for message in messages %}
-  <div id="msg"class="alert alert-{{ message.tags }}">
-    {{ message }}
-  </div>
-  {% endfor %}
- </ul>
- {% endif %}
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Guardar</button>
-  <a href='/perros/listar-mascotas-cliente/{{perro.cliente.user_id}}/' class="btn btn-primary">Cancelar</a>
-</form>
+  {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+        <div id="msg" class="alert alert-{{ message.tags }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </ul>
+  {% endif %}
+  <form method="post" id="registrar-atencion-form">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" id="btn-guardar" disabled>Guardar</button>
+    <a href='/perros/listar-mascotas-cliente/{{ perro.cliente.user_id }}/' class="btn btn-primary">Cancelar</a>
+  </form>
 
-{% endblock %} 
+<script>
+  const form = document.getElementById('registrar-atencion-form');
+  const btnGuardar = document.getElementById('btn-guardar');
+
+  form.addEventListener('input', () => {
+    const tipo = document.getElementById('id_tipo').value;
+    const peso = document.getElementById('id_peso').value;
+    const observacion = document.getElementById('id_observacion').value;
+
+    if (tipo.trim() !== '' && isValidWeight(peso) && observacion.trim() !== '') {
+      btnGuardar.disabled = false;
+    } else {
+      btnGuardar.disabled = true;
+    }
+  });
+
+  function isValidWeight(peso) {
+    if (peso === '') {
+      return false;
+    }
+
+    const pesoPattern = /^\d{0,3}(\.\d{0,2})?$/; //4 dig máx
+    return pesoPattern.test(peso);
+  }
+</script>
+
+  
+  
+{% endblock %}

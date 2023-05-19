@@ -1,19 +1,149 @@
-{% extends 'OhMyDogApp/base.html' %}
+{% extends "OhMyDogApp/base.html" %}
 {% load static %}
 {% load crispy_forms_tags %}
 {% block content %}
 
-<form method="post" action="" style="color: black;">
-
-{% csrf_token %}
-<div style="width: 75%; margin: auto;">
-{{ form|crispy }}
-
-<button type="submit" class="btn btn-success">Registrar</button>
-<a href="{% url 'Home' %}" class="btn btn-primary">Cancelar</a>
-
+<h1>Editar Perfil</h1>
+<div class="container">
+    <div class="card-deck">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="listing-heading text-center">
+                        <h5 class="card-title">Perfil</h5>
+                    </div>
+                    <form method="post" action="" style="color: black;" onsubmit="return validarFormulario()">
+                        {% csrf_token %}
+                        <p class="card-text">
+                            <i class="fa-solid fa-user" style="color: #e4a64e;"></i>
+                            Nombre*: {{ form.nombre }}
+                            <p>
+                                {% for error in form.nombre.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                            </p>
+                        </p>
+                        <hr>
+                        <p class="card-text">
+                            <i class="fa-solid fa-user" style="color: #e4a64e;"></i>
+                            Apellido*: {{ form.apellido }}
+                            <p>
+                                {% for error in form.apellido.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                            </p>
+                        </p>
+                        <hr>
+                        <p class="card-text">
+                            <i class="fa-solid fa-envelope" style="color: #e4a64e;"></i>
+                            Email*: {{ form.email }}
+                            <p>
+                                {% for error in form.email.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                            </p>
+                        </p>
+                        <hr>
+                        <p class="card-text">
+                            <i class="fa-solid fa-id-card" style="color: #e4a64e;"></i>
+                            DNI*: {{ form.dni }}
+                            <p>
+                                {% for error in form.dni.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                            </p>
+                        </p>
+                        <hr>
+                        <p class="card-text">
+                            <i class="fa-solid fa-phone-volume" style="color: #e4a64e;"></i>
+                            Teléfono*: {{ form.telefono }}
+                            <p>
+                                {% for error in form.telefono.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                            </p>
+                        </p>
+                        <hr>
+                        <button type="submit" id="btn-registrar" class="btn btn-primary" disabled>Guardar cambios</button>
+                    </form>
+                    <a href="/usuarios/ver_perfil/" class="btn btn-primary">Cancelar</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-</form>
+<script>
+    function validarFormulario() {
+      var nombre = document.getElementById('id_nombre').value;
+      var apellido = document.getElementById('id_apellido').value;
+      var email = document.getElementById('id_email').value;
+      var dni = document.getElementById('id_dni').value;
+      var telefono = document.getElementById('id_telefono').value;
+    
+      if (nombre.trim() === '' || apellido.trim() === '' || email.trim() === '' || dni.trim() === '' || telefono.trim() === '') {
+        alert('Por favor, completa todos los campos.');
+        return false;
+      }
+    
+      if (dni.trim().length < 7) {
+        alert('El DNI debe tener al menos 7 dígitos.');
+        return false;
+      }
+    
+      if (telefono.trim().length < 10) {
+        alert('El teléfono debe tener al menos 10 dígitos.');
+        return false;
+      }
+    
+      // Validar formato de nombre y apellido (no se permiten números)
+      var letras = /^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/;
+      if (!nombre.match(letras) || !apellido.match(letras)) {
+        alert('El nombre y apellido solo deben contener letras.');
+        return false;
+      }
+    
+      // Validar formato de email
+      var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      if (!email.match(emailPattern)) {
+        alert('Ingresa un email válido.');
+        return false;
+      }
+    
+      // Validar que DNI y teléfono sean números
+      var numeros = /^[0-9]+$/;
+      if (!dni.match(numeros) || !telefono.match(numeros)) {
+        alert('El DNI y el teléfono deben contener solo números.');
+        return false;
+      }
+    
+      return true; // todo ok
+    }
+    
+    // Validar campos en tiempo real
+    var formInputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="number"]');
+    var btnRegistrar = document.getElementById('btn-registrar');
+    
+    formInputs.forEach(function(input) {
+      input.addEventListener('input', function() {
+        validarCampos();
+      });
+    });
+    
+    function validarCampos() {
+      var isFormValid = Array.from(formInputs).every(function(input) {
+        return input.value.trim() !== '' && input.checkValidity();
+      });
+    
+      if (document.getElementById('id_dni').value.trim().length < 7) {
+        isFormValid = false;
+      }
+    
+      btnRegistrar.disabled = !isFormValid;
+    }
+    
+    // Validar campos al cargar la página
+    validarCampos();
+</script>
 
 {% endblock %}

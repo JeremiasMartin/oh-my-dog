@@ -2,9 +2,9 @@
 {% load static %}
 {% load crispy_forms_tags %}
 {% block content %}
- 
+
 <h1>Editar Perfil</h1>
-<div class="container" >
+<div class="container">
     <div class="card-deck">
         <div class="col-md-4 mb-4">
             <div class="card h-100">
@@ -12,11 +12,11 @@
                     <div class="listing-heading text-center">
                         <h5 class="card-title">Perfil</h5>
                     </div>
-                    <form method="post" action="" style="color: black;">
-                    {% csrf_token %}
+                    <form method="post" action="" style="color: black;" onsubmit="return validarFormulario()">
+                        {% csrf_token %}
                         <p class="card-text">
-                            <i class="fa-solid fa-user" style="color: #e4a64e;"></i> 
-                            Nombre*: {{ form.nombre }} 
+                            <i class="fa-solid fa-user" style="color: #e4a64e;"></i>
+                            Nombre*: {{ form.nombre }}
                             <p>
                                 {% for error in form.nombre.errors %}
                                 <span style="color: red;">{{ error }}</span>
@@ -25,8 +25,8 @@
                         </p>
                         <hr>
                         <p class="card-text">
-                            <i class="fa-solid fa-user" style="color: #e4a64e;"></i> 
-                            Apellido*: {{ form.apellido }} 
+                            <i class="fa-solid fa-user" style="color: #e4a64e;"></i>
+                            Apellido*: {{ form.apellido }}
                             <p>
                                 {% for error in form.apellido.errors %}
                                 <span style="color: red;">{{ error }}</span>
@@ -44,16 +44,66 @@
                             </p>
                         </p>
                         <hr>
-                        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                        <button type="submit" id="btn-registrar" class="btn btn-primary" disabled>Guardar cambios</button>
                     </form>
                     <a href="/usuarios/ver_perfil/" class="btn btn-primary">Cancelar</a>
                 </div>
             </div>
         </div>
-    </div> 
+    </div>
 </div>
 
+<script>
+    function validarFormulario() {
+      var nombre = document.getElementById('id_nombre').value;
+      var apellido = document.getElementById('id_apellido').value;
+      var telefono = document.getElementById('id_telefono').value;
+    
+      if (nombre.trim() === '' || apellido.trim() === '' || telefono.trim() === '') {
+        alert('Por favor, completa todos los campos.');
+        return false;
+      }
+    
+      if (telefono.trim().length < 10) {
+        alert('El teléfono debe tener al menos 10 dígitos.');
+        return false;
+      }
+    
+      // Validar que nombre y apellido no contengan números
+      if (contieneNumeros(nombre) || contieneNumeros(apellido)) {
+        alert('El nombre y apellido no pueden contener números.');
+        return false;
+      }
+    
+      return true; // todo ok
+    }
+    
+    function contieneNumeros(cadena) {
+      var numeros = /[0-9]/;
+      return numeros.test(cadena);
+    }
+    
+    // Validar campos en tiempo real
+    var formInputs = document.querySelectorAll('input[type="text"], input[type="number"]');
+    var btnRegistrar = document.getElementById('btn-registrar');
+    
+    formInputs.forEach(function(input) {
+      input.addEventListener('input', function() {
+        validarCampos();
+      });
+    });
+    
+    function validarCampos() {
+      var isFormValid = Array.from(formInputs).every(function(input) {
+        return input.value.trim() !== '' && input.checkValidity();
+      });
+    
+      btnRegistrar.disabled = !isFormValid;
+    }
+    
+    // Validar campos al cargar la página
+    validarCampos();
+    </script>
+    
+
 {% endblock %}
-
-
-

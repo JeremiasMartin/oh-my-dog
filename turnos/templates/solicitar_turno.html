@@ -11,9 +11,40 @@
        {% endfor %}
    </ul>
    {% endif %}
-  <form method="post">
+  <form method="post" id="solicitar-turno-form">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Solicitar Turno</button>
+    <button type="submit" class="btn btn-primary" id="btn-solicitar-turno" disabled>Solicitar Turno</button>
   </form>
+
+  <script>
+    const form = document.getElementById('solicitar-turno-form');
+    const btnSolicitarTurno = document.getElementById('btn-solicitar-turno');
+
+    form.addEventListener('submit', (event) => {
+      if (!validateForm()) {
+        event.preventDefault();
+      }
+    });
+
+    form.addEventListener('input', () => {
+      validateForm();
+    });
+
+    // Validar campos al cargar la página
+    validateForm();
+
+    function validateForm() {
+      const fecha = document.getElementById('id_fecha').value;
+      const tipoAtencion = document.getElementById('id_tipo_atencion').value;
+
+      if (fecha.trim() === '' || tipoAtencion.trim() === '') {
+        btnSolicitarTurno.disabled = true;
+        return false;
+      } else {
+        btnSolicitarTurno.disabled = false;
+        return true;
+      }
+    }
+  </script>
 {% endblock %}

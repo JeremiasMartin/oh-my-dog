@@ -3,16 +3,105 @@
 {% load crispy_forms_tags %}
 {% block content %}
 
-<form method="post" action="" style="color: black;">
+<form method="post" action="" style="color: black;" onsubmit="return validarFormulario()">
 
-{% csrf_token %}
-<div style="width: 75%; margin: auto;">
-{{ form|crispy }}
+  {% csrf_token %}
+  <div style="width: 75%; margin: auto;">
+    {{ form|crispy }}
 
-<button type="submit" class="btn btn-success">Registrar</button>
-<a href="{% url 'Clientes' %}" class="btn btn-primary">Cancelar</a>
-</div>
+    <button type="submit" id="btn-registrar" class="btn btn-success">Registrar</button>
+    <a href="{% url 'Clientes' %}" class="btn btn-primary">Cancelar</a>
+  </div>
 
 </form>
 
-{% endblock %} 
+
+<script>
+    function validarFormulario() {
+      var nombre = document.getElementById('id_nombre').value;
+      var raza = document.getElementById('id_raza').value;
+      var color = document.getElementById('id_color').value;
+      var fechaNacimiento = document.getElementById('id_fecha_nac').value;
+    
+      // Validación de campos vacíos
+      if (nombre.trim() === '' || raza.trim() === '' || color.trim() === '' || fechaNacimiento.trim() === '') {
+        alert('Por favor, completa todos los campos.');
+        return false;
+      }
+    
+      // Validación de campos no numéricos
+      var regex = /^[a-zA-Z\s]*$/; // Expresión regular para solo letras y espacios
+      if (!regex.test(nombre) || !regex.test(raza) || !regex.test(color)) {
+        alert('Los campos "Nombre", "Raza" y "Color" no pueden contener números.');
+        return false;
+      }
+    
+      // Validación de fecha válida y no anterior a la fecha actual
+      var fechaNacimientoParts = fechaNacimiento.split('/');
+      var dia = parseInt(fechaNacimientoParts[0], 10);
+      var mes = parseInt(fechaNacimientoParts[1], 10) - 1; // Restamos 1 ya que los meses en JavaScript son base 0 (enero = 0)
+      var anio = parseInt(fechaNacimientoParts[2], 10);
+      var fechaNacimientoDate = new Date(anio, mes, dia);
+    
+      if (
+        isNaN(fechaNacimientoDate) ||
+        fechaNacimientoDate > new Date() ||
+        dia !== fechaNacimientoDate.getDate() ||
+        mes !== fechaNacimientoDate.getMonth() ||
+        anio !== fechaNacimientoDate.getFullYear()
+      ) {
+        alert('Por favor, ingresa una fecha de nacimiento válida.');
+        return false;
+      }
+    
+      return true; // todo ok
+    }
+    
+    // Validar campos en tiempo real
+    var formInputs = document.querySelectorAll('input[type="text"], input[type="number"], select');
+    var btnRegistrar = document.getElementById('btn-registrar');
+    
+    formInputs.forEach(function(input) {
+      input.addEventListener('input', function() {
+        validarCampos();
+      });
+    });
+    
+    function validarCampos() {
+      var nombre = document.getElementById('id_nombre').value;
+      var raza = document.getElementById('id_raza').value;
+      var color = document.getElementById('id_color').value;
+      var fechaNacimiento = document.getElementById('id_fecha_nac').value;
+    
+      var regex = /^[a-zA-Z\s]*$/; // Expresión regular para solo letras y espacios
+      var fechaNacimientoParts = fechaNacimiento.split('/');
+      var dia = parseInt(fechaNacimientoParts[0], 10);
+      var mes = parseInt(fechaNacimientoParts[1], 10) - 1; // Restamos 1 ya que los meses en JavaScript son base 0 (enero = 0)
+      var anio = parseInt(fechaNacimientoParts[2], 10);
+      var fechaNacimientoDate = new Date(anio, mes, dia);
+    
+      var isFormValid =
+        nombre.trim() !== '' &&
+        regex.test(nombre) &&
+        raza.trim() !== '' &&
+        regex.test(raza) &&
+        color.trim() !== '' &&
+        regex.test(color) &&
+        fechaNacimiento.trim() !== '' &&
+        !isNaN(fechaNacimientoDate) &&
+        fechaNacimientoDate <= new Date() &&
+        dia === fechaNacimientoDate.getDate() &&
+        mes === fechaNacimientoDate.getMonth() &&
+        anio === fechaNacimientoDate.getFullYear();
+    
+      btnRegistrar.disabled = !isFormValid;
+    }
+    
+    // Validar campos al cargar la página
+    validarCampos();
+    </script>
+    
+    
+    
+
+{% endblock %}
