@@ -4,40 +4,94 @@
 
 {% block content %}
 
-  <!-- Heading -->
-   <section class="page-section clearfix">
-    <div class="container">
-      <div class="intro">
-        <img class="intro-img img-fluid mb-3 mb-lg-0 rounded" src="{% static 'OhMyDogApp/img/principal.jpg' %}" alt="">
-        <div class="intro-text left-0 text-center bg-faded p-5 rounded">
-          <h2 class="section-heading mb-4" >
-            <span class="section-heading-lower">Bienvenidos</span>
-            <span class="section-heading-upper">Veterinaria oh my dog</span>
-          </h2>
-          <p class="mb-3"></p>
-         
+
+<!-- Servicios -->
+<section class="servicios" style="margin-bottom: 230px;">
+  <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" data-interval="5000">
+    <ol class="carousel-indicators">
+      <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+      <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+      <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+      <li data-target="#carouselExampleIndicators" data-slide-to="3"></li>
+    </ol>
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img class="d-block w-100" src="{% static 'OhMyDogApp/img/vacunas.png' %}" alt="Vacunas">
+        <div class="carousel-caption d-none d-md-block">
+          <h5>Vacunas</h5>
+          <p>Prevenir enfermedades en tu mascota es una prioridad y la vacunación es la mejor manera de hacerlo. En nuestra clínica, encontrarás la vacuna antirrábica y antiviral, para mantener a tus mascotas protegidas y saludables.</p>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <img class="d-block w-100" src="{% static 'OhMyDogApp/img/desparasitante.jpg' %}" alt="Desparasitante">
+        <div class="carousel-caption d-none d-md-block">
+          <h5>Desparasistante</h5>
+          <p>Las lombrices y otros parásitos pueden causar problemas graves de salud en tus mascotas, como diarrea, vómitos y pérdida de peso. Para mantener a tus mascotas libres de parásitos y saludables, en nuestra clínica ofrecemos una variedad de desparasitantes seguros y efectivos.</p>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <img class="d-block w-100" src="{% static 'OhMyDogApp/img/atencionclinica.jpg' %}" alt="Atención Clínica">
+        <div class="carousel-caption d-none d-md-block">
+          <h5>Atención Clínica</h5>
+          <p>Cuando tu mascota está enferma o lesionada, es importante recibir atención médica de calidad y atención personalizada. En nuestra clínica, ofrecemos una atención clínica completa y de calidad, desde exámenes físicos hasta diagnósticos avanzados y tratamientos efectivos. Nuestro equipo de veterinarios está comprometido con el bienestar de tu mascota.</p>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <img class="d-block w-100" src="{% static 'OhMyDogApp/img/castracion.jpeg' %}" alt="Castración">
+        <div class="carousel-caption d-none d-md-block">
+          <h5>Castración</h5>
+          <p>La castración es una decisión importante y personal para cualquier dueño de mascota. En nuestra clínica, ofrecemos servicios de castración seguros y efectivos para perros y gatos, que pueden ayudar a prevenir enfermedades, reducir el riesgo de ciertos tipos de cáncer, controlar el comportamiento y prevenir la sobrepoblación de animales. Habla con nuestros veterinarios para saber más acerca de la castración y si es adecuada para tu mascota.</p>
         </div>
       </div>
     </div>
-  </section>
+    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="sr-only">Anterior</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="sr-only">Siguiente</span>
+    </a>
+  </div>
+</section>
 
 
+<section class="page-section" id="horarios">
   
-    <!-- Message -->
-    <section class="page-section cta">
-      <div class="container">
-        <div class="row">
-          <div class="col-xl-9 mx-auto">
-            <div class="cta-inner text-center rounded">
-              <h2 class="section-heading mb-4">
-                <span class="section-heading-upper">frase4</span>
-                <span class="section-heading-lower">frase5</span>
-              </h2>
-              <p class="mb-0">frase6</p>
-            </div>
+  <div class="container">
+    <div class="text-center">
+      <h2 class="section-heading text-uppercase font-weight-bold"><span class="highlight">Horarios</span></h2>
+      <hr class="my-4">
+    </div>
+    <div class="row">
+      <div class="col-md-4 mb-4">
+        <div class="card text-center h-100">
+          <div class="card-body">
+            <h4 class="card-title">Lunes a Viernes</h4>
+            <p class="card-text">9:00 AM - 1:00 PM</p>
+            <p class="card-text">3:00 PM - 8:00 PM</p>
           </div>
         </div>
       </div>
-    </section>
+      <div class="col-md-4 mb-4">
+        <div class="card text-center h-100">
+          <div class="card-body">
+            <h4 class="card-title">Sábados</h4>
+            <p class="card-text">8:00 AM - 1:00 PM</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-4">
+        <div class="card text-center h-100">
+          <div class="card-body">
+            <h4 class="card-title">Domingos</h4>
+            <p class="card-text">Cerrado</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 
 {% endblock %}
