@@ -105,6 +105,11 @@
     if (!regex.test(document.getElementById('id_nombre').value) || !regex.test(document.getElementById('id_apellido').value)) {
       isFormValid = false;
     }
+
+    var telefonoValue = document.getElementById('id_telefono').value;
+    if (telefonoValue.trim().length < 10) {
+      isFormValid = false;
+    }
   
     btnRegistrar.disabled = !isFormValid;
   }
