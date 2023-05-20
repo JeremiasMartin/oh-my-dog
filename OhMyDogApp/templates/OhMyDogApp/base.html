@@ -57,9 +57,10 @@
           </li>
           <li class="nav-item {% if request.path == '/turnos/listar_turnos_pendientes/' %}current_page_item{%endif %}">
             <a class="nav-link" href="{% url 'listar_turnos_pendientes' %}">Turnos Pendientes</a>   
-          </li>  
-          <li class="nav-item {% if request.path == '/turnos/listar_turnos_confirmados/' %}current_page_item{%endif %}">
-            <a class="nav-link" href="{% url 'listar_turnos_confirmados' %}">Turnos Confirmados</a>   
+          </li> 
+          <!-- Despues cambiar a turnos confirmados (todos)-->  
+          <li class="nav-item {% if request.path == '/turnos/listar_confirmados_dia/' %}current_page_item{%endif %}">
+            <a class="nav-link" href="{% url 'listar_confirmados_dia' %}">Turnos del Dia</a>   
           </li> 
           {% else %}
           <li class="nav-item {% if request.path == '/perros/listar_mascotas/' %}current_page_item{%endif %}">
@@ -114,7 +115,7 @@
           <p><i class="fa-solid fa-envelope"></i> ohmydog@gmail.com</p>
         </div>
         <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
-          <p"><i class="fa-solid fa-phone"></i> +221 6036628</p>
+          <p><i class="fa-solid fa-phone"></i> +221 6036628</p>
         </div>
         <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
           <p><i class="fa-solid fa-copyright"></i> EJTech</p>
