@@ -42,7 +42,7 @@
                                 <p class="card-text"><i class="fa fa-stethoscope" style="color: #e4a64e;"></i> Tipo de Atenci&oacute;n: {{ turno.tipo_atencion.tipo }}</p>
                                 <hr>
                                 <div style="display: flex; flex-direction: column; align-items: center;"class="d-flex flex-column">
-                                    <a href= "{% url 'perros:Listar_mascotas_cliente' turno.id  %}" class="btn btn-primary btn-block">Registrar Atención</a>
+                                    <a href= "{% url 'perros:Listar_mascotas_cliente' turno.cliente.user_id  %}" class="btn btn-primary btn-block">Registrar Atención</a>
                                 </div>
                             </div>
                         </div>
