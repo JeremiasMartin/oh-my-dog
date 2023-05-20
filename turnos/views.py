@@ -29,7 +29,7 @@ def solicitar_turno(request):
             turno.cliente = cliente
             turno.estado_id = 3
             if Turno.objects.filter(cliente=cliente, fecha=form.cleaned_data['fecha']).exists():
-                messages.error(request, 'Ya tiene un turno asignado para la fecha seleccionada.')
+                messages.error(request, 'Ya tiene un turno solicitado para la fecha seleccionada.')
                 return redirect('solicitar_turno')
             
             turno.save()
