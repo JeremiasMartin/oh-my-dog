@@ -6,7 +6,7 @@ El motivo de la cancelaci&oacute;n es:
 {{ motivo }}
 {% endif %}
 {% if esVacuna %}
-Recuerde que es importante completar el calendario de vacunación, por tal motivo le sugerimos aplicar la siguiente dosis de {{ atencion }} en una fecha cercana al {{ fecha }}.
+Recuerde que es importante completar el calendario de vacunación, por tal motivo le sugerimos aplicar la siguiente dosis de {{ atencion }} en una fecha cercana al {{ fecha|date:'d/m/Y' }}.
 {% else %}
 No dudes en contactarnos ante cualquier inconveniente.
 {% endif %}

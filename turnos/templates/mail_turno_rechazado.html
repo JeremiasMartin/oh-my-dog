@@ -143,7 +143,7 @@ table, td { color: #000000; } </style>
     {% endif %}
     <br>
     {% if esVacuna %}
-    <p style="font-size: 16px; line-height: 140%;">Recuerde que es importante completar el calendario de vacunación, por tal motivo le sugerimos aplicar la siguiente dosis de {{ atencion }} en una fecha cercana al {{ fecha }}.</p> 
+    <p style="font-size: 16px; line-height: 140%;">Recuerde que es importante completar el calendario de vacunación, por tal motivo le sugerimos aplicar la siguiente dosis de {{ atencion }} en una fecha cercana al {{ fecha|date:'d/m/Y' }}.</p> 
 	{% else %}
     <p style="font-size: 16px; line-height: 140%;">No dudes en contactarnos ante cualquier inconveniente.</p>
 	{% endif %}
