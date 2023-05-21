@@ -10,8 +10,7 @@
     Por favor, introduzca su contraseña nueva dos veces para verificar que la ha escrito correctamente.
     {% csrf_token %} 
     {{ form.as_p}} 
-   <button> <input type="submit" value="cambiar mi contraseña"> </button> 
-</form> 
+    <button id="cambiar-contraseña-btn" disabled>cambiar mi contraseña</button></form> 
 <a href="/">Cancelar</a>
 
 {% else %}
@@ -19,5 +18,35 @@
 <p>El enlace de restablecimiento de contraseña era inválido, seguramente porque se haya usado antes. Por favor, solicite un nuevo restablecimiento de contraseña</p>
 
 {% endif %}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        
+        var newPasswordField = document.getElementById("id_new_password1");
+        var confirmPasswordField = document.getElementById("id_new_password2");
+        var cambiarContraseñaBtn = document.getElementById("cambiar-contraseña-btn");
+
+        
+        function isPasswordFieldEmpty() {
+            return newPasswordField.value.trim() === "" || confirmPasswordField.value.trim() === "";
+        }
+
+        
+        function validatePasswordFields() {
+            if (isPasswordFieldEmpty()) {
+                cambiarContraseñaBtn.disabled = true;
+            } else {
+                cambiarContraseñaBtn.disabled = false;
+            }
+        }
+
+        
+        newPasswordField.addEventListener("input", validatePasswordFields);
+        confirmPasswordField.addEventListener("input", validatePasswordFields);
+
+        
+        validatePasswordFields();
+    });
+</script>
 
 {%endblock%}

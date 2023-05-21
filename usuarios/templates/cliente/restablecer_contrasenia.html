@@ -2,9 +2,7 @@
 {% load static %}
 {% block title %} <title> Restablecer contraseña </title>{%endblock%}
 {% block content %}
-   
 <form method="post"> 
-    
     {% if messages %}
     {% for message in messages %}
     <div class="{% if message.tags == 'error' %} alert alert-warning {% else %} alert alert-success {% endif %}" style="padding-top: 10px;">
@@ -16,7 +14,36 @@
     ¿Olvidaste tu contraseña? Ingrese su dirección de correo electrónico a continuación y le enviaremos las instrucciones para configurar una nueva.
     {% csrf_token %} 
     {{ form.as_p}} 
-   <button> <input type="submit" value="restablecer contraseña"> </button> 
+    <button id="restablecer-btn" disabled>Restablecer contraseña</button>
 </form> 
 <a href="/usuarios/login">Cancelar</a>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+
+        var emailField = document.getElementById("id_email");
+        var restablecerBtn = document.getElementById("restablecer-btn");
+
+        var emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    
+        function validateEmail(email) {
+            return emailRegex.test(email);
+        }
+
+    
+        emailField.addEventListener("input", function() {
+            var email = emailField.value.trim();
+            
+    
+            if (email !== "" && validateEmail(email)) {
+                restablecerBtn.disabled = false;
+            } else {
+                restablecerBtn.disabled = true;
+            }
+        });
+    });
+</script>
+
+
 {%endblock%}
