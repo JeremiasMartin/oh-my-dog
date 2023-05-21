@@ -73,9 +73,15 @@ def run_scheduler():
         time.sleep(1)  # Pausa para evitar consumo excesivo de recursos
 
 
-def enviar_recordatorio(turno):
+def enviar_recordatorio(turno, fecha_turno):
     print("enviar recordatorio..")
-
+    fecha_actual = timezone.localtime().replace(tzinfo=None).replace(second=0, microsecond=0)
+    fecha_recordatorio = fecha_turno - datetime.timedelta(days=3)
+    fecha_recordatorio = fecha_recordatorio.replace(second=0)
+    print("fecha actual", fecha_actual)
+    print("fecha recordatorio", fecha_recordatorio)
+    if fecha_actual != fecha_recordatorio:
+        return
     subject = 'Recordatorio de Turno'
     from_email = 'Ejtech <%s>' % (settings.EMAIL_HOST_USER)
     to_email = '%s' % (turno.cliente.user.email)
@@ -167,14 +173,13 @@ def aceptar_solicitud(request, id_turno):
 
     # Calcular la diferencia de tiempo
     diferencia_tiempo = fecha_turno - fecha_actual
-    print("fecha actual", fecha_actual)
-    print("fecha recordatorio", fecha_recordatorio)
-    print("diferencia de tiempo", diferencia_tiempo)
+    # print("fecha actual", fecha_actual)
+    # print("fecha recordatorio", fecha_recordatorio)
+    # print("diferencia de tiempo", diferencia_tiempo)
     # Verificar si todavía falta para el turno y la diferencia es mayor o igual a 3 días
     if (fecha_actual < fecha_turno) and (diferencia_tiempo >= datetime.timedelta(days=3)):
         print("ENTRÓ")
-        schedule.every().day.at(fecha_recordatorio.strftime('%H:%M')).do(enviar_recordatorio, turno)
-
+        schedule.every().day.at(fecha_recordatorio.strftime('%H:%M')).do(enviar_recordatorio, turno, fecha_turno)
      # Ejecutar las tareas pendientes en el objeto `schedule.jobs`
     if not schedule.jobs:
         threading.Thread(target=run_scheduler, daemon=True).start()
