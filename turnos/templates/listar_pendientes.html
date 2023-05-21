@@ -37,7 +37,7 @@
                 <div class="card h-100">
                     <div class="card-body">
                         <hr>
-                        <p class="card-text text-wrap"><i class="fa fa-calendar" style="color: #e4a64e;"></i> Fecha: {{ turno.fecha|date }}</p>
+                        <p class="card-text text-wrap" data-fecha="{{ turno.fecha|date:"d/m/Y" }}"><i class="fa fa-calendar" style="color: #e4a64e;"></i> Fecha: {{ turno.fecha|date }}</p>
                         <hr>
                         <p class="card-text"><i class="fa-solid fa-id-card" style="color: #e4a64e;"></i> Cliente: {{ turno.cliente }}</p>
                         <hr>
@@ -115,6 +115,9 @@
 
 <script>
     const turnos = document.querySelectorAll('.card-body');
+    const currentDate = new Date();
+    console.log("Fecha Actual: ",currentDate);
+
     turnos.forEach((turno) => {
         const form = turno.querySelector('form');
         const motivoInput = turno.querySelector('textarea');
@@ -131,12 +134,55 @@
         });
 
         horaInput.addEventListener('input', () => {
-            if (horaInput.value.trim() !== '') {
-                btnAceptar.disabled = false;
-            } else {
+            let fechaElement = turno.querySelector("[data-fecha]");
+            //fecha en formato dd/mm/yyyy
+            let fechaValue = fechaElement.getAttribute("data-fecha");
+            let fechaTurno = fechaFormatoDate(fechaValue);
+
+            const selectedTime = horaInput.value.split(':');
+            const selectedHour = parseInt(selectedTime[0]);
+            const selectedMinutes = parseInt(selectedTime[1]);
+            const currentHour = new Date().getHours();
+            const currentMinutes = new Date().getMinutes();
+
+
+            console.log("Fecha Turno: ", fechaTurno);
+
+            if (horaInput.value.trim() === '') {
                 btnAceptar.disabled = true;
+            } else if (turnoEsHoy(fechaTurno)){
+                console.log('ES HOY ES HOY')
+                if ((selectedHour < currentHour) ||(selectedHour === currentHour && selectedMinutes <= currentMinutes)) {
+                    // hora actual 22, selecciona 21 
+                    btnAceptar.disabled = true;
+                    console.log('HORARIO ACTUAL:',new Date().getHours(),':',new Date().getMinutes());
+                    console.log('HORARIO SELECCIONADA: ', horaInput.value);
+                    //alert('La hora selecciona debe ser posterior a la hora actual.');
+                } else{
+                    btnAceptar.disabled = false;
+                }
+            }
+            else {
+                btnAceptar.disabled = false;
             }
         });
+
+        function fechaFormatoDate (fecha){
+            // de una fecha dd/mm/yyyy a Date
+            let parts = fecha.split('/'); // Split the string by '/'
+            let day = parseInt(parts[0], 10);
+            let month = parseInt(parts[1], 10) - 1; // Months are zero-based
+            let year = parseInt(parts[2], 10);
+
+            return new Date(year, month, day);
+        }
+
+        function turnoEsHoy (fechaTurno){
+            return (fechaTurno.getDay() === currentDate.getDay() 
+            && fechaTurno.getMonth() === currentDate.getMonth() 
+            && fechaTurno.getYear() === fechaTurno.getYear())
+        }
+
     });
 </script>
 

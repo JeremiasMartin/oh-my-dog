@@ -43,7 +43,7 @@ def solicitar_turno(request):
 @login_required
 def listar_turnos_pendientes(request):
     turnos = Turno.objects.filter(estado_id=3)
-    paginator = Paginator(turnos,6)
+    paginator = Paginator(turnos,3)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return render(request, 'listar_pendientes.html', {'turnos': page_obj})
