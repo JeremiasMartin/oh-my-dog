@@ -49,8 +49,8 @@ class Tipo_atencion(models.Model):
 class Atencion(models.Model):
     mascota = models.ForeignKey(Perro, on_delete=models.CASCADE)
     tipo = models.ForeignKey(Tipo_atencion, on_delete=models.CASCADE)
-    peso = models.DecimalField('Peso', validators = [MinValueValidator((0.5), message="El peso ingresado es inválido")],
-                               max_digits=5, decimal_places=2, blank=False, null=False)
+    peso = models.DecimalField('Peso', validators = [MinValueValidator((0.5))],
+                               max_digits=100, decimal_places=97, blank=False, null=False)
     fecha = models.DateField('Fecha', blank=False, null=False)
     observacion = models.TextField('Observacion', blank=False, null=True)
 

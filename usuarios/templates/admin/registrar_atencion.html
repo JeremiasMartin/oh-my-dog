@@ -22,27 +22,49 @@
 <script>
   const form = document.getElementById('registrar-atencion-form');
   const btnGuardar = document.getElementById('btn-guardar');
-
+  const pesoMsg = document.getElementById('peso-msg');
+  
   form.addEventListener('input', () => {
     const tipo = document.getElementById('id_tipo').value;
     const peso = document.getElementById('id_peso').value;
     const observacion = document.getElementById('id_observacion').value;
-
-    if (tipo.trim() !== '' && isValidWeight(peso) && observacion.trim() !== '') {
-      btnGuardar.disabled = false;
+  
+    if (tipo.trim() !== '' && observacion.trim() !== '') {
+      if (isValidWeight(peso)) {
+        btnGuardar.disabled = false;
+      } else {
+        btnGuardar.disabled = true;
+      }
     } else {
       btnGuardar.disabled = true;
     }
   });
-
+  
   function isValidWeight(peso) {
-    if (peso === '') {
-      return false;
-    }
-
-    const pesoPattern = /^\d{0,3}(\.\d{0,2})?$/; //4 dig máx
-    return pesoPattern.test(peso);
+  if (peso === '') {
+    return false;
   }
+
+  // Verificar si el valor de peso comienza con una coma o punto
+  if (peso.startsWith(',') || peso.startsWith('.')) {
+    return false;
+  }
+
+  const parsedPeso = parseFloat(peso.replace(',', '.'));
+
+  if (!isNaN(parsedPeso) && parsedPeso >= 0.5 && parsedPeso <= 999.99) {
+    const decimalPart = parsedPeso % 1;
+    const decimalDigits = decimalPart.toFixed(2).split('.')[1];
+    if (decimalDigits && decimalDigits.length <= 2) {
+      return true;
+    } else if (decimalPart === 0) {
+      return true;
+    }
+  }
+
+  return false;
+}
+  
 </script>
 
   
