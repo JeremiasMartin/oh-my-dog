@@ -228,34 +228,23 @@ p {
 }
 
 .footer {
+   margin-top: auto;
+   align-items: flex-start;
    background-color: #80befb;
+   background-size: 100% 100%;
+   display: flex;
+   flex-direction: row;
+   flex-shrink: 1;
+   height: 122px;
+   justify-content: flex-start;
+   margin-top: 237px;
+   min-width: 1440px;
+   padding: 19px 97px;
+   padding-bottom: 30px;
+   width: auto;
 }
 
-.homepage-footer {
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 200px;
-  padding-top: 30px;
-  padding-bottom: 30px;
-  font-size: 19px;
-  color: black;
-  background-color: #80befb;
-}
 
-.homepage-footer2 {
-  position: absolute; 
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 200px;
-  padding-top: 30px;
-  padding-bottom: 0;
-  margin-top: 100px;
-  font-size: 19px;
-  color: black;
-  background-color: #80befb;
-}
 
 .carousel-caption h5,
 .carousel-caption p {
@@ -279,7 +268,7 @@ p {
 }
 
 .carousel-item img {
-  max-height: 900px; /* Establece una altura máxima deseada */
+  max-height: 600px; /* Establece una altura máxima deseada */
   object-fit: cover; /* Ajusta la imagen para que cubra todo el espacio disponible */
 }
 
@@ -371,4 +360,66 @@ table {
 th, td {
   text-align: left;
   padding: 8px;
+}
+
+
+.valign-text-middle {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 0;
+}
+
+.phone {
+  font-family: 'Roboto';
+  height: 80px;
+  letter-spacing: 0;
+  line-height: normal;
+  text-align: center;
+  width: 262px;
+  font-style: normal;
+  font-weight: 200;
+  font-size: 20px;
+}
+
+.ubicacion {
+  font-family: 'Roboto';
+  height: 80px;
+  letter-spacing: 0;
+  line-height: normal;
+  text-align: center;
+  width: 288px;
+  font-style: normal;
+  font-weight: 200;
+  font-size: 20px;
+}
+
+.mail {
+  font-family: 'Roboto';
+  height: 80px;
+  letter-spacing: 0;
+  line-height: normal;
+  text-align: center;
+  width: 340px;
+  font-style: normal;
+  font-weight: 200;
+  font-size: 20px;
+}
+
+.ejtech{
+  height: 80px;
+  letter-spacing: 0;
+  line-height: normal;
+  text-align: center;
+  width: 288px;
+  font-style: normal;
+  font-weight: 200;
+  font-size: 20px;
+}
+
+.contenido {
+  min-height: 70%;
+  min-height: -webkit-calc(100% - 122px);
+  min-height: -moz-calc(100% - 122px);
+  min-height: calc(100% - 122px);
 }
