@@ -150,7 +150,7 @@ def ver_historia_clinica(request, id_mascota):
     for tipo in tipos:
         tipos_dict[tipo.tipo] = tipo.id
     vacunas = atenciones.filter(Q(tipo_id=tipos_dict['Vacuna antiviral']) | Q(tipo_id=tipos_dict['Vacuna antirrábica']))
-    clinicas = atenciones.exclude(Q(tipo_id=tipos_dict['Vacuna antiviral']) & ~Q(tipo_id=tipos_dict['Vacuna antirrábica']))
+    clinicas = atenciones.exclude(Q(tipo_id=tipos_dict['Vacuna antiviral']) | Q(tipo_id=tipos_dict['Vacuna antirrábica']))
     context = {
         "perro": perro,
         "clinicas": clinicas,
