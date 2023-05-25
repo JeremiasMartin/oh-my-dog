@@ -2,6 +2,7 @@ from django.shortcuts import render
 from usuarios.models import Cliente, Usuario
 from .models import *
 from .forms import *
+from servicios.forms import PersonalForm
 from django.contrib.auth import login, authenticate
 from django.contrib.auth import logout as django_logout
 from django.shortcuts import render, redirect
@@ -23,6 +24,7 @@ from django.contrib.auth.forms import PasswordResetForm,SetPasswordForm
 from django.contrib.auth.views import PasswordChangeView
 from django.contrib.auth.forms import PasswordChangeForm
 from django.urls import reverse_lazy
+from django.contrib.gis.geos import Point
 
 # Create your views here.
 
@@ -180,4 +182,28 @@ class restPasswordConfirm(PasswordResetConfirmView):
 def restDone(request):
     
     return render(request, 'cliente/restablecer_contrasenia_enviado.html') 
+
+
+def registrar_personal(request):
+    if request.method == 'POST':
+        form = PersonalForm(request.POST)
+        if form.is_valid():
+            personal = form.save(commit=False)
+            coordenadas = request.POST.get('ubicacion')  # Obtiene el valor de la ubicación del campo oculto
+            if coordenadas:
+                coordenadas_list = coordenadas.split(',')
+                if len(coordenadas_list) == 2:
+                    latitud, longitud = coordenadas_list  # Divide las coordenadas en latitud y longitud
+                    personal.ubicacion = Point(float(longitud), float(latitud))  # Crea un objeto Point con las coordenadas
+            personal.save()
+            return redirect('/')
+    else:
+        form = PersonalForm()
+
+    context = {
+        'form': form
+    }
+
+    return render(request, 'admin/registrar_personal.html', context)
+
 

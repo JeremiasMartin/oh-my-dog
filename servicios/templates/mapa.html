@@ -1,0 +1,50 @@
+{% extends 'OhMyDogApp/base.html' %}
+{% load leaflet_tags %}
+{% load static %}
+
+{% block content %}
+<head>
+  {% leaflet_js plugins="forms" %}
+  {% leaflet_css plugins="forms" %}
+  <script src="https://kit.fontawesome.com/803ea84c99.js" crossorigin="anonymous"></script>
+</head>
+<h1>Mapa de Personal</h1>
+<div id="map" style="width: 100%; height: 400px;"></div>
+
+<script>
+
+  var map = L.map('map').setView([-34.9215, -57.9545], 13);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+
+  {% for person in personal %}
+    var lat = "{{ person.ubicacion.y }}".replace(",", ".");
+    var lng = "{{ person.ubicacion.x }}".replace(",", ".");
+    var latLng = L.latLng(parseFloat(lat), parseFloat(lng));
+
+      // Seleccionar el ícono de Bootstrap según el tipo de personal
+      var iconClass;
+    if ("{{ person.tipo }}" === "paseador") {
+      iconClass = "fas fa-dog";
+    } else if ("{{ person.tipo }}" === "cuidador") {
+        iconClass = "fa-shield-dog";
+    } else if ("{{ person.tipo }}" === "guarderia") {
+        iconClass = "fa-house-chimney";
+    }
+
+    // Crear el ícono de FontAwesome con el iconClass correspondiente
+    var icon = L.divIcon({
+      className: 'custom-icon',
+      html: '<i class="fas ' + iconClass + '"></i>',
+      iconSize: [10, 10],
+    });
+
+    // Agregar el marcador al mapa con el icono correspondiente
+    var marker = L.marker(latLng, { icon: icon }).addTo(map);
+    marker.bindPopup("Nombre: {{person.nombre}}<br>Tipo: {{person.tipo}}<br> Horarios: {{person.horario}}");  // Información adicional en el marcador
+  {% endfor %}
+</script>
+{% endblock %}
