@@ -1,0 +1,32 @@
+{% extends 'OhMyDogApp/base.html' %}
+{% load leaflet_tags %}
+{% load static %}
+{% block content %}
+<head>
+  {% leaflet_js plugins="forms" %}
+  {% leaflet_css plugins="forms" %}
+ </head>
+  <h1>Registrar Personal</h1>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div id="map"></div> 
+    <input type="submit" value="Guardar">
+  </form>
+<script>
+   var map = L.map('map').setView([-34.9215, -57.9545], 13);  // bs as lp
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    var marker;
+    map.on('click', function(e) {
+      if (marker) {
+        map.removeLayer(marker);
+      }
+      marker = L.marker(e.latlng).addTo(map);
+      document.getElementById("id_ubicacion").value = e.latlng.lat + ',' + e.latlng.lng;  // Almacena las coordenadas en el campo oculto
+    });
+  </script>
+{% endblock %}

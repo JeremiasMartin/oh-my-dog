@@ -16,4 +16,5 @@ urlpatterns = [
     path('reset_password_complete/', views.PasswordResetCompleteView.as_view(template_name="cliente/restablecer_contrasenia_exitoso.html"), name='password_reset_complete'),
     path('cambiar_contrasenia/', cambiar_contrasenia.as_view(template_name='cliente/cambiar_contrasenia.html')),
     path('password_change/done/',views.PasswordChangeDoneView.as_view(), name='password_change_done'),
+    path('registrar_personal/', registrar_personal, name='Registrar_personal'),
 ]

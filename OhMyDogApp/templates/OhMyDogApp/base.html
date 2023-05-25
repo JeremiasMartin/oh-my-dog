@@ -52,6 +52,9 @@
           <li class="nav-item {% if request.path == '/usuarios/registrar_cliente/' %}current_page_item{%endif %}">
               <a class="nav-link" href="{% url 'Registro' %}">Registrar Cliente</a>
           </li>
+          <li class="nav-item {% if request.path == '/usuarios/registrar_personal/' %}current_page_item{%endif %}">
+            <a class="nav-link" href="{% url 'Registrar_personal' %}">Registrar Personal</a>
+          </li>
           <li class="nav-item {% if request.path == '/usuarios/clientes/' %}current_page_item{%endif %}">
               <a class="nav-link" href="{% url 'Clientes' %}">Clientes</a>
           </li>
@@ -84,6 +87,11 @@
         <li class="nav-item {% if request.path == '/usuarios/login/' %}current_page_item{% endif %}">
           <a class="btn btn-primary" href="{% url 'Login' %}">
             <i class="fa-solid fa-right-to-bracket"></i>
+          </a>
+        </li>
+        <li class="nav-item {% if request.path == '/servicios/mapa/' %}current_page_item{% endif %}">
+          <a class="btn btn-primary" href="{% url 'Mapa' %}">
+            Mapa
           </a>
         </li>
       </ul>
