@@ -1,9 +1,5 @@
-from datetime import datetime
-from time import time
 from django.db import models
-from django.utils import timezone
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
-from django.core.validators import RegexValidator, MinValueValidator
 
 class UsuarioManager(BaseUserManager):
 
@@ -35,15 +31,10 @@ class Usuario(AbstractBaseUser):
     last_name = None
 
     email = models.EmailField('Mail', unique=True, max_length=254, blank=True, null=False) 
-    dni = models.PositiveIntegerField('DNI',unique=True, blank=False, null=False, default='', validators=[MinValueValidator((1000000),message="Por favor ingrese minimo 7 digitos")])
-
-    nombre = models.CharField('Nombre', validators=[RegexValidator((r'^[a-zA-Z ]+$'), message="Por favor ingrese solo letras sin acentos.")],
-                              max_length=20, blank=False, null=False, default='')
-    
-    apellido = models.CharField('Apellido', validators=[RegexValidator((r'^[a-zA-Z ]+$'), message="Por favor ingrese solo letras sin acentos.")],
-                                max_length=20, blank=False, null=False, default='')
-    
-    telefono = models.PositiveIntegerField('Telefono', blank=False, null=False, default='', validators=[MinValueValidator((1000000000),message="Por favor ingrese mínimo 10 digitos")])
+    dni = models.PositiveIntegerField('DNI',unique=True, blank=False, null=False, default='')
+    nombre = models.CharField('Nombre', max_length=20, blank=False, null=False, default='')
+    apellido = models.CharField('Apellido', max_length=20, blank=False, null=False, default='')
+    telefono = models.BigIntegerField('Telefono', blank=False, null=False, default=0)
     is_active = models.BooleanField(default=True)
     tipo_usuario = models.CharField('Tipo de Usuario', max_length=20, blank=False, null=False)
     is_staff = models.BooleanField(default=False)
