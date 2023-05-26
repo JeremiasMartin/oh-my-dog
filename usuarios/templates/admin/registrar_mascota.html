@@ -3,18 +3,23 @@
 {% load crispy_forms_tags %}
 {% block content %}
 
-<form method="post" action="" style="color: black;" onsubmit="return validarFormulario()">
+<div class="container">
+  {% for message in messages %}
+      <div id="msg"class="alert alert-{{ message.tags }}">
+        {{ message }}
+      </div>
+  {% endfor %}
 
-  {% csrf_token %}
-  <div style="width: 75%; margin: auto;">
-    {{ form|crispy }}
+  <form method="post" action="" style="color: black;" onsubmit="return validarFormulario()">
+    {% csrf_token %}
+    <div style="width: 75%; margin: auto;">
+      {{ form|crispy }}
+      <button type="submit" id="btn-registrar" class="btn btn-success">Registrar</button>
+      <a href="{% url 'Clientes' %}" class="btn btn-primary">Cancelar</a>
+    </div>
 
-    <button type="submit" id="btn-registrar" class="btn btn-success">Registrar</button>
-    <a href="{% url 'Clientes' %}" class="btn btn-primary">Cancelar</a>
-  </div>
-
-</form>
-
+  </form>
+</div>
 
 <script>
     function validarFormulario() {

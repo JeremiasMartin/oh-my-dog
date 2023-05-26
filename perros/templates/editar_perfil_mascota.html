@@ -3,8 +3,17 @@
 {% load crispy_forms_tags %}
 {% block content %}
 
+
 <h1>Editar Perfil Mascota</h1>
+
+
+
  <div class="container">
+    {% for message in messages %}
+      <div id="msg"class="alert alert-{{ message.tags }}">
+      {{ message }}
+      </div>
+    {% endfor %}
     <div class="card-deck">
         <div class="col-md-5 mb-5">
             <div class="card h-100">
@@ -13,7 +22,6 @@
                         <h5 class="card-title">Perfil</h5>
                     </div>
                     <form method="post" action="" style="color: black;" onsubmit="return validarFormulario()">
-
                         {% csrf_token %}
                         <p class="card-text">
                             <i class="fa-solid fa-dog" style="color: #e4a64e;"></i>

@@ -23,11 +23,16 @@ def registrar_mascota(request, cliente_id):
         form = registrar_perro(request.POST)
         if form.is_valid():
             # Crear la mascota y guardarla en la base de datos
-            mascota = form.save(commit=False)
-            mascota.cliente = cliente
-            mascota.save()
-            messages.success(request, 'Mascota agregada exitosamente')
-            return redirect('/usuarios/clientes')
+            nombre_mascota = form.cleaned_data['nombre']
+            nombre_mascota_minuscula = nombre_mascota.lower()
+            if Perro.objects.filter(cliente=cliente, nombre__iexact=nombre_mascota_minuscula).exists():
+                messages.error(request, 'El cliente ya tiene una mascota con ese nombre registrada.')
+            else: 
+                mascota = form.save(commit=False)
+                mascota.cliente = cliente
+                mascota.save()
+                messages.success(request, 'Mascota agregada exitosamente')
+                return redirect('/usuarios/clientes')
     else:
         # Mostrar el formulario de registro de mascota
         form = registrar_perro()
@@ -40,12 +45,19 @@ def registrar_mascota(request, cliente_id):
 
 def editar_perfil_mascota(request, id):
     perro = get_object_or_404(Perro, id=id)
+    cliente = get_object_or_404(Cliente, cliente_id=perro.cliente_id)
     if request.method == 'POST':
         form = editar_pefil_mascota(request.POST, instance=perro)
         if form.is_valid():
-            form.save()
-            messages.success(request, '¡Información actualizada correctamente!')
-            return redirect(f"/perros/listar-mascotas-cliente/{perro.cliente.user_id}/")
+            nombre_mascota = form.cleaned_data['nombre']
+            nombre_mascota_minuscula = nombre_mascota.lower()
+            #chequea si el nombre existe, pero no incluye al mismo perro para asi poder cambiar a mayusculas y minusculas
+            if Perro.objects.exclude(id=perro.id).filter(cliente=cliente, nombre__iexact=nombre_mascota_minuscula).exists():
+                messages.error(request, 'El cliente ya tiene una mascota con ese nombre registrada.')
+            else: 
+                form.save()
+                messages.success(request, '¡Información actualizada correctamente!')
+                return redirect(f"/perros/listar-mascotas-cliente/{perro.cliente.user_id}/")
     else:
         form = editar_pefil_mascota(instance=perro)
     
