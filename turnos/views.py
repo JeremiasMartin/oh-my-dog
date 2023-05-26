@@ -49,11 +49,11 @@ def listar_turnos_pendientes(request):
     return render(request, 'listar_pendientes.html', {'turnos': page_obj})
 
 def listar_turnos_confirmados(request):
-    #turnos = Turno.objects.filter(estado_id=1)
-    #paginator = Paginator(turnos,6)
-    #page_number = request.GET.get('page')
-    #page_obj = paginator.get_page(page_number)
-    return render(request, 'listar_confirmados.html')#, {'turnos': turnos})
+    turnos = Turno.objects.filter(estado_id=1)
+    paginator = Paginator(turnos,6)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'listar_confirmados.html', {'turnos': turnos})
 
 def listar_confirmados_del_dia(request):
     fecha_actual = timezone.localtime().date()

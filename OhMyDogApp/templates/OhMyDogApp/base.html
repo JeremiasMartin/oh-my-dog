@@ -63,7 +63,7 @@
           </li> 
           <!-- Despues cambiar a turnos confirmados (todos)-->  
           <li class="nav-item {% if request.path == '/turnos/listar_confirmados_dia/' %}current_page_item{%endif %}">
-            <a class="nav-link" href="{% url 'listar_confirmados_dia' %}">Turnos del Dia</a>   
+            <a class="nav-link" href="{% url 'listar_turnos_confirmados' %}">Turnos Confirmados</a>   
           </li> 
           {% else %}
           <li class="nav-item {% if request.path == '/perros/listar_mascotas/' %}current_page_item{%endif %}">
