@@ -157,3 +157,18 @@ def ver_historia_clinica(request, id_mascota):
         'vacunas': vacunas
     }
     return render(request, 'ver_historia_clinica.html', context)
+
+def listar_vacunas(request, id_mascota):
+    perro = get_object_or_404(Perro, id=id_mascota)
+    atenciones = Atencion.objects.filter(mascota_id=id_mascota)
+    # Para filtrar las atenciones
+    tipos = Tipo_atencion.objects.all()
+    tipos_dict = {}
+    for tipo in tipos:
+        tipos_dict[tipo.tipo] = tipo.id
+    vacunas = atenciones.filter(Q(tipo_id=tipos_dict['Vacuna antiviral']) | Q(tipo_id=tipos_dict['Vacuna antirrábica']))
+    context = {
+        "perro": perro,
+        'vacunas': vacunas
+    }
+    return render(request, 'listar_vacunas.html', context)
