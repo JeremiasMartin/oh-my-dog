@@ -34,6 +34,12 @@
                                 <div class="listing-heading text-center">
                                     <h5 class="card-title">{{ mascota.nombre }}</h5>
                                 </div>
+                                {% if mascota.foto %}
+                                    <hr>
+                                    <div class="foto-perfil">
+                                        <img class='foto-perfil' src="{{ mascota.foto.url }}" alt="foto perfil"> 
+                                    </div> 
+                                {% endif %}
                                 <hr>
                                 <p class="card-text"><i class="fas fa-user" style="color: #e4a64e;"></i> Dueño: {{ mascota.cliente}}</p>
                                 <hr>

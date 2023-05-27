@@ -34,7 +34,7 @@ class Usuario(AbstractBaseUser):
     dni = models.PositiveIntegerField('DNI',unique=True, blank=False, null=False, default='')
     nombre = models.CharField('Nombre', max_length=20, blank=False, null=False, default='')
     apellido = models.CharField('Apellido', max_length=20, blank=False, null=False, default='')
-    telefono = models.BigIntegerField('Telefono', blank=False, null=False, default=0)
+    telefono = models.BigIntegerField('Telefono', blank=False, null=False, default='')
     is_active = models.BooleanField(default=True)
     tipo_usuario = models.CharField('Tipo de Usuario', max_length=20, blank=False, null=False)
     is_staff = models.BooleanField(default=False)

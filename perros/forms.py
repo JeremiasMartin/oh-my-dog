@@ -1,21 +1,12 @@
 from django import forms
 from .models import Perro, Atencion, Tipo_atencion
 from django.utils.encoding import force_str
-from datetime import date
 
-class registrar_perro(forms.ModelForm):
+#Unifico los forms edicion y registro porque eran iguales 
+class perro_form(forms.ModelForm):
     class Meta:
         model = Perro
-        fields = ['nombre', 'raza', 'tamanio', 'fecha_nac', 'color'] 
-    
-        
-
-
-class editar_pefil_mascota(forms.ModelForm):
-    class Meta:
-        model = Perro
-        fields = ['nombre', 'raza', 'tamanio','fecha_nac', 'color'] 
-    
+        fields = ['nombre', 'raza', 'tamanio', 'fecha_nac', 'color', 'foto'] 
         
 class registrar_atencion_form(forms.ModelForm):
     class Meta:

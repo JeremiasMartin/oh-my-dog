@@ -15,13 +15,13 @@
       </div>
     {% endfor %}
     <div class="card-deck">
-        <div class="col-md-5 mb-5">
+        <div class="col-md-6 mb-5">
             <div class="card h-100">
                 <div class="card-body">
                     <div class="listing-heading text-center">
                         <h5 class="card-title">Perfil</h5>
                     </div>
-                    <form method="post" action="" style="color: black;" onsubmit="return validarFormulario()">
+                    <form method="post" action="" style="color: black;" onsubmit="return validarFormulario()" enctype='multipart/form-data'>
                         {% csrf_token %}
                         <p class="card-text">
                             <i class="fa-solid fa-dog" style="color: #e4a64e;"></i>
@@ -48,6 +48,14 @@
                             <i class="fa-solid fa-palette" style="color: #e4a64e;"></i>
                             Color*: {{ form.color }}
                         </p>
+                        <hr>
+                        <p class="card-text">
+                            <i class="fa-solid fa-image" style="color: #e4a64e;"></i>
+                            Foto: 
+                        </p>
+                        <p>
+                            {{ form.foto }}
+                        </p>  
                         <hr>
                           <button type="submit" id="btn-registrar" class="btn btn-success">Confirmar</button>
                           <a href="{% url 'perros:Listar_mascotas_cliente' cliente_id=perro.cliente.user_id %}" class="btn btn-primary">Cancelar</a>

@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Perro, Atencion, Tipo_atencion 
 from usuarios.models import Cliente
-from .forms import registrar_perro, editar_pefil_mascota, registrar_atencion_form
+from .forms import perro_form, registrar_atencion_form
 from django.contrib import messages
 from django.core.paginator import Paginator
 from datetime import datetime, date, timedelta
@@ -20,7 +20,7 @@ def registrar_mascota(request, cliente_id):
     cliente = get_object_or_404(Cliente, cliente_id=cliente_id)
     if request.method == 'POST':
         # Procesar el formulario de registro de mascota
-        form = registrar_perro(request.POST)
+        form = perro_form(request.POST, request.FILES)
         if form.is_valid():
             # Crear la mascota y guardarla en la base de datos
             nombre_mascota = form.cleaned_data['nombre']
@@ -35,7 +35,7 @@ def registrar_mascota(request, cliente_id):
                 return redirect('/usuarios/clientes')
     else:
         # Mostrar el formulario de registro de mascota
-        form = registrar_perro()
+        form = perro_form()
     
     context={
         'form': form,
@@ -47,7 +47,7 @@ def editar_perfil_mascota(request, id):
     perro = get_object_or_404(Perro, id=id)
     cliente = get_object_or_404(Cliente, cliente_id=perro.cliente_id)
     if request.method == 'POST':
-        form = editar_pefil_mascota(request.POST, instance=perro)
+        form = perro_form(request.POST or None, request.FILES or None, instance=perro)
         if form.is_valid():
             nombre_mascota = form.cleaned_data['nombre']
             nombre_mascota_minuscula = nombre_mascota.lower()
@@ -59,7 +59,7 @@ def editar_perfil_mascota(request, id):
                 messages.success(request, '¡Información actualizada correctamente!')
                 return redirect(f"/perros/listar-mascotas-cliente/{perro.cliente.user_id}/")
     else:
-        form = editar_pefil_mascota(instance=perro)
+        form = perro_form(instance=perro)
     
     context = {
         'form': form, 

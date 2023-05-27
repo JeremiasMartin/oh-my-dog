@@ -1,14 +1,13 @@
 from django.db import models
 from usuarios.models import Cliente
-from django.core.validators import MaxValueValidator, RegexValidator, MinValueValidator
+from django.core.validators import MaxValueValidator, RegexValidator
 from datetime import date
+from PIL import Image
 
 class Perro(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, blank=False, null=False)
-    nombre = models.CharField('Nombre', validators = [RegexValidator((r'^[a-zA-Z ]+$'), message="Por favor ingrese solo letras sin acentos.")], 
-                              max_length=100, blank=False, null=False)
-    raza = models.CharField('Raza', max_length=100, validators = [RegexValidator((r'^[a-zA-Z ]+$'), message="Por favor ingrese solo letras sin acentos.")],
-                            blank=False, null=False)
+    nombre = models.CharField('Nombre', max_length=100, blank=False, null=False)
+    raza = models.CharField('Raza', max_length=100, blank=False, null=False)
 
     opciones_tamanio = (
         ('Pequeño','Pequeño'),
@@ -16,11 +15,9 @@ class Perro(models.Model):
         ('Grande','Grande'),
     )
     tamanio = models.CharField('Tamanio', max_length=10, blank=False, null=False, choices= opciones_tamanio)
-    fecha_nac = models.DateField('Nacimiento',
-                                 validators=[MaxValueValidator((date.today), message="La fecha ingresada no puede ser futura")], 
-                                 blank=False, null=False)
-    color = models.CharField('Color', validators = [RegexValidator((r'^[a-zA-Z ]+$'), message="Por favor ingrese solo letras sin acentos.")],
-                             max_length=100, blank=False, null=False)
+    fecha_nac = models.DateField('Nacimiento',blank=False, null=False)
+    color = models.CharField('Color', max_length=100, blank=False, null=False)
+    foto = models.ImageField(null=True, blank = True, upload_to='mascotas')
 
     class Meta:
         verbose_name = 'perro'
@@ -28,6 +25,7 @@ class Perro(models.Model):
 
     def __str__(self) -> str:
         return '%s, %s, %s' % (self.nombre, self.raza, self.tamanio)
+        
 
 class Tipo_atencion(models.Model):
     tipos = (
@@ -49,8 +47,7 @@ class Tipo_atencion(models.Model):
 class Atencion(models.Model):
     mascota = models.ForeignKey(Perro, on_delete=models.CASCADE)
     tipo = models.ForeignKey(Tipo_atencion, on_delete=models.CASCADE)
-    peso = models.DecimalField('Peso', validators = [MinValueValidator((0.5))],
-                               max_digits=100, decimal_places=97, blank=False, null=False)
+    peso = models.DecimalField('Peso', max_digits=100, decimal_places=97, blank=False, null=False)
     fecha = models.DateField('Fecha', blank=False, null=False)
     observacion = models.TextField('Observacion', blank=False, null=True)
 
