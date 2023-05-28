@@ -17,6 +17,11 @@
         <li class="nav-item {% if request.path == '/' %}current_page_item{%endif %}">
           <a class="nav-link" href="{% url 'Home' %}">Inicio</a>
         </li>
+         <!-- Mapa Paseadores/cuidadores/guarderia -->
+        <li class="nav-item {% if request.path == '/servicios/mapa/' %}current_page_item{% endif %}">
+          <a class="nav-link" href="{% url 'Mapa' %}">Mapa</a>
+        </li> 
+        
         {% if user.is_authenticated %}
             {% if user.is_staff %}
                 <!-- Dropdown Clientes -->
@@ -46,7 +51,7 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="{% url 'Registrar_personal' %}">Registrar Personal</a></li>
-                        <li><a class="dropdown-item" href="#">Ver Personal</a></li>
+                        <li><a class="dropdown-item" href="{% url 'Listar_personal' %}">Ver Personal</a></li>
                     </ul>
                 </li>
             {% else %}
@@ -86,12 +91,6 @@
       <li class="nav-item {% if request.path == '/usuarios/login/' %}current_page_item{% endif %}">
         <a class="btn btn-primary" href="{% url 'Login' %}">
           <i class="fa-solid fa-right-to-bracket"></i>
-        </a>
-      </li>
-      <!-- Mapa Paseadores/cuidadores/guarderia -->
-      <li class="nav-item {% if request.path == '/servicios/mapa/' %}current_page_item{% endif %}">
-        <a class="btn btn-primary" href="{% url 'Mapa' %}">
-            Mapa
         </a>
       </li>
     </div>
