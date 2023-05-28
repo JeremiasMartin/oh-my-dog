@@ -1,0 +1,57 @@
+{% extends 'OhMyDogApp/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<p>Completa el formulario para registrar un perro en adopción:</p>
+
+<form method="POST" enctype="multipart/form-data">
+  {% csrf_token %}
+  
+  <!-- Campos para los datos del perro en adopción -->
+  <div>
+    <label for="id_sexo">Sexo:</label>
+    <select name="sexo" id="id_sexo">
+      <option value="Macho">Macho</option>
+      <option value="Hembra">Hembra</option>
+    </select>
+  </div>
+  
+  <div>
+    <label for="id_tamanio">Tamaño:</label>
+    <select name="tamaño" id="id_tamanio">
+      <option value="pequeño">Pequeño</option>
+      <option value="mediano">Mediano</option>
+      <option value="grande">Grande</option>
+    </select>
+  </div>
+  
+  <div>
+    <label for="id_color">Color:</label>
+    <input type="text" name="color" id="id_color">
+  </div>
+  
+  <div>
+    <label for="id_origen">Origen:</label>
+    <input type="text" name="origen" id="id_origen">
+  </div>
+  
+  <div>
+    <label for="id_raza">Raza:</label>
+    <input type="text" name="raza" id="id_raza">
+  </div>
+  
+  <div>
+    <label for="id_descripcion_medica">Descripción Médica:</label>
+    <textarea name="descripcion_medica" id="id_descripcion_medica"></textarea>
+  </div>
+  
+  <div>
+    <label for="id_foto">Foto:</label>
+    <input type="file" name="foto" id="id_foto">
+  </div>
+  
+  <button type="submit">Subir</button>
+</form>
+
+{% endblock %}
