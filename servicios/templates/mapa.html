@@ -9,8 +9,8 @@
   <script src="https://kit.fontawesome.com/803ea84c99.js" crossorigin="anonymous"></script>
 </head>
 <h1>Mapa de Personal</h1>
-<div id="map" style="width: 100%; height: 400px;"></div>
-
+<div id="map" style="width: 100%; height: 800px;"></div>
+{% if personal %}
 <script>
 
   var map = L.map('map').setView([-34.9215, -57.9545], 13);
@@ -47,4 +47,7 @@
     marker.bindPopup("Nombre: {{person.nombre}}<br>Tipo: {{person.tipo}}<br> Horarios: {{person.horario}}");  // Información adicional en el marcador
   {% endfor %}
 </script>
+{% else %}
+  <p>No se ha registrado personal.</p>
+{% endif %}
 {% endblock %}
