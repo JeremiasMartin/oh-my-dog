@@ -1,0 +1,85 @@
+{% extends "OhMyDogApp/base.html" %}
+{% load leaflet_tags %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+<head>
+    {% leaflet_js plugins="forms" %}
+    {% leaflet_css plugins="forms" %}
+</head>
+<h1>Editar Personal</h1>
+<div class="container">
+    <div class="card-deck">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="listing-heading text-center">
+                        <h5 class="card-title">Perfil</h5>
+                    </div>
+                    <form method="post" action="" style="color: black;">
+                        {% csrf_token %}
+                        <p class="card-text">
+                            <i class="fa-solid fa-user" style="color: #e4a64e;"></i>
+                            Nombre*: {{ form.nombre }}
+                            <p>
+                                {% for error in form.nombre.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                            </p>
+                        </p>
+                        <hr>
+                        <p class="card-text">
+                            <i class="fa-solid fa-user" style="color: #e4a64e;"></i>
+                            Dirección*: {{ form.direccion }}
+                            <p>
+                                {% for error in form.direccion.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                            </p>
+                        </p>
+                        <hr>
+                        <p class="card-text">
+                            <i class="fa-solid fa-phone-volume" style="color: #e4a64e;"></i>
+                            Contacto*: {{ form.contacto }}
+                            <p>
+                                {% for error in form.contacto.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                            </p>
+                        </p>
+                        <hr>
+                        <p class="card-text">
+                            <i class="fa-solid fa-phone-volume" style="color: #e4a64e;"></i>
+                            Tipo*: {{ form.tipo }}
+                        </p>
+                        <hr>
+                        <!-- Agrega los campos adicionales aquí -->
+                        <p class="card-text">
+                            <i class="fa-solid fa-clock" style="color: #e4a64e;"></i>
+                            Horario*: {{ form.horario }}
+                            <p>
+                                {% for error in form.horario.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                            </p>
+                        </p>
+                        <hr>
+                        <p class="card-text">
+                            <i class="fa-solid fa-map-marker-alt" style="color: #e4a64e;"></i>
+                            Ubicación*: {{ form.ubicacion }}
+                            <p>
+                                {% for error in form.ubicacion.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                            </p>
+                        </p>
+                        <hr>
+                        <button type="submit" id="btn-registrar" class="btn btn-primary">Guardar cambios</button>
+                    </form>
+                    <a href="/servicios/listar_personal/" class="btn btn-primary">Cancelar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -7,11 +7,11 @@
   {% leaflet_css plugins="forms" %}
  </head>
   <h1>Registrar Personal</h1>
-  <form method="post" enctype="multipart/form-data">
+  <form method="post" enctype="multipart/form-data" id="personal-form">
     {% csrf_token %}
     {{ form.as_p }}
-    <div id="map"></div> 
-    <input type="submit" value="Guardar">
+    <div id="map"></div>
+    <input type=" " value="Guardar" disabled>
   </form>
 <script>
    var map = L.map('map').setView([-34.9215, -57.9545], 13);  // bs as lp
@@ -21,12 +21,29 @@
     }).addTo(map);
 
     var marker;
+    var guardarButton = document.querySelector('input[type="submit"]');
+  
     map.on('click', function(e) {
       if (marker) {
         map.removeLayer(marker);
       }
       marker = L.marker(e.latlng).addTo(map);
       document.getElementById("id_ubicacion").value = e.latlng.lat + ',' + e.latlng.lng;  // Almacena las coordenadas en el campo oculto
+      guardarButton.removeAttribute('disabled'); // Habilita el botón cuando se agrega el marcador
     });
-  </script>
+
+    var form = document.getElementById('personal-form');
+    form.addEventListener('submit', function(event) {
+      if (!marker) {
+        event.preventDefault();
+        alert('Debe seleccionar una ubicación en el mapa.');
+      }
+    });
+
+    map.on('moveend', function() {
+      if (!marker) {
+        guardarButton.setAttribute('disabled', 'disabled'); // Deshabilita el botón si no hay marcador
+      }
+    });
+</script>
 {% endblock %}
