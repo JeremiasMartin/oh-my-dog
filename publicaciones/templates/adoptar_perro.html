@@ -2,11 +2,15 @@
 {% load static %}
 {% load crispy_forms_tags %}
 {% block content %}
-
 <p>Completa el formulario para registrar un perro en adopción:</p>
 <form method="POST" enctype="multipart/form-data">
   {% csrf_token %}
   {{ form.as_p }}
+  
+  <!-- Campos adicionales de Publicacion -->
+  {{ form.instance.id_perro_publicacion.descripcion.label_tag }}: {{ form.instance.id_perro_publicacion.descripcion }}
+  {{ form.instance.id_perro_publicacion.activo.label_tag }}: {{ form.instance.id_perro_publicacion.activo }}
+
   <button type="submit">Subir</button>
 </form>
 {% endblock %}
