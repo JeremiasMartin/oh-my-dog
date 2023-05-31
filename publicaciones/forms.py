@@ -1,17 +1,13 @@
-
 from django import forms
-from .models import PerroAdopcion
+from .models import Adopcion
 
 class AdopcionForm(forms.ModelForm):
     class Meta:
-        model = PerroAdopcion
-        fields = ('sexo', 'tamaño', 'color', 'origen', 'raza', 'descripcion_medica', 'foto')
+        model = Adopcion
+        fields = ('perro_publicacion', 'origen', 'motivo_adopcion')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['color'].required = True
-        self.fields['sexo'].required = True
-        self.fields['tamaño'].required = True
+        self.fields['perro_publicacion'].required = True
         self.fields['origen'].required = True
-        self.fields['raza'].required = True
-        self.fields['descripcion_medica'].required = True
+        self.fields['motivo_adopcion'].required = True

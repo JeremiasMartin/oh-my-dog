@@ -25,7 +25,7 @@ urlpatterns = [
     path('perros/', include(('perros.urls', 'perros'), namespace='perros')),
     path('turnos/', include('turnos.urls')),
     path('servicios/', include('servicios.urls')),
-
+    path('publicaciones/', include('publicaciones.urls')),
 
 
 ]
