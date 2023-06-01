@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Perro, Atencion, Tipo_atencion 
 from usuarios.models import Cliente
-from .forms import perro_form, registrar_atencion_form
+from .forms import perro_form, registrar_atencion_form, editar_foto_form
 from django.contrib import messages
 from django.core.paginator import Paginator
 from datetime import datetime, date, timedelta
@@ -67,6 +67,24 @@ def editar_perfil_mascota(request, id):
     }
     
     return render(request, 'editar_perfil_mascota.html', context)
+
+def editar_foto_mi_mascota(request, id):
+    perro = get_object_or_404(Perro, id=id)
+    cliente = get_object_or_404(Cliente, cliente_id=perro.cliente_id)
+    if request.method == 'POST':
+        form = editar_foto_form(request.POST or None, request.FILES or None, instance=perro)
+        if form.is_valid():
+            form.save()
+            messages.success(request, '¡Información actualizada correctamente!')
+            return redirect(f"/perros/listar-mascotas-cliente/{perro.cliente.user_id}/")
+    else:
+        form = editar_foto_form(instance=perro)
+
+    context = {
+        'form': form, 
+        'mascota': perro
+    }
+    return render(request, 'editar_foto_mi_mascota.html', context)
 
 def registrar_atencion(request, id_mascota):
     perro = get_object_or_404(Perro, id=id_mascota)

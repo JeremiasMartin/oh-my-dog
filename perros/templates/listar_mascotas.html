@@ -40,8 +40,10 @@
                                         <img class='foto-perfil' src="{{ mascota.foto.url }}" alt="foto perfil"> 
                                     </div> 
                                 {% endif %}
-                                <hr>
-                                <p class="card-text"><i class="fas fa-user" style="color: #e4a64e;"></i> Dueño: {{ mascota.cliente}}</p>
+                                {% if user.is_staff %}
+                                    <hr>
+                                    <p class="card-text"><i class="fas fa-user" style="color: #e4a64e;"></i> Dueño: {{ mascota.cliente}}</p>
+                                {% endif %}
                                 <hr>
                                 <p class="card-text"><i class="fa-solid fa-calendar-days" style="color: #e4a64e;"></i> Nacimiento: {{ mascota.fecha_nac }}</p>
                                 <hr>
@@ -54,6 +56,8 @@
                                 {% if request.user.is_staff %}
                                     <a href="/perros/editar-perfil-mascota/{{ mascota.id }}/" class="btn btn-primary btn-block">Editar Información</a>
                                     <a href="/perros/registrar-atencion/{{ mascota.id }}/" class="btn btn-primary btn-block">Registrar Atención</a>
+                                {% else %}
+                                    <a href="/perros/editar-foto-mi-mascota/{{ mascota.id }}/" class="btn btn-primary btn-block">Editar Foto</a>
                                 {% endif %}
                                 <a href="/perros/ver-historia-clinica/{{ mascota.id }}/" class="btn btn-primary btn-block">Ver Historia Clínica</a>
                                 <a href="/perros/listar-vacunas/{{ mascota.id }}/" class="btn btn-primary btn-block">Ver Vacunas Aplicadas</a>

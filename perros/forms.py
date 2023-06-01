@@ -8,6 +8,11 @@ class perro_form(forms.ModelForm):
         model = Perro
         fields = ['nombre', 'raza', 'tamanio', 'fecha_nac', 'color', 'foto'] 
         
+class editar_foto_form(forms.ModelForm):
+    class Meta:
+        model = Perro
+        fields = ['foto'] 
+        
 class registrar_atencion_form(forms.ModelForm):
     class Meta:
         model = Atencion

@@ -1,0 +1,49 @@
+{% extends 'OhMyDogApp/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<h1>Editar Perfil Mi Mascota</h1>
+
+<div class="container">
+    {% for message in messages %}
+      <div id="msg"class="alert alert-{{ message.tags }}">
+      {{ message }}
+      </div>
+    {% endfor %}
+    <div class="card-deck">
+        <div class="col-md-6 mb-5">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="listing-heading text-center">
+                        <h5 class="card-title">Perfil</h5>
+                    </div>
+                    <hr>
+                    <p class="card-text"><i class="fa-solid fa-calendar-days" style="color: #e4a64e;"></i> Nacimiento: {{ mascota.fecha_nac }}</p>
+                    <hr>
+                    <p class="card-text"><i class="fa-solid fa-dog" style="color: #e4a64e;"></i> Raza: {{ mascota.raza }}</p>
+                    <hr>
+                    <p class="card-text"><i class="fa-solid fa-ruler-vertical"style="color: #e4a64e;"></i> Tamaño: {{ mascota.tamanio }}</p>
+                    <hr>
+                    <p class="card-text"><i class="fa-solid fa-palette" style="color: #e4a64e;"></i> Color: {{ mascota.color }}</p>
+                    <hr>
+                    <form method="post" action="" style="color: black;" enctype='multipart/form-data'>
+                    {% csrf_token %}
+                        <p class="card-text">
+                            <i class="fa-solid fa-image" style="color: #e4a64e;"></i>
+                            Foto: 
+                        </p>
+                        <p>
+                            {{ form.foto }}
+                        </p>
+                        <hr>
+                        <button type="submit" id="btn-registrar" class="btn btn-success">Confirmar</button>
+                        <a href="{% url 'perros:Listar_mascotas_cliente' user.id %}" class="btn btn-primary">Cancelar</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
