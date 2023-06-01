@@ -24,12 +24,12 @@
             {% endfor %}
         </ul>
         {% endif %}
-        <div class="card-deck">
-            {% if turnos %}
-                <!-- Boton para turnos confirmados del día-->
-                <div style="padding: 10px 20px; display: inline-block;">
-                  <a href= "{% url 'listar_confirmados_dia' %}" class="btn btn-primary btn-block">Turnos del día</a>
-                </div>
+        {% if turnos %}
+            <!-- Boton para turnos confirmados del día-->
+            <div style="padding: 10px 20px; display: inline-block;">
+                <a href= "{% url 'listar_confirmados_dia' %}" class="btn btn-primary btn-block">Turnos del día</a>
+            </div>
+            <div class="card-deck">
                 {% for turno in turnos %}
                     <div class="col-md-4 mb-4">
                         <div class="card h-100">
@@ -39,24 +39,25 @@
                                 <hr>
                                 <p class="card-text"><i class="fa-solid fa-id-card" style="color: #e4a64e;"></i> Cliente: {{ turno.cliente }}</p>
                                 <hr>
+                                <p class="card-text"><i class="fa-solid fa-dog" style="color: #e4a64e;"></i> Mascota: {{ turno.perro }}</p>
+                                <hr>
                                 <p class="card-text"><i class="fa fa-info-circle" style="color: #e4a64e;"></i> Estado: {{ turno.estado.estado }}</p>
                                 <hr>
                                 <p class="card-text"><i class="fa fa-stethoscope" style="color: #e4a64e;"></i> Tipo de Atenci&oacute;n: {{ turno.tipo_atencion.tipo }}</p>
                                 <hr>
                                 <div style="display: flex; flex-direction: column; align-items: center;"class="d-flex flex-column">
-                                    <a href= "{% url 'perros:Listar_mascotas_cliente' turno.cliente.user_id  %}" class="btn btn-primary btn-block">Registrar Atención</a>
+                                    <a href= "{% url 'perros:Listar_mascotas_cliente' turno.cliente_id  %}" class="btn btn-primary btn-block">Registrar Atención</a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 {% endfor %}
-                
+            </div>    
             {% else %}
-                <div class="col-md-12">
-                    <p>No hay turnos confirmados</p>
-                </div>
-            {% endif %}
-        </div> 
+            <div class="col-md-12">
+                <p>No hay turnos confirmados</p>
+            </div>
+        {% endif %} 
     </div>
     <!-- Paginacion -->
     <div class="container">

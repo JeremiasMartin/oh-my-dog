@@ -449,3 +449,8 @@ th, td {
   object-fit: cover;
   object-position: center;
 }
+
+.form-select {
+  display: inline-block; 
+  width: 300px;
+}

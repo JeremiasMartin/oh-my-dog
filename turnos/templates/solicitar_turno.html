@@ -13,9 +13,28 @@
    {% endif %}
   <form method="post" id="solicitar-turno-form">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary" id="btn-solicitar-turno" disabled>Solicitar Turno</button>
-  </form>
+    <div class="form-group">
+      <label for="{{ form.fecha.id_for_label }}">Fecha*:</label>
+      {{ form.fecha }}
+    </div>
+
+    <div class="form-group">
+      <label for="{{ form.tipo_atencion.id_for_label }}">Tipo de Atención*:</label>
+      {{ form.tipo_atencion }}
+    </div>
+
+    <div class="form-group">
+      <label for="{{ form.perro.id_for_label }}" style="display: inline-block; margin-right: 10px;">Perro*:</label>
+      <select name="{{ form.perro }}" class="form-select">
+        <!--<option value="">-------</option>  Por si es opcional elegir un perro--> 
+        {% for option in form.perro.field.choices %}
+          <option value="{{ option }}">{{ option }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    
+  <button type="submit" class="btn btn-primary" id="btn-solicitar-turno" disabled>Solicitar Turno</button>
+</form>
 
   <script>
     const form = document.getElementById('solicitar-turno-form');

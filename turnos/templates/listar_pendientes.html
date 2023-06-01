@@ -39,8 +39,10 @@
                         <hr>
                         <p class="card-text text-wrap" data-fecha="{{ turno.fecha|date:"d/m/Y" }}"><i class="fa fa-calendar" style="color: #e4a64e;"></i> Fecha: {{ turno.fecha|date }}</p>
                         <hr>
-                        <p class="card-text"><i class="fa-solid fa-id-card" style="color: #e4a64e;"></i> Cliente: {{ turno.cliente }}</p>
+                        <p class="card-text"><i class="fa-solid fa-user" style="color: #e4a64e;"></i> Cliente: {{ turno.cliente }}</p>
                         <hr>
+                        <p class="card-text"><i class="fa-solid fa-dog" style="color: #e4a64e;"></i> Mascota: {{ turno.perro }}</p>
+                        <hr>                        
                         <p class="card-text"><i class="fa fa-info-circle" style="color: #e4a64e;"></i> Estado: {{ turno.estado.estado }}</p>
                         <hr>
                         <p class="card-text"><i class="fa fa-stethoscope" style="color: #e4a64e;"></i> Tipo de Atención: {{ turno.tipo_atencion.tipo }}</p>

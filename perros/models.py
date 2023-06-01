@@ -24,7 +24,7 @@ class Perro(models.Model):
         db_table = 'perros'
 
     def __str__(self) -> str:
-        return '%s, %s, %s' % (self.nombre, self.raza, self.tamanio)
+        return '%s' % (self.nombre)
         
 
 class Tipo_atencion(models.Model):

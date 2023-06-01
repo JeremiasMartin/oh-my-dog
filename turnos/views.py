@@ -21,13 +21,14 @@ from django.core.paginator import Paginator
 
 @login_required
 def solicitar_turno(request):
+    cliente = request.user.cliente
     if request.method == 'POST':
-        form = SolicitarTurnoForm(request.POST)
+        form = SolicitarTurnoForm(cliente, request.POST)
         if form.is_valid():
-            cliente = request.user.cliente
             turno = form.save(commit=False)
             turno.cliente = cliente
             turno.estado_id = 3
+
             if Turno.objects.filter(cliente=cliente, fecha=form.cleaned_data['fecha']).exists():
                 messages.error(request, 'Ya tiene un turno solicitado para la fecha seleccionada.')
                 return redirect('solicitar_turno')
@@ -36,8 +37,12 @@ def solicitar_turno(request):
 
             messages.success(request, 'Turno solicitado correctamente.')
             return redirect('solicitar_turno')
+        else:
+            print('FORM NOT VALID')
+            print("Form errors:", form.errors)
     else:
-        form = SolicitarTurnoForm()
+        form = SolicitarTurnoForm(cliente=cliente)
+
     return render(request, 'solicitar_turno.html', {'form': form})
 
 @login_required
@@ -61,7 +66,7 @@ def listar_confirmados_del_dia(request):
     paginator = Paginator(turnos,6)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    return render(request, 'listar_confirmados_dia.html', {'turnos': page_obj})
+    return render(request, 'listar_confirmados.html', {'turnos': page_obj})
 
 
 
