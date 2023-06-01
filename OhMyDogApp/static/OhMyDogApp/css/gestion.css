@@ -454,3 +454,8 @@ th, td {
   display: inline-block; 
   width: 300px;
 }
+
+.texto {
+  height: 100px;
+  width: 300px
+}

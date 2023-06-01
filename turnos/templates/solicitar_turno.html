@@ -32,6 +32,13 @@
         {% endfor %}
       </select>
     </div>
+
+    <div class="form-group">
+      <label for="{{ form.descripcion.id_for_label }}">Descripcion:</label>
+      <div>
+        <input type="text" name="{{ form.descripcion.name }}" id="{{ form.descripcion.id_for_label }}" class='texto'>
+      </div>
+    </div>
     
   <button type="submit" class="btn btn-primary" id="btn-solicitar-turno" disabled>Solicitar Turno</button>
 </form>

@@ -20,7 +20,7 @@ class SolicitarTurnoForm(forms.ModelForm):
     
     class Meta:
         model = Turno
-        fields = ['fecha', 'tipo_atencion','perro']
+        fields = ['fecha', 'tipo_atencion','perro', 'descripcion']
         widgets = {
             'fecha': DateInput(attrs={'type': 'date','min': str(date.today())}),
         }
