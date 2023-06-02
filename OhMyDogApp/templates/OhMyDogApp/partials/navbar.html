@@ -22,6 +22,34 @@
           <a class="nav-link" href="{% url 'Mapa' %}">Mapa</a>
         </li> 
         
+        <!-- Dropdown Publicaciones -->
+        <li class="nav-item dropdown {% if request.path|slice:":14" == '/publicaciones'%}current_page_item{%endif %}">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Publicaciones
+            </a>
+            <ul class="dropdown-menu">
+              <!-- Submenu de Adopcion-->
+              {% if user.is_authenticated %}
+                <li class="nav-item dropend">
+                    <a class="dropdown-item dropdown-toggle " href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      Adopción
+                    </a>
+                    <ul class="dropdown-menu ">
+                        <li><a class="dropdown-item" href="/publicaciones/adoptar_perro/">Cargar Perro En Adopcion</a></li>
+                        <li><a class="dropdown-item" href="#">Publicaciones Adopcion</a></li>
+                        <li><a class="dropdown-item" href="#">Mis Publicaciones Adopcion</a></li>
+                    </ul>
+                </li>
+              {% else %}   
+                <li>
+                  <a class="dropdown-item" href="/publicaciones/adoptar_perro/" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Adopción
+                  </a>
+                </li>
+              {% endif %}
+            </ul>
+        </li>
+
         {% if user.is_authenticated %}
             {% if user.is_staff %}
                 <!-- Dropdown Clientes -->
@@ -47,16 +75,16 @@
                 <!-- Servicio paseador/etc  -->
                 <li class="nav-item dropdown {% if request.path == '/usuarios/registrar_personal/' %}current_page_item{%endif %}">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Personal
+                        Servicio de terceros
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{% url 'Registrar_personal' %}">Registrar Personal</a></li>
-                        <li><a class="dropdown-item" href="{% url 'Listar_personal' %}">Ver Personal</a></li>
+                        <li><a class="dropdown-item" href="{% url 'Registrar_personal' %}">Registrar Servicio</a></li>
+                        <li><a class="dropdown-item" href="{% url 'Listar_personal' %}">Ver Servicios</a></li>
                     </ul>
                 </li>
             {% else %}
                 <!-- Mascotas cliente -->
-                <li class="nav-item {% if request.path == '/perros/listar_mascotas/' %}current_page_item{%endif %}">
+                <li class="nav-item {% if request.path|slice:":7" == '/perros' %}current_page_item{%endif %}">
                     <a class="nav-link" href="{% url 'perros:Listar_mascotas_cliente' user.id %}">Ver Mascotas</a>
                 </li>  
                 <!-- Turno -->
@@ -64,6 +92,7 @@
                     <a class="nav-link" href="{% url 'solicitar_turno' %}">Solicitar turno</a>
                 </li>    
             {% endif %}
+<<<<<<< HEAD
         <!-- Dropdown Publicaciones -->
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -77,6 +106,9 @@
                 <li><a class="dropdown-item" href="#">Encontrados</a></li>
             </ul>
         </li>
+=======
+        
+>>>>>>> b9c2b440f39f55e58ea3163d189f067754b37eec
         <!-- Perfil -->
         <li class="nav-item {% if request.path == '/usuarios/ver_perfil/' %}current_page_item{%endif %}">
             <a class="nav-link" href="{% url 'Ver_perfil' %}">Mi Perfil</a>
@@ -98,40 +130,3 @@
     </div>
     {% endif %} 
 </nav>
-
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    var dropdowns = document.querySelectorAll(".dropdown-toggle");
-    var dropdownMenus = document.querySelectorAll(".dropdown-menu");
-
-    dropdowns.forEach(function(dropdown) {
-      dropdown.addEventListener("click", function(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        var isActive = this.classList.contains("show");
-
-        closeDropdownMenus();
-
-        if (!isActive) {
-          this.classList.add("show");
-          var dropdownMenu = this.nextElementSibling;
-          dropdownMenu.classList.add("show");
-        }
-      });
-    });
-
-    document.addEventListener("click", function() {
-      closeDropdownMenus();
-    });
-
-    function closeDropdownMenus() {
-      dropdowns.forEach(function(dropdown) {
-        dropdown.classList.remove("show");
-      });
-
-      dropdownMenus.forEach(function(dropdownMenu) {
-        dropdownMenu.classList.remove("show");
-      });
-    }
-  });
-</script>
