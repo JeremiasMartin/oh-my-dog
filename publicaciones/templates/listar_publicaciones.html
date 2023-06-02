@@ -1,0 +1,31 @@
+{% extends 'OhMyDogApp/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+
+
+{% if adopciones %}
+  <h2>Perros en adopción</h2>
+  <ul>
+    {% for adopcion in adopciones %}
+      <li>
+        <strong>Nombre:</strong> {{ adopcion.perro_publicacion.nombre }}<br>
+        <strong>Tamaño:</strong> {{ adopcion.perro_publicacion.tamanio }}<br>
+        <strong>Sexo:</strong> {{ adopcion.perro_publicacion.get_sexo_display }}<br>
+        <strong>Color:</strong> {{ adopcion.perro_publicacion.color }}<br>
+        <strong>Edad:</strong> {{ adopcion.perro_publicacion.edad }}<br>
+        <strong>Raza:</strong> {{ adopcion.perro_publicacion.raza }}<br>
+        <strong>Motivo de adopción:</strong> {{ adopcion.motivo_adopcion }}<br>
+        <strong>Origen de adopción:</strong> {{ adopcion.origen }}<br>
+        <!-- Mostrar otros detalles de la publicación -->
+        <img src="{{ adopcion.perro_publicacion.foto.url }}" alt="{{ adopcion.perro_publicacion.nombre }}">
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <!-- Mostrar el mensaje de "No hay resultados" -->
+  <p>No hay perros en adopción disponibles.</p>
+{% endif %}
+
+{% endblock %}
