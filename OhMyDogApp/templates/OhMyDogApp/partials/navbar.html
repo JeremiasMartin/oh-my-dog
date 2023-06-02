@@ -36,7 +36,7 @@
                     </a>
                     <ul class="dropdown-menu ">
                         <li><a class="dropdown-item" href="/publicaciones/adoptar_perro/">Cargar Perro En Adopcion</a></li>
-                        <li><a class="dropdown-item" href="#">Publicaciones Adopcion</a></li>
+                        <li><a class="dropdown-item" href="/publicaciones/listar_publicaciones/">Publicaciones Adopcion</a></li>
                         <li><a class="dropdown-item" href="#">Mis Publicaciones Adopcion</a></li>
                     </ul>
                 </li>
@@ -92,23 +92,7 @@
                     <a class="nav-link" href="{% url 'solicitar_turno' %}">Solicitar turno</a>
                 </li>    
             {% endif %}
-<<<<<<< HEAD
-        <!-- Dropdown Publicaciones -->
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Publicaciones
-            </a>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="/publicaciones/adoptar_perro/">Adopción</a></li>
-              <li><a class="dropdown-item" href="/publicaciones/listar_publicaciones/">mis Publicaciones adopcion</a></li>
-  <li><a class="dropdown-item" href="#">Perdidos</a></li>
-                <li><a class="dropdown-item" href="#">Perdidos</a></li>
-                <li><a class="dropdown-item" href="#">Encontrados</a></li>
-            </ul>
-        </li>
-=======
         
->>>>>>> b9c2b440f39f55e58ea3163d189f067754b37eec
         <!-- Perfil -->
         <li class="nav-item {% if request.path == '/usuarios/ver_perfil/' %}current_page_item{%endif %}">
             <a class="nav-link" href="{% url 'Ver_perfil' %}">Mi Perfil</a>
