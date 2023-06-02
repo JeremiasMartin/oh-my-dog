@@ -25,5 +25,5 @@ class Turno(models.Model):
     descripcion = models.TextField('Descripcion', blank=True, null=True)
 
     def __str__(self):
-        return f"Turno de {self.usuario} para {self.tipo_servicio} el día {self.fecha}"
+        return f"Turno de {self.cliente} para {self.tipo_atencion} el día {self.fecha}"
   

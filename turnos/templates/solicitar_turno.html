@@ -25,7 +25,7 @@
 
     <div class="form-group">
       <label for="{{ form.perro.id_for_label }}" style="display: inline-block; margin-right: 10px;">Perro*:</label>
-      <select name="{{ form.perro }}" class="form-select">
+      <select name="{{ form.perro.name }}" class="selector">
         <!--<option value="">-------</option>  Por si es opcional elegir un perro--> 
         {% for option in form.perro.field.choices %}
           <option value="{{ option }}">{{ option }}</option>
@@ -33,11 +33,9 @@
       </select>
     </div>
 
-    <div class="form-group">
+    <div class="form-group-descripcion">
       <label for="{{ form.descripcion.id_for_label }}">Descripcion:</label>
-      <div>
-        <input type="text" name="{{ form.descripcion.name }}" id="{{ form.descripcion.id_for_label }}" class='texto'>
-      </div>
+        {{ form.descripcion }}
     </div>
     
   <button type="submit" class="btn btn-primary" id="btn-solicitar-turno" disabled>Solicitar Turno</button>
