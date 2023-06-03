@@ -7,35 +7,50 @@
     <div class="container">
       <div class="row text-center">
         <div class="col-md-12">
-          <h2 class="display-4">Turnos confirmados</h2>
+        {% if request.path == '/turnos/listar_confirmados_dia/'%}
+          <h2 class="display-4">Turnos confirmados del día</h2>
+        {% else %}
+            <h2 class="display-4">Turnos confirmados</h2>
+        {% endif%}
         </div>
       </div>
     </div>
   </section>
+
 <!-- Listado -->
 <section id="listado" class="py-4">
     <div class="container">
         {% if messages %}
         <ul class="messages">
             {% for message in messages %}
-            <div id="msg"class="alert alert-{{ message.tags }}">
+            <div id="msg-{{ message.tags }}"class="alert alert-{{ message.tags }}">
                 {{ message }}
             </div>
             {% endfor %}
         </ul>
         {% endif %}
         {% if turnos %}
-            <!-- Boton para turnos confirmados del día-->
-            <div style="padding: 10px 20px; display: inline-block;">
-                <a href= "{% url 'listar_confirmados_dia' %}" class="btn btn-primary btn-block">Turnos del día</a>
-            </div>
+            {% include 'filtros_turnos.html' %} 
+            {% if request.path != '/turnos/listar_confirmados_dia/'%}
+                <!-- Boton para turnos confirmados del día-->
+                <div style="padding: 10px 20px; display: inline-block;">
+                    <a href= "{% url 'listar_confirmados_dia' %}" class="btn btn-primary btn-block">Turnos del día</a>
+                </div>
+            {% else %}
+                <!-- Boton para turnos confirmados del día-->
+                <div style="padding: 10px 20px; display: inline-block;">
+                    <a href= "{% url 'listar_turnos_confirmados' %}" class="btn btn-primary btn-block">Turnos Confirmados</a>
+                </div>
+            {% endif %}
             <div class="card-deck">
                 {% for turno in turnos %}
                     <div class="col-md-4 mb-4">
                         <div class="card h-100">
                             <div class="card-body">
                                 <hr>
-                                <p class="card-text text-wrap"><i class="fa fa-calendar" style="color: #e4a64e;"></i> Fecha: {{ turno.fecha }}</p>
+                                <p class="card-text text-wrap"><i class="fa fa-calendar" style="color: #e4a64e;"></i> Fecha: {{ turno.fecha|date:"d/m/Y" }}</p>
+                                <hr>
+                                <p class="card-text text-wrap"><i class="fa-solid fa-clock" style="color: #e4a64e;"></i> Hora: {{ turno.fecha|time:"H:i"}}</p>
                                 <hr>
                                 <p class="card-text"><i class="fa-solid fa-id-card" style="color: #e4a64e;"></i> Cliente: {{ turno.cliente }}</p>
                                 <hr>

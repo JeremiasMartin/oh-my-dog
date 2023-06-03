@@ -16,6 +16,10 @@ import threading
 import time
 from pytz import timezone as tz
 from django.core.paginator import Paginator
+from django.db.models.functions import Concat
+from django.db.models import Q,Value as V, Func, F
+from unidecode import unidecode
+
 
 # Create your views here.
 
@@ -47,27 +51,31 @@ def solicitar_turno(request):
 
 @login_required
 def listar_turnos_pendientes(request):
+    filtro = request.GET.get('filtro', None)
+    consulta = request.GET.get('consulta', None)
     turnos = Turno.objects.filter(estado_id=3)
-    paginator = Paginator(turnos,3)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    return render(request, 'listar_pendientes.html', {'turnos': page_obj})
+    if filtro and consulta:
+        turnos = buscar(request, filtro, consulta, turnos)
+
+    return render(request, 'listar_pendientes.html', {'turnos': paginar(request, turnos)})
 
 def listar_turnos_confirmados(request):
+    filtro = request.GET.get('filtro', None)
+    consulta = request.GET.get('consulta', None)
     turnos = Turno.objects.filter(estado_id=1)
-    paginator = Paginator(turnos,6)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    return render(request, 'listar_confirmados.html', {'turnos': turnos})
+    if filtro and consulta:
+        turnos = buscar(request, filtro, consulta, turnos)
+
+    return render(request, 'listar_confirmados.html', {'turnos': paginar(request, turnos)})
 
 def listar_confirmados_del_dia(request):
+    filtro = request.GET.get('filtro', None)
+    consulta = request.GET.get('consulta', None)
     fecha_actual = timezone.localtime().date()
     turnos = Turno.objects.filter(estado_id=1, fecha__date=fecha_actual)
-    paginator = Paginator(turnos,6)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    return render(request, 'listar_confirmados.html', {'turnos': page_obj})
-
+    if filtro and consulta:
+        turnos = buscar(request, filtro, consulta, turnos)
+    return render(request, 'listar_confirmados.html', {'turnos': paginar(request, turnos)})
 
 
 def run_scheduler():
@@ -237,3 +245,39 @@ def rechazar_solicitud(request, id_turno):
             turno.save()
             messages.success(request, 'Turno rechazado correctamente.')
     return redirect('/turnos/listar_turnos_pendientes/')
+
+
+def buscar(request, filtro, consulta, turnos):
+    print("FILTRO",filtro)
+    print("CONSULTA",consulta)
+    
+    if filtro == 'fecha':
+        consulta = datetime.datetime.strptime(consulta, "%d/%m/%Y").date() 
+        turnos_filtrados = turnos.filter(fecha__date=consulta)
+    
+    elif filtro == 'atencion':
+        consulta = unidecode(consulta)
+        turnos_filtrados = turnos.annotate(tipo_without_accents=Func(F('tipo_atencion__tipo'), function='unaccent')).\
+                filter(tipo_without_accents__icontains=consulta)
+    
+    elif filtro == 'cliente_dni':
+        turnos_filtrados = turnos.filter(cliente__user__dni__icontains=consulta)
+    
+    elif filtro == 'cliente_nombre_apellido':
+        turnos_filtrados = turnos.annotate(nombre_completo=Concat('cliente__user__nombre', V(' '), 'cliente__user__apellido')).\
+                filter(
+                    Q(nombre_completo__icontains=unidecode(consulta)) |
+                    Q(nombre_completo__icontains=unidecode(" ".join(reversed(consulta.split()))))
+                )
+    if  not turnos_filtrados:
+        messages.add_message(request, messages.ERROR, 'No hay turnos para la búsqueda realizada')
+        turnos_filtrados = turnos
+
+    return turnos_filtrados
+
+
+def paginar(request,turnos):
+    paginator = Paginator(turnos,6)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return page_obj
