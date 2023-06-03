@@ -7,14 +7,31 @@ from django.core.paginator import Paginator
 from datetime import datetime, date, timedelta
 from turnos.models import Turno
 from django.db.models import Q
+from turnos.views import paginar
+from unidecode import unidecode
 
 
 def listar_mascotas_cliente(request, cliente_id):
     mascotas = Perro.objects.filter(cliente_id__user_id=cliente_id)
-    paginator = Paginator(mascotas,6)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    return render(request, 'listar_mascotas.html', {"mascotas":page_obj})
+    filtro = request.GET.get('filtro', None)
+    
+    if filtro:
+        consulta_param = f"{filtro}-consulta"
+        consulta = request.GET.get(consulta_param, None)
+
+    if filtro and consulta:
+        mascotas = buscar(request, filtro, consulta, mascotas)
+
+    tamanio_opciones = (
+        ('Pequeño', 'Pequeño'),
+        ('Mediano', 'Mediano'),
+        ('Grande', 'Grande'),
+    )
+    contexto = {
+        "mascotas":paginar(request, mascotas, 6),
+        "opciones_tamanios": tamanio_opciones
+    }
+    return render(request, 'listar_mascotas.html', contexto)
 
 def registrar_mascota(request, cliente_id):
     cliente = get_object_or_404(Cliente, cliente_id=cliente_id)
@@ -202,3 +219,19 @@ def listar_vacunas(request, id_mascota):
         'vacunas': vacunas
     }
     return render(request, 'listar_vacunas.html', context)
+
+def buscar(request, filtro, consulta, mascotas):
+    print("FILTRO",filtro)
+    print("CONSULTA",consulta)
+    
+    if filtro == 'tamanio':
+        mascotas_filtradas = mascotas.filter(tamanio=consulta)
+        
+    elif filtro == 'raza':
+        mascotas_filtradas = mascotas.filter(raza__icontains=unidecode(consulta))
+    
+    if  not mascotas_filtradas:
+        messages.add_message(request, messages.ERROR, 'No hay perros para la búsqueda realizada')
+        mascotas_filtradas = mascotas
+
+    return mascotas_filtradas

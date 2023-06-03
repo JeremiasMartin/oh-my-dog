@@ -1,0 +1,82 @@
+{% load static %}
+<div class="search-container">
+    <form method="GET" action="" id='perro-buscar'>
+        <select name='filtro' id='filtro-perros'>
+            {% if '/perros/listar-mascotas-cliente/' not in request.path %}
+                <option id='sexo' value='sexo'>Sexo</option>
+            {% endif %}
+            <option id='raza' value='raza'>Raza</option>
+            <option id= 'tamanio' value='tamanio'>Tamaño</option>
+        </select>
+        <select class="search-input" id='tamanio-select' name="tamanio-consulta" style="display: none;">
+            {% for value, display_text in opciones_tamanios %}
+                <option value="{{ value }}">{{ display_text }}</option>
+            {% endfor %}
+        </select>
+        <select class="search-input" id='sexo-select' name="sexo-consulta" style="display: none;">
+            {% for value, display_text in opciones_sexo %}
+                <option value="{{ value }}">{{ display_text }}</option>
+            {% endfor %}
+        </select>
+        <input type="text" class="search-input" id='raza-consulta' name="raza-consulta" placeholder="Buscar...">
+        <button type="submit" id="btn-buscar" class="search-button">Buscar</button> 
+    </form>
+</div>
+
+
+<script>
+  var filtroSelect = document.getElementById('filtro-perros');
+  var consultaInput = document.getElementById('raza-consulta');
+  var sexoSelect = document.getElementById('sexo-select');
+  var tamanioSelect = document.getElementById('tamanio-select');
+  var btnBuscar = document.getElementById('btn-buscar');
+  var errorText = '';
+
+  filtroSelect.addEventListener('change', validarFiltro);
+  consultaInput.addEventListener('input', validarConsulta);
+
+  consultaInput.addEventListener('mouseenter', function() {
+    if (btnBuscar.disabled) {
+      consultaInput.title = errorText;
+    }
+  });
+
+  consultaInput.addEventListener('mouseleave', function() {
+    consultaInput.title = '';
+  });
+
+  function validarBusqueda() {
+    var isFormValid = true;
+
+    if (filtroSelect.value === 'raza') {
+      var regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
+      if (!regex.test(consultaInput.value)) {
+        errorText = 'Por favor, ingrese solo letras (incluyendo acentos) en el campo de consulta.';
+        isFormValid = false;
+      }
+    }
+
+    btnBuscar.disabled = !isFormValid;
+  }
+
+  function validarFiltro() {
+    validarBusqueda();
+    if (filtroSelect.value === 'tamanio') {
+      consultaInput.style.display = 'none';
+      tamanioSelect.style.display = 'inline';
+      sexoSelect.style.display = 'none';
+    } else if (filtroSelect.value === 'sexo') {
+      consultaInput.style.display = 'none';
+      tamanioSelect.style.display = 'none';
+      sexoSelect.style.display = 'inline';
+    } else {
+      consultaInput.style.display = 'inline';
+      tamanioSelect.style.display = 'none';
+      sexoSelect.style.display = 'none';
+    }
+  }
+
+  function validarConsulta() {
+    validarBusqueda();
+  }
+</script>

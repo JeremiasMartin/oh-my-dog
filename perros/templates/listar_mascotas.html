@@ -12,7 +12,7 @@
         </div>
       </div>
     </div>
-  </section>
+</section>
 <!-- Listado -->
 {% if mascotas %}
     <section id="listado" class="py-4">
@@ -20,12 +20,13 @@
             {% if messages %}
             <ul class="messages">
                 {% for message in messages %}
-                <div id="msg"class="alert alert-{{ message.tags }}">
+                <div id="msg-{{ message.tags }}" class="alert alert-{{ message.tags }}">
                     {{ message }}
                 </div>
                 {% endfor %}
             </ul>
             {% endif %}
+        {% include 'filtros_perros.html' %} 
             <div class="row">
                 {% for mascota in mascotas %}
                     <div class="col-md-6 col-lg-4 mb-4">
