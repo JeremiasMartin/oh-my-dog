@@ -222,8 +222,7 @@ def buscar(request, filtro, consulta, clientes):
                     Q(nombre_completo__icontains=unidecode(" ".join(reversed(consulta.split()))))
                 )
     if  not clientes_filtrados:
-        messages.add_message(request, messages.ERROR, 'No hay turnos para la búsqueda realizada')
-        print("NO HAY PARA MOSTRAR")
+        messages.add_message(request, messages.ERROR, 'No hay clientes para la búsqueda realizada')
         clientes_filtrados = clientes
 
     return clientes_filtrados
