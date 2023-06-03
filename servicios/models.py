@@ -9,11 +9,11 @@ class Personal(models.Model):
         ('guarderia', 'Guardería'),
     ]
 
-    nombre = models.CharField(max_length=100)
-    contacto = models.CharField(max_length=100)
-    tipo = models.CharField(max_length=100, choices=TIPO_OPCIONES)
-    direccion = models.CharField(max_length=100)
-    horario = models.CharField(max_length=100)
+    nombre = models.CharField(max_length=100, blank=False, null=False, default='')
+    contacto = models.CharField(max_length=20, blank=False, null=False, default='')
+    tipo = models.CharField(blank=False, null=False, default='', choices=TIPO_OPCIONES)
+    descripcion = models.CharField(max_length=200, blank=False, null=False, default='')
+    horario = models.CharField(max_length=200, blank=False, null=False, default='')
     ubicacion = gis_models.PointField()
     activo = models.BooleanField(default=True)
 
