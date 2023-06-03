@@ -482,7 +482,7 @@ th, td {
   /*margin-left: 20px;*/
 }
 
-#filtro-turnos{
+[id*="filtro"]{
   padding: 10px;
   width: 200px;
   border: 1px solid #ccc;
