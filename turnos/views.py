@@ -57,7 +57,7 @@ def listar_turnos_pendientes(request):
     if filtro and consulta:
         turnos = buscar(request, filtro, consulta, turnos)
 
-    return render(request, 'listar_pendientes.html', {'turnos': paginar(request, turnos)})
+    return render(request, 'listar_pendientes.html', {'turnos': paginar(request, turnos, 6)})
 
 def listar_turnos_confirmados(request):
     filtro = request.GET.get('filtro', None)
@@ -66,7 +66,7 @@ def listar_turnos_confirmados(request):
     if filtro and consulta:
         turnos = buscar(request, filtro, consulta, turnos)
 
-    return render(request, 'listar_confirmados.html', {'turnos': paginar(request, turnos)})
+    return render(request, 'listar_confirmados.html', {'turnos': paginar(request, turnos, 6)})
 
 def listar_confirmados_del_dia(request):
     filtro = request.GET.get('filtro', None)
@@ -75,7 +75,7 @@ def listar_confirmados_del_dia(request):
     turnos = Turno.objects.filter(estado_id=1, fecha__date=fecha_actual)
     if filtro and consulta:
         turnos = buscar(request, filtro, consulta, turnos)
-    return render(request, 'listar_confirmados.html', {'turnos': paginar(request, turnos)})
+    return render(request, 'listar_confirmados.html', {'turnos': paginar(request, turnos, 6)})
 
 
 def run_scheduler():
@@ -276,8 +276,8 @@ def buscar(request, filtro, consulta, turnos):
     return turnos_filtrados
 
 
-def paginar(request,turnos):
-    paginator = Paginator(turnos,6)
+def paginar(request,elementos, cantidad):
+    paginator = Paginator(elementos,cantidad)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     return page_obj

@@ -4,14 +4,11 @@ from django.core.paginator import Paginator
 from .forms import *
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
-
+from turnos.views import paginar
 
 def listar_personal(request):
     personal = Personal.objects.all()
-    paginator = Paginator(personal,6)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    return render(request, 'listar_personal.html', {"personal":page_obj})
+    return render(request, 'listar_personal.html', {"personal":paginar(request,personal,6)})
 
 def cambiar_estado(request, personal_id):
     personal = Personal.objects.get(id=personal_id)

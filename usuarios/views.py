@@ -9,8 +9,6 @@ from django.shortcuts import render, redirect
 from .forms import ClienteRegistroForm
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import HttpResponseRedirect
-from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from email.mime.image import MIMEImage
@@ -25,15 +23,13 @@ from django.contrib.auth.views import PasswordChangeView
 from django.contrib.auth.forms import PasswordChangeForm
 from django.urls import reverse_lazy
 from django.contrib.gis.geos import Point
+from turnos.views import paginar
 
 # Create your views here.
 
 def listar_clientes(request):
     clientes = Cliente.objects.all()
-    paginator = Paginator(clientes,6)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    return render(request, 'admin/listar_clientes.html', {"clientes":page_obj})
+    return render(request, 'admin/listar_clientes.html', {"clientes":paginar(request,clientes,6)})
 
 
 
