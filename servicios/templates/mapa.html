@@ -7,18 +7,45 @@
   {% leaflet_js plugins="forms" %}
   {% leaflet_css plugins="forms" %}
   <script src="https://kit.fontawesome.com/803ea84c99.js" crossorigin="anonymous"></script>
+  <style>
+    .custom-icon {
+      font-size: 24px; /* Tamaño del ícono  */
+      color:rgb(73, 149, 255);
+    }
+    .custom-popup .siempre-visible {
+      display: block !important;
+    }
+    .mensaje-no-personal {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 5px;
+      text-align: center;
+      display: block; /* Mostrar el mensaje de forma predeterminada */
+      z-index: 9999; /* Asegurar que el mensaje esté en la capa superior */
+    }
+    .btn-aceptar {
+      background-color: #007bff;
+      color: #ffffff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
 </head>
-<h1>Mapa de Personal</h1>
+<h1>Mapa de Servicios de Terceros</h1>
 <div id="map" style="width: 100%; height: 800px;"></div>
-{% if personal %}
 <script>
-
-  var map = L.map('map').setView([-34.9215, -57.9545], 13);
+  document.addEventListener('DOMContentLoaded', function () {
+    var map = L.map('map').setView([-34.9215, -58], 13);
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors'
   }).addTo(map);
-
 
   {% for person in personal %}
     var lat = "{{ person.ubicacion.y }}".replace(",", ".");
@@ -27,27 +54,61 @@
 
       // Seleccionar el ícono de Bootstrap según el tipo de personal
       var iconClass;
-    if ("{{ person.tipo }}" === "paseador") {
-      iconClass = "fas fa-dog";
-    } else if ("{{ person.tipo }}" === "cuidador") {
-        iconClass = "fa-shield-dog";
-    } else if ("{{ person.tipo }}" === "guarderia") {
-        iconClass = "fa-house-chimney";
-    }
+      if ("{{ person.tipo }}" === "paseador") {
+        iconClass = "fas fa-dog";
+      } else if ("{{ person.tipo }}" === "cuidador") {
+          iconClass = "fa-shield-dog";
+      } else if ("{{ person.tipo }}" === "guarderia") {
+          iconClass = "fa-house-chimney";
+      }
 
-    // Crear el ícono de FontAwesome con el iconClass correspondiente
-    var icon = L.divIcon({
+      // Crear el ícono de FontAwesome con el iconClass correspondiente
+      var icon = L.divIcon({
+        className: 'custom-icon',
+        html: '<i class="fas ' + iconClass + '"></i>',
+        iconSize: [10, 10],
+      });
+
+      // Agregar el marcador al mapa con el icono correspondiente
+      var marker = L.marker(latLng, { icon: icon }).addTo(map);
+      marker.bindPopup(`
+          Nombre: {{person.nombre}}
+          <br>
+          Tipo: {{person.tipo}}
+          <br> 
+          Horarios: {{person.horario}}
+          <br> 
+          Descripción: {{person.descripcion}}
+          <br><br>
+          <a href='{% url 'Editar_personal' person.id %}' class='btn btn-primary siempre-visible' style='font-size:15px'>Editar Informaci&oacute;n</a>
+      `);
+    {% endfor %}
+
+    // Agregar marcador fijo de veterinaria
+    var fixedMarkerLatLng = L.latLng(-34.871395007975416, -58.02867585786812);
+    var fixedMarkerIcon = L.divIcon({
       className: 'custom-icon',
-      html: '<i class="fas ' + iconClass + '"></i>',
-      iconSize: [10, 10],
+      html: '<i class="fas fa-map-marker-alt"></i>',
+      iconSize: [24, 24],
     });
+    var fixedMarker = L.marker(fixedMarkerLatLng, { icon: fixedMarkerIcon }).addTo(map);
+    fixedMarker.bindPopup("Veterinaria ¡Oh My Dog!");
 
-    // Agregar el marcador al mapa con el icono correspondiente
-    var marker = L.marker(latLng, { icon: icon }).addTo(map);
-    marker.bindPopup("Nombre: {{person.nombre}}<br>Tipo: {{person.tipo}}<br> Horarios: {{person.horario}}");  // Información adicional en el marcador
-  {% endfor %}
+    // Mostrar mensaje si no hay personal registrado
+    {% if not personal %}
+    var mensajeNoPersonal = document.createElement('div');
+    mensajeNoPersonal.className = 'mensaje-no-personal';
+    mensajeNoPersonal.innerHTML = `
+      <p>No hay servicios de terceros registrados.</p>
+      <button class="btn btn-aceptar">Aceptar</button>
+    `;
+    document.body.appendChild(mensajeNoPersonal);
+
+    var btnAceptar = mensajeNoPersonal.querySelector('.btn-aceptar');
+    btnAceptar.addEventListener('click', function () {
+      mensajeNoPersonal.style.display = 'none';
+    });
+    {% endif %}
+  });
 </script>
-{% else %}
-  <p>No se ha registrado personal.</p>
-{% endif %}
 {% endblock %}
