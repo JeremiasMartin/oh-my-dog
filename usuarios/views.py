@@ -16,7 +16,6 @@ from django.template.loader import get_template
 from OhMyDog import settings
 from django.core.mail import EmailMultiAlternatives
 import os
-from django.core.paginator import Paginator
 from django.contrib.auth.views import PasswordResetConfirmView
 from django.contrib.auth.forms import PasswordResetForm,SetPasswordForm
 from django.contrib.auth.views import PasswordChangeView
@@ -24,11 +23,18 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.urls import reverse_lazy
 from django.contrib.gis.geos import Point
 from turnos.views import paginar
+from unidecode import unidecode
+from django.db.models.functions import Concat
+from django.db.models import Q, Value as V
 
 # Create your views here.
 
 def listar_clientes(request):
     clientes = Cliente.objects.all()
+    filtro = request.GET.get('filtro', None)
+    consulta = request.GET.get('consulta', None)
+    if filtro and consulta:
+        clientes = buscar(request, filtro, consulta, clientes)
     return render(request, 'admin/listar_clientes.html', {"clientes":paginar(request,clientes,6)})
 
 
@@ -202,4 +208,23 @@ def registrar_personal(request):
 
     return render(request, 'admin/registrar_personal.html', context)
 
+def buscar(request, filtro, consulta, clientes):
+    print("FILTRO",filtro)
+    print("CONSULTA",consulta)
+
+    if filtro == 'cliente_dni':
+        clientes_filtrados = clientes.filter(user__dni=consulta)
+    
+    elif filtro == 'cliente_nombre_apellido':
+        clientes_filtrados = clientes.annotate(nombre_completo=Concat('user__nombre', V(' '), 'user__apellido')).\
+                filter(
+                    Q(nombre_completo__icontains=unidecode(consulta)) |
+                    Q(nombre_completo__icontains=unidecode(" ".join(reversed(consulta.split()))))
+                )
+    if  not clientes_filtrados:
+        messages.add_message(request, messages.ERROR, 'No hay turnos para la búsqueda realizada')
+        print("NO HAY PARA MOSTRAR")
+        clientes_filtrados = clientes
+
+    return clientes_filtrados
 

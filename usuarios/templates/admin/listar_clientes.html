@@ -24,9 +24,10 @@
             {% endfor %}
         </ul>
         {% endif %}
-        <div class="card-deck">
-            {% if clientes %}
-                
+        
+        {% if clientes %}
+            {% include 'admin/filtros_cliente.html' %} 
+            <div class="card-deck">
                 {% for cliente in clientes %}
                     <div class="col-md-4 mb-4">
                         <div class="card h-100">
@@ -49,13 +50,12 @@
                         </div>
                     </div>
                 {% endfor %}
-                
+            </div>    
             {% else %}
                 <div class="col-md-12">
                     <p>No Hay Resultados</p>
                 </div>
             {% endif %}
-        </div> 
     </div>
     <!-- Paginacion -->
     <div class="container">
