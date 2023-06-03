@@ -34,13 +34,9 @@
 
     if (filtroSelect.value === 'cliente_dni') {
       var dni = consultaInput.value;
-      if (dni.length < 7) {
-        errorText = 'Por favor, ingrese un DNI con al menos 7 dígitos.';
-        isFormValid = false;
-      }
       var numeros = /^[0-9]+$/;
       if (!dni.match(numeros)) {
-        errorText = 'Por favor, ingrese un DNI con al menos 7 dígitos.';
+        errorText = 'Por favor, ingrese solo dígitos y al menos uno.';
         isFormValid = false;
       }
     }

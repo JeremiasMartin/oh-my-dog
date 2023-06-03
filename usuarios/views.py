@@ -213,7 +213,7 @@ def buscar(request, filtro, consulta, clientes):
     print("CONSULTA",consulta)
 
     if filtro == 'cliente_dni':
-        clientes_filtrados = clientes.filter(user__dni=consulta)
+        clientes_filtrados = clientes.filter(Q(user__dni__iexact=consulta) | Q(user__dni__icontains=consulta))
     
     elif filtro == 'cliente_nombre_apellido':
         clientes_filtrados = clientes.annotate(nombre_completo=Concat('user__nombre', V(' '), 'user__apellido')).\
