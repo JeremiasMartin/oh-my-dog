@@ -6,44 +6,11 @@
   {% leaflet_js plugins="forms" %}
   {% leaflet_css plugins="forms" %}
  </head>
-  <h1>Registrar Personal</h1>
+  <h1>Registrar Servicio de Terceros</h1>
   <form method="post" enctype="multipart/form-data" id="personal-form">
     {% csrf_token %}
     {{ form.as_p }}
     <div id="map"></div>
-    <input type=" " value="Guardar" disabled>
+    <input type="submit" value="Guardar">
   </form>
-<script>
-   var map = L.map('map').setView([-34.9215, -57.9545], 13);  // bs as lp
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
-
-    var marker;
-    var guardarButton = document.querySelector('input[type="submit"]');
-  
-    map.on('click', function(e) {
-      if (marker) {
-        map.removeLayer(marker);
-      }
-      marker = L.marker(e.latlng).addTo(map);
-      document.getElementById("id_ubicacion").value = e.latlng.lat + ',' + e.latlng.lng;  // Almacena las coordenadas en el campo oculto
-      guardarButton.removeAttribute('disabled'); // Habilita el botón cuando se agrega el marcador
-    });
-
-    var form = document.getElementById('personal-form');
-    form.addEventListener('submit', function(event) {
-      if (!marker) {
-        event.preventDefault();
-        alert('Debe seleccionar una ubicación en el mapa.');
-      }
-    });
-
-    map.on('moveend', function() {
-      if (!marker) {
-        guardarButton.setAttribute('disabled', 'disabled'); // Deshabilita el botón si no hay marcador
-      }
-    });
-</script>
 {% endblock %}
