@@ -7,7 +7,7 @@
     {% leaflet_js plugins="forms" %}
     {% leaflet_css plugins="forms" %}
 </head>
-<h1>Editar Personal</h1>
+<h1>Editar Servicio de Terceros</h1>
 <div class="container">
     <div class="card-deck">
         <div class="col-md-4 mb-4">
@@ -30,9 +30,9 @@
                         <hr>
                         <p class="card-text">
                             <i class="fa-solid fa-user" style="color: #e4a64e;"></i>
-                            Dirección*: {{ form.direccion }}
+                            Descripción*: {{ form.descripcion }}
                             <p>
-                                {% for error in form.direccion.errors %}
+                                {% for error in form.descripcion.errors %}
                                 <span style="color: red;">{{ error }}</span>
                                 {% endfor %}
                             </p>
