@@ -45,7 +45,7 @@
       }
     }
 
-    if (filtroSelect.value === 'cliente_nombre_apellido') {
+    else if (filtroSelect.value === 'cliente_nombre_apellido') {
       var regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
       if (!regex.test(consultaInput.value)) {
         errorText = 'Por favor, ingrese solo letras (incluyendo acentos) en el campo de consulta.';

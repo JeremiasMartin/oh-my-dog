@@ -44,7 +44,7 @@
       }
     }
 
-    if (filtroSelect.value === 'cliente_dni') {
+    else if (filtroSelect.value === 'cliente_dni') {
       var dni = consultaInput.value;
       if (dni.length < 7) {
         errorText = 'Por favor, ingrese un DNI con al menos 7 dígitos.';
@@ -57,7 +57,7 @@
       }
     }
 
-    if (filtroSelect.value === 'atencion' || filtroSelect.value === 'cliente_nombre_apellido') {
+    else if (filtroSelect.value === 'atencion' || filtroSelect.value === 'cliente_nombre_apellido') {
       var regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
       if (!regex.test(consultaInput.value)) {
         errorText = 'Por favor, ingrese solo letras (incluyendo acentos) en el campo de consulta.';
