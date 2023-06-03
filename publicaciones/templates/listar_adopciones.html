@@ -1,0 +1,22 @@
+{% extends 'OhMyDogApp/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+{% for adopcion in adopciones %}
+  <h2>{{ adopcion.perro_publicacion.nombre }}</h2>
+  <p>Tamaño: {{ adopcion.perro_publicacion.tamanio }}</p>
+  <p>Sexo: {{ adopcion.perro_publicacion.sexo }}</p>
+  <p>Color: {{ adopcion.perro_publicacion.color }}</p>
+  <p>Edad: {{ adopcion.perro_publicacion.edad }}</p>
+  <p>Raza: {{ adopcion.perro_publicacion.raza }}</p>
+  <img src="{{ adopcion.perro_publicacion.foto.url }}" alt="Foto del perro">
+  <p>Origen: {{ adopcion.origen }}</p>
+  <p>Motivo de adopción: {{ adopcion.motivo_adopcion }}</p>
+  <form action="{% url 'postularse' adopcion.id %}" method="POST">
+    {% csrf_token %}
+    <button type="submit">Postularse</button>
+  </form>
+{% endfor %}
+{% endblock %}

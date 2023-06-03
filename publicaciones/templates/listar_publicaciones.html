@@ -19,13 +19,14 @@
         <strong>Motivo de adopción:</strong> {{ adopcion.motivo_adopcion }}<br>
         <strong>Origen de adopción:</strong> {{ adopcion.origen }}<br>
         <!-- Mostrar otros detalles de la publicación -->
+
         <img src="{{ adopcion.perro_publicacion.foto.url }}" alt="{{ adopcion.perro_publicacion.nombre }}">
       </li>
     {% endfor %}
   </ul>
 {% else %}
   <!-- Mostrar el mensaje de "No hay resultados" -->
-  <p>No hay perros en adopción disponibles.</p>
+  <p>No has realizado publicaciones de perro en adopción.</p>
 {% endif %}
 
 {% endblock %}

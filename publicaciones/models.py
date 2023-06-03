@@ -54,3 +54,15 @@ class Adopcion(models.Model):
         verbose_name = 'Perro en adopción'
         verbose_name_plural = 'Perros en adopción'
         db_table = 'adopcion'
+
+
+
+class Postulacion(models.Model):
+    cliente = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='postulaciones')
+    publicacion_adopcion = models.ForeignKey(Adopcion, on_delete=models.CASCADE, related_name='postulaciones')
+    email = models.EmailField(blank=False, null=False)
+    mensaje = models.TextField(blank=False, null=False)
+    nombre = models.CharField(max_length=100, blank=False, null=False)
+    telefono = models.CharField(max_length=20, blank=False, null=False)
+    class Meta:
+        db_table = 'postulaciones'

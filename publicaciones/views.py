@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect
-from .forms import AdopcionForm
+from .forms import AdopcionForm, PostulacionForm
 from .models import *
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.shortcuts import get_object_or_404
 
 def adoptar_perro(request):
     if request.method == 'POST':
@@ -45,7 +46,35 @@ def adoptar_perro(request):
     return render(request, 'adoptar_perro.html', {'form': form})
 
 
+
+
 @login_required
 def listar_publicaciones(request):
-    adopciones = Adopcion.objects.select_related('perro_publicacion').all()
+    adopciones =adopciones = Adopcion.objects.select_related('perro_publicacion').filter(id_publicacion_id=request.user.id)
     return render(request, 'listar_publicaciones.html', {'adopciones': adopciones})
+    
+
+@login_required
+def listar_adopciones(request):
+    adopciones = Adopcion.objects.filter(perro_publicacion__publicacion__activo=True)
+    return render(request, 'listar_adopciones.html', {'adopciones': adopciones})
+
+@login_required
+
+def postularse(request, adopcion_id):
+    adopcion = Adopcion.objects.get(id=adopcion_id)
+    if adopcion.id_publicacion_id == request.user.id:
+        messages.error(request, 'No puedes postularte a tu propia publicación.')
+        return redirect('listar_adopciones')
+    if request.method == 'POST':
+        form = PostulacionForm(request.POST)
+        if form.is_valid():
+            adopcion = get_object_or_404(Adopcion, id=adopcion_id)
+            postulacion = form.save(commit=False)
+            postulacion.cliente = request.user
+            postulacion.publicacion_adopcion = adopcion
+            postulacion.save()
+            return redirect('listar_adopciones')
+    else:
+        form = PostulacionForm()
+    return render(request, 'postularse.html', {'form': form, 'adopcion_id': adopcion_id})

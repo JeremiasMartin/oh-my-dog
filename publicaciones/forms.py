@@ -1,6 +1,7 @@
 
 from django import forms
 from .models import Perro_publicacion, Adopcion
+from .models import Postulacion
 
 class AdopcionForm(forms.ModelForm):
     foto = forms.ImageField(required=True)
@@ -20,3 +21,9 @@ class AdopcionForm(forms.ModelForm):
         self.fields['edad'].required = True
         self.fields['raza'].required = True
         self.fields['foto'].required = True
+
+
+class PostulacionForm(forms.ModelForm):
+    class Meta:
+        model = Postulacion
+        fields = ['nombre', 'email', 'telefono', 'mensaje']

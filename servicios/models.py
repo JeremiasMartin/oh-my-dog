@@ -11,7 +11,7 @@ class Personal(models.Model):
 
     nombre = models.CharField(max_length=100, blank=False, null=False, default='')
     contacto = models.CharField(max_length=20, blank=False, null=False, default='')
-    tipo = models.CharField(blank=False, null=False, default='', choices=TIPO_OPCIONES)
+    tipo = models.CharField(max_length=200,blank=False, null=False, default='', choices=TIPO_OPCIONES)
     descripcion = models.CharField(max_length=200, blank=False, null=False, default='')
     horario = models.CharField(max_length=200, blank=False, null=False, default='')
     ubicacion = gis_models.PointField()
