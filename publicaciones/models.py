@@ -18,6 +18,7 @@ class Perro_publicacion(models.Model):
     edad = models.CharField('Edad', max_length=100, blank=False, null=False)
     raza = models.CharField('Raza', max_length=100, blank=False, null=False)
     foto = models.ImageField(null=True, blank=True, upload_to='publicaciones')
+    activo = models.BooleanField(default=True, editable=True)
 
     class Meta:
         verbose_name = 'Perro en publicación'
@@ -31,7 +32,6 @@ class Publicacion(models.Model):
     descripcion = models.TextField(default=False, blank=True, null=True)
     id_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     id_perro_publicacion = models.OneToOneField(Perro_publicacion, on_delete=models.CASCADE)
-    activo = models.BooleanField(default=True)
 
     def __str__(self):
         return f'{self.id_usuario}, {self.id_perro_publicacion}'
@@ -41,11 +41,24 @@ class Publicacion(models.Model):
         db_table = 'publicaciones'
 
 
+class Postulacion(models.Model):
+    publicacion_adopcion = models.ForeignKey('Adopcion', on_delete=models.CASCADE, related_name='postulaciones')
+    email = models.EmailField('Mail', unique=True, max_length=254, blank=True, null=False) 
+    mensaje = models.TextField('Mensaje', blank=False, null=False)
+    nombre = models.CharField('Nombre', max_length=20, blank=False, null=False, default='')
+    apellido = models.CharField('Apellido', max_length=20, blank=False, null=False, default='')
+    telefono = models.BigIntegerField('Telefono', blank=False, null=False, default='')
+
+    class Meta:
+        db_table = 'postulaciones'
+
+
 class Adopcion(models.Model):
     id_publicacion = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     perro_publicacion = models.ForeignKey(Perro_publicacion, on_delete=models.CASCADE)
     origen = models.TextField(blank=False)
     motivo_adopcion = models.TextField(blank=False, null=True)
+    adoptante = models.OneToOneField(Postulacion, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
         return f'{self.id_publicacion}, Origen: {self.origen}'
@@ -54,15 +67,3 @@ class Adopcion(models.Model):
         verbose_name = 'Perro en adopción'
         verbose_name_plural = 'Perros en adopción'
         db_table = 'adopcion'
-
-
-
-class Postulacion(models.Model):
-    cliente = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='postulaciones')
-    publicacion_adopcion = models.ForeignKey(Adopcion, on_delete=models.CASCADE, related_name='postulaciones')
-    email = models.EmailField(blank=False, null=False)
-    mensaje = models.TextField(blank=False, null=False)
-    nombre = models.CharField(max_length=100, blank=False, null=False)
-    telefono = models.CharField(max_length=20, blank=False, null=False)
-    class Meta:
-        db_table = 'postulaciones'
