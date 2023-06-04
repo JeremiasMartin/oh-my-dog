@@ -38,6 +38,7 @@
             <p class="card-text"><strong>Motivo de adopción:</strong> {{ adopcion.motivo_adopcion }}</p>
             <hr>
             <p class="card-text"><strong>Origen de adopción:</strong> {{ adopcion.origen }}</p>
+            <a class="btn btn-primary" href="{% url 'listar_postulantes' adopcion.id %}">Ver Postulantes</a>
           </div>
         </div>
       </div>

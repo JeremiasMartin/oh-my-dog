@@ -1,0 +1,59 @@
+{% extends "OhMyDogApp/base.html" %}
+
+{% load static %}
+
+{% block content %}
+<section id="showcase-inner" class="py-5 text-black">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-md-12">
+          <h2 class="display-4">Listado de Postulantes</h2>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+<!-- Listado -->
+<section id="listado" class="py-4">
+    <div class="container">
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <div id="msg-{{ message.tags }}"class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        
+        {% if postulantes %}
+            <div class="card-deck">
+                {% for postulante in postulantes %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="listing-heading text-center">
+                                    <h5 class="card-title">{{ postulante.nombre }} {{ postulante.apellido }}</h5>
+                                </div>
+                                <hr>
+                                <p class="card-text text-wrap"><i class="fa-solid fa-envelope" style="color: #e4a64e;"></i> Email: {{ postulante.email }}</p>
+                                <hr>
+                                <p class="card-text"><i class="fa-solid fa-phone-volume" style="color: #e4a64e;"></i> Teléfono: {{ postulante.telefono }}</p>
+                                <hr>
+                                <div style="display: flex; flex-direction: column; align-items: center;"class="d-flex flex-column">
+                                    <a href= "{% url 'seleccionar_postulante_adopcion' postulante.id %}" class="btn btn-primary btn-block">Seleccionar como Adoptante</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>    
+            {% else %}
+                <div class="col-md-12">
+                    <p>No Hay Postulantes</p>
+                </div>
+            {% endif %}
+    </div>
+  </section>
+{% endblock %}
