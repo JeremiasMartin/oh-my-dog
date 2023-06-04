@@ -26,4 +26,4 @@ class AdopcionForm(forms.ModelForm):
 class PostulacionForm(forms.ModelForm):
     class Meta:
         model = Postulacion
-        fields = ['nombre', 'email', 'telefono', 'mensaje']
+        fields = ['nombre', 'apellido', 'email', 'telefono', 'mensaje']
