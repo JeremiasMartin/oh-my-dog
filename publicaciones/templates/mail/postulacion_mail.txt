@@ -1,0 +1,8 @@
+¡{{ nombre_postulante }}, tu postulación ha sido enviada!
+
+Si eres seleccionado como adoptante de {{ nombre_mascota }}, recibirás otro correo con los datos del usuario que realizó la publicación para que puedan coordinar la adopción.
+
+¡Muchas gracias por utilizar nuestro sistema!
+
+
+Oh My Dog!

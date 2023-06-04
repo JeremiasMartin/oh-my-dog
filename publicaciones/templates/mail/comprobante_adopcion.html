@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Comprobante de Adopción</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f9f9f9;
+            font-family: Arial, sans-serif;
+        }
+
+        h2 {
+            color: #333333;
+        }
+
+        strong {
+            color: #ff9900;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border: 1px solid #dddddd;
+        }
+        
+        .header {
+            background-color: #00a8e0;
+            color: #ffffff;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .content {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Comprobante de Adopción</h2>
+        </div>
+        <div class="content" style="font-size: 15px">
+            Estimado(a) {{ nombre_postulante }},
+            Felicidades, has sido seleccionado(a) como adoptante de la mascota "{{ nombre_mascota }}". A continuación, se detallan los datos de la adopción:
+            <hr>
+            <strong>Nombre de la mascota en adopción:</strong> {{ nombre_mascota }}
+            <br>
+            <strong>Fecha de adopción:</strong> {{ fecha_adopcion }}
+            <br><br>
+            Datos del adoptante:
+            <br><br>
+            <strong>Nombre:</strong> {{ nombre_postulante }} {{ apellido_postulante }}
+            <br>
+            <strong>Correo electrónico:</strong> {{ email_postulante }}
+            <br>
+            <strong>Teléfono:</strong> {{ telefono_postulante }}
+            <br><br>
+            Datos del publicador:
+            <br><br>
+            <strong>Nombre:</strong> {{ nombre_publicador }} {{ apellido_publicador }}
+            <br>
+            <strong>Correo electrónico:</strong> {{ email_publicador }}
+            <br>
+            <strong>Teléfono</strong> {{ telefono_publicador }}
+            <hr>
+            <br>
+            Gracias por tu interés y por darle un hogar a la mascota.
+            <br><br>
+            Atentamente,
+            ¡Oh My Dog!
+        </div>
+    </div>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

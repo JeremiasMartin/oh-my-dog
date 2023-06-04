@@ -1,0 +1,13 @@
+¡{{ nombre_postulante }}, has sido seleccionado como adoptante de {{ nombre_mascota }}!
+
+A continuación te enviamos los datos de {{ nombre_publicador }} para que puedas contactarlo:
+
+{{ nombre_publicador }} {{ apellido_publicador }}
+email: ({{ email_publicador }}
+teléfono: {{ telefono_publicador }})
+
+
+¡Muchas gracias por utilizar nuestro sistema!
+
+
+Oh My Dog!

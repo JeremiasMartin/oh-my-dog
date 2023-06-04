@@ -1,0 +1,13 @@
+¡{{ nombre_publicador }}, se han postulado para adoptar a {{nombre_mascota}}!
+
+A continuación te dejamos los datos de contacto del postulante:
+
+Nombre: {{nombre_postulante}}
+Apellido: {{apellido_postulante}}
+Email: {{email_postulante}}
+Telefono: {{telefono_postulante}}
+Motivo: {{motivo_postulante}}
+
+
+
+Oh My Dog!
