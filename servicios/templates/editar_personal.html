@@ -6,11 +6,18 @@
 <head>
     {% leaflet_js plugins="forms" %}
     {% leaflet_css plugins="forms" %}
+    <style>
+        .formulario-ampliado {
+            width: 100%;
+            max-width: 800px; /* Ajusta el ancho máximo del formulario según tus necesidades */
+            margin: 0 auto; /* Centra el formulario horizontalmente */
+        }
+    </style>    
 </head>
-<h1>Editar Servicio de Terceros</h1>
+<h1 style="text-align: center; padding: 50px;">Editar Servicio de Terceros</h1>
 <div class="container">
     <div class="card-deck">
-        <div class="col-md-4 mb-4">
+        <div class="col-md-4 mb-4 formulario-ampliado">
             <div class="card h-100">
                 <div class="card-body">
                     <div class="listing-heading text-center">
@@ -65,8 +72,8 @@
                         </p>
                         <hr>
                         <p class="card-text">
-                            <i class="fa-solid fa-map-marker-alt" style="color: #e4a64e;"></i>
-                            Ubicación*: {{ form.ubicacion }}
+                            <i class="fa-solid fa-map-marker-alt" style="color: #e4a64e"></i>
+                            Ubicación*: <div id="id_ubicacion-map" style="width: 700px; height: 400px;">{{ form.ubicacion }}</div>
                             <p>
                                 {% for error in form.ubicacion.errors %}
                                 <span style="color: red;">{{ error }}</span>

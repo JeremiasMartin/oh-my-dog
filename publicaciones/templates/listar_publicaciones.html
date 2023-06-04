@@ -3,30 +3,49 @@
 {% load crispy_forms_tags %}
 {% block content %}
 
+<section id="showcase-inner" class="py-4">
+  <div class="container">
+    <div class="row text-center">
+      <div class="col-md-12">
+        <h2 class="display-4">Mis Publicaciones de Adopci&oacute;n</h2>
+      </div>
+    </div>
+  </div>
+</section>
 
-
-{% if adopciones %}
-  <h2>Perros en adopción</h2>
-  <ul>
+<div class="card-deck">
+  {% if adopciones %}
     {% for adopcion in adopciones %}
-      <li>
-        <strong>Nombre:</strong> {{ adopcion.perro_publicacion.nombre }}<br>
-        <strong>Tamaño:</strong> {{ adopcion.perro_publicacion.tamanio }}<br>
-        <strong>Sexo:</strong> {{ adopcion.perro_publicacion.get_sexo_display }}<br>
-        <strong>Color:</strong> {{ adopcion.perro_publicacion.color }}<br>
-        <strong>Edad:</strong> {{ adopcion.perro_publicacion.edad }}<br>
-        <strong>Raza:</strong> {{ adopcion.perro_publicacion.raza }}<br>
-        <strong>Motivo de adopción:</strong> {{ adopcion.motivo_adopcion }}<br>
-        <strong>Origen de adopción:</strong> {{ adopcion.origen }}<br>
-        <!-- Mostrar otros detalles de la publicación -->
-
-        <img src="{{ adopcion.perro_publicacion.foto.url }}" alt="{{ adopcion.perro_publicacion.nombre }}">
-      </li>
+      <div class="col-md-4 mb-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <div class="listing-heading text-center">
+              <h5 class="card-title">{{ adopcion.perro_publicacion.nombre }}</h5>
+            </div>
+            <hr>
+            <img src="{{ adopcion.perro_publicacion.foto.url }}" alt="{{ adopcion.perro_publicacion.nombre }}" class="card-img-top">
+            <hr>
+            <p class="card-text"><strong>Tamaño:</strong> {{ adopcion.perro_publicacion.tamanio }}</p>
+            <hr>
+            <p class="card-text"><strong>Sexo:</strong> {{ adopcion.perro_publicacion.get_sexo_display }}</p>
+            <hr>
+            <p class="card-text"><strong>Color:</strong> {{ adopcion.perro_publicacion.color }}</p>
+            <hr>
+            <p class="card-text"><strong>Edad:</strong> {{ adopcion.perro_publicacion.edad }}</p>
+            <hr>
+            <p class="card-text"><strong>Raza:</strong> {{ adopcion.perro_publicacion.raza }}</p>
+            <hr>
+            <p class="card-text"><strong>Motivo de adopción:</strong> {{ adopcion.motivo_adopcion }}</p>
+            <hr>
+            <p class="card-text"><strong>Origen de adopción:</strong> {{ adopcion.origen }}</p>
+          </div>
+        </div>
+      </div>
     {% endfor %}
-  </ul>
-{% else %}
-  <!-- Mostrar el mensaje de "No hay resultados" -->
-  <p>No has realizado publicaciones de perro en adopción.</p>
-{% endif %}
+  {% else %}
+    <!-- Mostrar el mensaje de "No hay resultados" -->
+    <p>No has realizado publicaciones de perro en adopción.</p>
+  {% endif %}
+</div>
 
 {% endblock %}

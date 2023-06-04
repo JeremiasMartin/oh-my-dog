@@ -37,14 +37,16 @@
     }
   </style>
 </head>
-<h1>Mapa de Servicios de Terceros</h1>
-<div id="map" style="width: 100%; height: 800px;"></div>
+<div id="map" style="width: 100%; height: 900px;"></div>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    var map = L.map('map').setView([-34.9215, -58], 13);
+    var map = L.map('map').setView([-34.9115, -58], 13);
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap contributors'
+  L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png', {
+    attribution: 'Map data &copy; <a href="https://carto.com/">Carto</a>',
+    subdomains: 'abcd',
+    minZoom: 0,
+    maxZoom: 20,
   }).addTo(map);
 
   {% for person in personal %}
@@ -59,7 +61,7 @@
       } else if ("{{ person.tipo }}" === "cuidador") {
           iconClass = "fa-shield-dog";
       } else if ("{{ person.tipo }}" === "guarderia") {
-          iconClass = "fa-house-chimney";
+          iconClass = "fa-house-chimney-medical";
       }
 
       // Crear el ícono de FontAwesome con el iconClass correspondiente
@@ -88,7 +90,7 @@
     var fixedMarkerLatLng = L.latLng(-34.871395007975416, -58.02867585786812);
     var fixedMarkerIcon = L.divIcon({
       className: 'custom-icon',
-      html: '<i class="fas fa-map-marker-alt"></i>',
+      html: '<i class="fa-solid fa-house"></i>',
       iconSize: [24, 24],
     });
     var fixedMarker = L.marker(fixedMarkerLatLng, { icon: fixedMarkerIcon }).addTo(map);

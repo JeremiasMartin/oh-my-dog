@@ -2,21 +2,70 @@
 {% load static %}
 {% load crispy_forms_tags %}
 
-
 {% block content %}
-{% for adopcion in adopciones %}
-  <h2>{{ adopcion.perro_publicacion.nombre }}</h2>
-  <p>Tamaño: {{ adopcion.perro_publicacion.tamanio }}</p>
-  <p>Sexo: {{ adopcion.perro_publicacion.sexo }}</p>
-  <p>Color: {{ adopcion.perro_publicacion.color }}</p>
-  <p>Edad: {{ adopcion.perro_publicacion.edad }}</p>
-  <p>Raza: {{ adopcion.perro_publicacion.raza }}</p>
-  <img src="{{ adopcion.perro_publicacion.foto.url }}" alt="Foto del perro">
-  <p>Origen: {{ adopcion.origen }}</p>
-  <p>Motivo de adopción: {{ adopcion.motivo_adopcion }}</p>
-  <form action="{% url 'postularse' adopcion.id %}" method="POST">
-    {% csrf_token %}
-    <button type="submit">Postularse</button>
-  </form>
-{% endfor %}
+<section id="showcase-inner" class="py-5 text-black">
+  <div class="container">
+    <div class="row text-center">
+      <div class="col-md-12">
+        <h2 class="display-4">Publicaciones de Adopción</h2>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="listado" class="py-4">
+  <div class="container">
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <div id="msg"class="alert alert-{{ message.tags }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    <div class="card-deck">
+      {% if adopciones %}
+        {% for adopcion in adopciones %}
+          <div class="col-md-4 mb-4">
+            <div class="card h-100">
+              <div class="card-body">
+                <div class="listing-heading text-center">
+                  <h5 class="card-title">{{ adopcion.perro_publicacion.nombre }}</h5>
+                </div>
+                <hr>
+                <img src="{{ adopcion.perro_publicacion.foto.url }}" alt="{{ adopcion.perro_publicacion.nombre }}" class="card-img-top">
+                <hr>
+                <p class="card-text"><strong>Tamaño:</strong> {{ adopcion.perro_publicacion.tamanio }}</p>
+                <hr>
+                <p class="card-text"><strong>Sexo:</strong> {{ adopcion.perro_publicacion.get_sexo_display }}</p>
+                <hr>
+                <p class="card-text"><strong>Color:</strong> {{ adopcion.perro_publicacion.color }}</p>
+                <hr>
+                <p class="card-text"><strong>Edad:</strong> {{ adopcion.perro_publicacion.edad }}</p>
+                <hr>
+                <p class="card-text"><strong>Raza:</strong> {{ adopcion.perro_publicacion.raza }}</p>
+                <hr>
+                <p class="card-text"><strong>Motivo de adopción:</strong> {{ adopcion.motivo_adopcion }}</p>
+                <hr>
+                <p class="card-text"><strong>Origen de adopción:</strong> {{ adopcion.origen }}</p>
+
+                {% if adopcion.id_publicacion.id != request.user.id %}
+                  <form action="{% url 'postularse' adopcion.id %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary">Postularse</button>
+                  </form>
+                {% endif %}
+              </div> 
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <!-- Mostrar el mensaje de "No hay resultados" -->
+      <p>No has realizado publicaciones de perro en adopción.</p>
+    {% endif %}
+  </div>
+</section>
 {% endblock %}
