@@ -198,7 +198,8 @@ def registrar_personal(request):
                     latitud, longitud = coordenadas_list  # Divide las coordenadas en latitud y longitud
                     personal.ubicacion = Point(float(longitud), float(latitud))  # Crea un objeto Point con las coordenadas
             personal.save()
-            return redirect('/')
+            messages.success(request, 'Registro exitoso')
+            return redirect('/servicios/listar_personal/')
     else:
         form = PersonalForm()
 

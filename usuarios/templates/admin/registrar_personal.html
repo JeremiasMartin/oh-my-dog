@@ -7,6 +7,11 @@
   {% leaflet_css plugins="forms" %}
  </head>
   <h1>Registrar Servicio de Terceros</h1>
+  {% for message in messages %}
+      <div id="msg-{{ message.tags }}"class="alert alert-{{ message.tags }}">
+        {{ message }}
+      </div>
+  {% endfor %}
   <form method="post" enctype="multipart/form-data" id="personal-form">
     {% csrf_token %}
     {{ form.as_p }}
