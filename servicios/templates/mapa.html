@@ -82,7 +82,9 @@
           <br> 
           Descripción: {{person.descripcion}}
           <br><br>
-          <a href='{% url 'Editar_personal' person.id %}' class='btn btn-primary siempre-visible' style='font-size:15px'>Editar Informaci&oacute;n</a>
+          {% if user.is_admin %}
+            <a href='{% url 'Editar_personal' person.id %}' class='btn btn-primary siempre-visible' style="font-size:15px; color: white;">Editar Informaci&oacute;n</a>
+          {% endif %}
       `);
     {% endfor %}
 
