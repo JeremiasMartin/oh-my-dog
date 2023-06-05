@@ -5,11 +5,11 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     
-    path('adoptar_perro/', views.adoptar_perro, name='adoptar_perro'),
-    path('listar_publicaciones/',views.listar_publicaciones, name= 'listar_publicaciones'),
+    path('publicar_adopcion/', views.publicar_adopcion, name='publicar_adopcion'),
+    path('listar_mis_publicaciones_adopcion/',views.listar_mis_publicaciones_adopcion, name= 'listar_mis_publicaciones_adopcion'),
     path('listar_adopciones/', views.listar_adopciones, name='listar_adopciones'),
     path('postularse/<int:adopcion_id>/', views.postularse, name='postularse'),
-    path('listar_postulantes/<int:adopcion_id>/', views.listar_postulantes, name='listar_postulantes'),
+    path('listar_postulantes_adopcion/<int:adopcion_id>/', views.listar_postulantes_adopcion, name='listar_postulantes_adopcion'),
     path('seleccionar_postulante_adopcion/<int:postulante_id>/', views.seleccionar_postulante_adopcion, name='seleccionar_postulante_adopcion'),
 
 ]

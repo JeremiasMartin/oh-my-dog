@@ -13,7 +13,7 @@ import xhtml2pdf.pisa as pisa
 import tempfile
 import datetime
 
-def adoptar_perro(request):
+def publicar_adopcion(request):
     if request.method == 'POST':
         form = AdopcionForm(request.POST, request.FILES)
         if form.is_valid():
@@ -51,15 +51,15 @@ def adoptar_perro(request):
     else:
         form = AdopcionForm()
         
-    return render(request, 'adoptar_perro.html', {'form': form})
+    return render(request, 'publicar_adopcion.html', {'form': form})
 
 
 
 
 @login_required
-def listar_publicaciones(request):
+def listar_mis_publicaciones_adopcion(request):
     adopciones = Adopcion.objects.select_related('perro_publicacion').filter(id_publicacion_id=request.user.id)
-    return render(request, 'listar_publicaciones.html', {'adopciones': adopciones})
+    return render(request, 'listar_mis_publicaciones_adopcion.html', {'adopciones': adopciones})
     
 
 def listar_adopciones(request):
@@ -131,9 +131,9 @@ def enviar_postulante_a_publicador(postulacion):
     email.send(fail_silently=False)
 
 
-def listar_postulantes(request, adopcion_id):
+def listar_postulantes_adopcion(request, adopcion_id):
     postulantes = Postulacion.objects.filter(publicacion_adopcion_id=adopcion_id)
-    return render(request, 'listar_postulantes.html', {'postulantes': postulantes})
+    return render(request, 'listar_postulantes_adopcion.html', {'postulantes': postulantes})
 
 def seleccionar_postulante_adopcion(request, postulante_id):
     postulante = Postulacion.objects.get(id=postulante_id)
