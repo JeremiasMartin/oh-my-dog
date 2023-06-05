@@ -7,11 +7,10 @@ from django.shortcuts import get_object_or_404
 from django.template.loader import get_template
 from OhMyDog import settings
 from django.core.mail import EmailMultiAlternatives
-import os
-from django.http import HttpResponse
 import xhtml2pdf.pisa as pisa
 import tempfile
 import datetime
+from turnos.views import paginar
 
 def publicar_adopcion(request):
     if request.method == 'POST':
@@ -59,12 +58,12 @@ def publicar_adopcion(request):
 @login_required
 def listar_mis_publicaciones_adopcion(request):
     adopciones = Adopcion.objects.select_related('perro_publicacion').filter(id_publicacion_id=request.user.id)
-    return render(request, 'listar_mis_publicaciones_adopcion.html', {'adopciones': adopciones})
+    return render(request, 'listar_mis_publicaciones_adopcion.html', {'adopciones': paginar(request, adopciones, 6)})
     
 
 def listar_adopciones(request):
     adopciones = Adopcion.objects.filter(perro_publicacion__activo=True)
-    return render(request, 'listar_adopciones.html', {'adopciones': adopciones})
+    return render(request, 'listar_adopciones.html', {'adopciones': paginar(request, adopciones, 6)})
 
 
 def postularse(request, adopcion_id):
@@ -133,7 +132,7 @@ def enviar_postulante_a_publicador(postulacion):
 
 def listar_postulantes_adopcion(request, adopcion_id):
     postulantes = Postulacion.objects.filter(publicacion_adopcion_id=adopcion_id)
-    return render(request, 'listar_postulantes_adopcion.html', {'postulantes': postulantes})
+    return render(request, 'listar_postulantes_adopcion.html', {'postulantes': paginar(request, postulantes, 6)})
 
 def seleccionar_postulante_adopcion(request, postulante_id):
     postulante = Postulacion.objects.get(id=postulante_id)
