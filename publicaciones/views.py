@@ -11,6 +11,9 @@ import xhtml2pdf.pisa as pisa
 import tempfile
 import datetime
 from turnos.views import paginar
+from unidecode import unidecode
+from django.db.models.functions import Concat
+from django.db.models import Q, Value as V
 
 def publicar_adopcion(request):
     if request.method == 'POST':
@@ -36,8 +39,7 @@ def publicar_adopcion(request):
             publicacion.save()
 
             adopcion = Adopcion(
-                id_publicacion=request.user,
-                perro_publicacion=perro_publicacion,
+                id_publicacion=publicacion,
                 motivo_adopcion=form.cleaned_data.get('motivo_adopcion'),
                 origen=form.cleaned_data.get('origen'),
             )
@@ -53,17 +55,61 @@ def publicar_adopcion(request):
     return render(request, 'publicar_adopcion.html', {'form': form})
 
 
-
-
 @login_required
 def listar_mis_publicaciones_adopcion(request):
-    adopciones = Adopcion.objects.select_related('perro_publicacion').filter(id_publicacion_id=request.user.id)
-    return render(request, 'listar_mis_publicaciones_adopcion.html', {'adopciones': paginar(request, adopciones, 6)})
+    adopciones = Adopcion.objects.filter(id_publicacion__id_usuario=request.user.id)
+    filtro = request.GET.get('filtro', None)
+    
+    if filtro:
+        consulta_param = f"{filtro}-consulta"
+        consulta = request.GET.get(consulta_param, None)
+
+    if filtro and consulta:
+        adopciones = buscar_mascotas(request, filtro, consulta, adopciones)
+
+    tamanio_opciones = (
+        ('Pequeño', 'Pequeño'),
+        ('Mediano', 'Mediano'),
+        ('Grande', 'Grande'),
+    )
+    sexo_opciones = (
+        ('M', 'Macho'),
+        ('H', 'Hembra')
+    )
+    contexto = {
+        "adopciones":paginar(request, adopciones, 3),
+        "opciones_tamanios": tamanio_opciones,
+        'opciones_sexo': sexo_opciones
+    }
+    return render(request, 'listar_mis_publicaciones_adopcion.html', contexto)
     
 
 def listar_adopciones(request):
-    adopciones = Adopcion.objects.filter(perro_publicacion__activo=True)
-    return render(request, 'listar_adopciones.html', {'adopciones': paginar(request, adopciones, 6)})
+    adopciones = Adopcion.objects.filter(id_publicacion__activo=True)
+    filtro = request.GET.get('filtro', None)
+    
+    if filtro:
+        consulta_param = f"{filtro}-consulta"
+        consulta = request.GET.get(consulta_param, None)
+
+    if filtro and consulta:
+        adopciones = buscar_mascotas(request, filtro, consulta, adopciones)
+
+    tamanio_opciones = (
+        ('Pequeño', 'Pequeño'),
+        ('Mediano', 'Mediano'),
+        ('Grande', 'Grande'),
+    )
+    sexo_opciones = (
+        ('M', 'Macho'),
+        ('H', 'Hembra')
+    )
+    contexto = {
+        "adopciones":paginar(request, adopciones, 3),
+        "opciones_tamanios": tamanio_opciones,
+        'opciones_sexo': sexo_opciones
+    }
+    return render(request, 'listar_adopciones.html',  contexto)
 
 
 def postularse(request, adopcion_id):
@@ -83,7 +129,7 @@ def postularse(request, adopcion_id):
 
             context = {
                     'nombre_postulante' : form.cleaned_data.get('nombre'),
-                    'nombre_mascota'  : postulacion.publicacion_adopcion.perro_publicacion.nombre,
+                    'nombre_mascota'  : postulacion.publicacion_adopcion.id_publicacion.id_perro_publicacion.nombre,
                     }
             text_content = get_template('mail/postulacion_mail.txt')
             html_content = get_template('mail/postulacion_mail.html')
@@ -104,18 +150,18 @@ def postularse(request, adopcion_id):
 
 
 def enviar_postulante_a_publicador(postulacion):
-    subject = f"Nuevo postulante de {postulacion.publicacion_adopcion.perro_publicacion.nombre}"
+    subject = f"Nuevo postulante de {postulacion.publicacion_adopcion.id_publicacion.id_perro_publicacion.nombre}"
     from_email = 'Ejtech <%s>' % (settings.EMAIL_HOST_USER)
-    to_email = '%s' % (postulacion.publicacion_adopcion.id_publicacion.email)
+    to_email = '%s' % (postulacion.publicacion_adopcion.id_publicacion.id_usuario.email)
     reply_to_email = 'noreply@ejtechsoft.com'
     context = {
-                    'nombre_publicador' : postulacion.publicacion_adopcion.id_publicacion.nombre,
+                    'nombre_publicador' : postulacion.publicacion_adopcion.id_publicacion.id_usuario.nombre,
                     'nombre_postulante' : postulacion.nombre,
                     'apellido_postulante' : postulacion.apellido,
                     'telefono_postulante' : postulacion.telefono,
                     'email_postulante' : postulacion.email,
                     'motivo_postulante' : postulacion.mensaje,
-                    'nombre_mascota'  : postulacion.publicacion_adopcion.perro_publicacion.nombre,
+                    'nombre_mascota'  : postulacion.publicacion_adopcion.id_publicacion.id_perro_publicacion.nombre,
                     }
     text_content = get_template('mail/datos_postulante.txt')
     html_content = get_template('mail/datos_postulante.html')
@@ -132,20 +178,23 @@ def enviar_postulante_a_publicador(postulacion):
 
 def listar_postulantes_adopcion(request, adopcion_id):
     postulantes = Postulacion.objects.filter(publicacion_adopcion_id=adopcion_id)
+    consulta = request.GET.get('consulta', None)
+    if consulta:
+        postulantes = buscar_postulantes(request, consulta, postulantes)
     return render(request, 'listar_postulantes_adopcion.html', {'postulantes': paginar(request, postulantes, 6)})
 
 def seleccionar_postulante_adopcion(request, postulante_id):
     postulante = Postulacion.objects.get(id=postulante_id)
     adopcion = postulante.publicacion_adopcion
-    adopcion.perro_publicacion.activo = False
+    adopcion.id_publicacion.activo = False
     adopcion.adoptante = postulante
-    adopcion.perro_publicacion.save()
+    adopcion.id_publicacion.save()
     adopcion.save()
     enviar_seleccionado_adopcion(postulante)
     return redirect('listar_adopciones')
 
 def enviar_seleccionado_adopcion(postulante):
-    subject = f"Postulante seleccionado de {postulante.publicacion_adopcion.perro_publicacion.nombre}"
+    subject = f"Postulante seleccionado de {postulante.publicacion_adopcion.id_publicacion.id_perro_publicacion.nombre}"
     from_email = 'Ejtech <%s>' % (settings.EMAIL_HOST_USER)
     to_email = '%s' % (postulante.email)
     reply_to_email = 'noreply@ejtechsoft.com'
@@ -154,11 +203,11 @@ def enviar_seleccionado_adopcion(postulante):
                     'apellido_postulante' : postulante.apellido,
                     'telefono_postulante' : postulante.telefono,
                     'email_postulante' : postulante.email,
-                    'telefono_publicador' : postulante.publicacion_adopcion.id_publicacion.telefono,
-                    'nombre_mascota'  : postulante.publicacion_adopcion.perro_publicacion.nombre,
-                    'email_publicador' : postulante.publicacion_adopcion.id_publicacion.email,
-                    'nombre_publicador' : postulante.publicacion_adopcion.id_publicacion.nombre,
-                    'apellido_publicador' : postulante.publicacion_adopcion.id_publicacion.apellido,
+                    'telefono_publicador' : postulante.publicacion_adopcion.id_publicacion.id_usuario.telefono,
+                    'nombre_mascota'  : postulante.publicacion_adopcion.id_publicacion.id_perro_publicacion.nombre,
+                    'email_publicador' : postulante.publicacion_adopcion.id_publicacion.id_usuario.email,
+                    'nombre_publicador' : postulante.publicacion_adopcion.id_publicacion.id_usuario.nombre,
+                    'apellido_publicador' : postulante.publicacion_adopcion.id_publicacion.id_usuario.apellido,
                     'fecha_adopcion' : datetime.datetime.now().strftime("%d/%m/%Y"),
     }
     text_content = get_template('mail/postulante_seleccionado.txt')
@@ -185,3 +234,36 @@ def enviar_seleccionado_adopcion(postulante):
 
     email.send(fail_silently=False)
 
+def buscar_mascotas(request, filtro, consulta, adopciones):
+    print("FILTRO",filtro)
+    print("CONSULTA",consulta)
+    
+    if filtro == 'tamanio':
+        adopciones_filtradas = adopciones.filter(id_publicacion__id_perro_publicacion__tamanio=consulta)
+        
+    elif filtro == 'raza':
+        adopciones_filtradas = adopciones.filter(id_publicacion__id_perro_publicacion__raza__icontains=unidecode(consulta))
+
+    elif filtro == 'sexo':
+        adopciones_filtradas = adopciones.filter(id_publicacion__id_perro_publicacion__sexo=consulta)
+    
+    if  not adopciones_filtradas:
+        messages.add_message(request, messages.ERROR, 'No hay perros para la búsqueda realizada')
+        adopciones_filtradas = adopciones
+
+    return adopciones_filtradas
+
+def buscar_postulantes(request, consulta, postulantes):
+    print("CONSULTA",consulta)
+    
+    postulantes_filtrados = postulantes.annotate(nombre_completo=Concat('nombre', V(' '), 'apellido')).\
+                filter(
+                    Q(nombre_completo__icontains=unidecode(consulta)) |
+                    Q(nombre_completo__icontains=unidecode(" ".join(reversed(consulta.split()))))
+                )
+    
+    if  not postulantes_filtrados:
+        messages.add_message(request, messages.ERROR, 'No hay postulantes para la búsqueda realizada')
+        postulantes_filtrados = postulantes
+
+    return postulantes_filtrados

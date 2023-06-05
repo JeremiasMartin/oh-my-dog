@@ -32,6 +32,7 @@ class Publicacion(models.Model):
     descripcion = models.TextField(default=False, blank=True, null=True)
     id_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     id_perro_publicacion = models.OneToOneField(Perro_publicacion, on_delete=models.CASCADE)
+    activo = models.BooleanField(default=True)
 
     def __str__(self):
         return f'{self.id_usuario}, {self.id_perro_publicacion}'
@@ -54,8 +55,7 @@ class Postulacion(models.Model):
 
 
 class Adopcion(models.Model):
-    id_publicacion = models.ForeignKey(Usuario, on_delete=models.CASCADE)
-    perro_publicacion = models.ForeignKey(Perro_publicacion, on_delete=models.CASCADE)
+    id_publicacion = models.ForeignKey(Publicacion, on_delete=models.CASCADE)
     origen = models.TextField(blank=False)
     motivo_adopcion = models.TextField(blank=False, null=True)
     adoptante = models.OneToOneField(Postulacion, on_delete=models.CASCADE, blank=True, null=True)

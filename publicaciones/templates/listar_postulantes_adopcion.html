@@ -28,6 +28,7 @@
         {% endif %}
         
         {% if postulantes %}
+        {% include 'filtros_postulantes.html' %} 
             <div class="card-deck">
                 {% for postulante in postulantes %}
                     <div class="col-md-4 mb-4">

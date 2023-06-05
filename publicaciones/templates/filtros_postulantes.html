@@ -1,0 +1,47 @@
+{% load static %}
+<div class="search-container">
+    <form method="GET" action="" id='postulante-buscar'>
+        <input type="text" class="search-input" id='consulta-input' name="consulta" placeholder="Buscar por nombre y apellido...">
+        <button type="submit" id="btn-buscar" class="search-button">Buscar</button>
+    </form>
+</div>
+
+<script>
+  var consultaInput = document.getElementById('consulta-input');
+  var btnBuscar = document.getElementById('btn-buscar');
+  var errorText = '';
+
+  filtroSelect.addEventListener('change', validarFiltro);
+  consultaInput.addEventListener('input', validarConsulta);
+
+  consultaInput.addEventListener('mouseenter', function() {
+    if (btnBuscar.disabled) {
+      consultaInput.title = errorText;
+    }
+  });
+
+  consultaInput.addEventListener('mouseleave', function() {
+    consultaInput.title = '';
+  });
+
+  function validarBusqueda() {
+    var isFormValid = true;
+
+    var regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
+    if (!regex.test(consultaInput.value)) {
+        errorText = 'Por favor, ingrese solo letras (incluyendo acentos) en el campo de consulta.';
+        isFormValid = false;
+    }
+    
+
+    btnBuscar.disabled = !isFormValid;
+  }
+
+  function validarFiltro() {
+    validarBusqueda();
+  }
+
+  function validarConsulta() {
+    validarBusqueda();
+  }
+</script>

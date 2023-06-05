@@ -2,11 +2,11 @@
 <div class="search-container">
     <form method="GET" action="" id='perro-buscar'>
         <select name='filtro' id='filtro-perros'>
+            <option id='raza' value='raza'>Raza</option>
+            <option id= 'tamanio' value='tamanio'>Tamaño</option>
             {% if '/perros/listar-mascotas-cliente/' not in request.path %}
                 <option id='sexo' value='sexo'>Sexo</option>
             {% endif %}
-            <option id='raza' value='raza'>Raza</option>
-            <option id= 'tamanio' value='tamanio'>Tamaño</option>
         </select>
         <select class="search-input" id='tamanio-select' name="tamanio-consulta" style="display: none;">
             {% for value, display_text in opciones_tamanios %}

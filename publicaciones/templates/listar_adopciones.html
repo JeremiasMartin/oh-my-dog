@@ -26,26 +26,29 @@
     {% endif %}
 
     {% if adopciones %}
+    {% include 'filtros_perros.html' %} 
     <div class="card-deck">
         {% for adopcion in adopciones %}
           <div class="col-md-4 mb-4">
             <div class="card h-100">
               <div class="card-body">
                 <div class="listing-heading text-center">
-                  <h5 class="card-title">{{ adopcion.perro_publicacion.nombre }}</h5>
+                  <h5 class="card-title">{{ adopcion.id_publicacion.id_perro_publicacion.nombre }}</h5>
                 </div>
                 <hr>
-                <img src="{{ adopcion.perro_publicacion.foto.url }}" alt="{{ adopcion.perro_publicacion.nombre }}" class="card-img-top">
+                <div class="foto-perfil">
+                  <img class='foto-perfil' src="{{ adopcion.id_publicacion.id_perro_publicacion.foto.url }}" alt="{{ adopcion.id_publicacion.id_perro_publicacion.nombre }}" class="card-img-top">
+                </div>
                 <hr>
-                <p class="card-text"><strong>Tamaño:</strong> {{ adopcion.perro_publicacion.tamanio }}</p>
+                <p class="card-text"><strong>Tamaño:</strong> {{ adopcion.id_publicacion.id_perro_publicacion.tamanio }}</p>
                 <hr>
-                <p class="card-text"><strong>Sexo:</strong> {{ adopcion.perro_publicacion.get_sexo_display }}</p>
+                <p class="card-text"><strong>Sexo:</strong> {{ adopcion.id_publicacion.id_perro_publicacion.get_sexo_display }}</p>
                 <hr>
-                <p class="card-text"><strong>Color:</strong> {{ adopcion.perro_publicacion.color }}</p>
+                <p class="card-text"><strong>Color:</strong> {{ adopcion.id_publicacion.id_perro_publicacion.color }}</p>
                 <hr>
-                <p class="card-text"><strong>Edad:</strong> {{ adopcion.perro_publicacion.edad }}</p>
+                <p class="card-text"><strong>Edad:</strong> {{ adopcion.id_publicacion.id_perro_publicacion.edad }}</p>
                 <hr>
-                <p class="card-text"><strong>Raza:</strong> {{ adopcion.perro_publicacion.raza }}</p>
+                <p class="card-text"><strong>Raza:</strong> {{ adopcion.id_publicacion.id_perro_publicacion.raza }}</p>
                 <hr>
                 <p class="card-text"><strong>Motivo de adopción:</strong> {{ adopcion.motivo_adopcion }}</p>
                 <hr>
