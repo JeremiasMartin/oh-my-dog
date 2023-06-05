@@ -18,15 +18,14 @@
         {% if messages %}
         <ul class="messages">
             {% for message in messages %}
-            <div id="msg"class="alert alert-{{ message.tags }}">
+            <div id="msg-{{ message.tags }}"class="alert alert-{{ message.tags }}">
                 {{ message }}
             </div>
             {% endfor %}
         </ul>
         {% endif %}
-        <div class="card-deck">
-            {% if personal %}
-                
+        {% if personal %}
+            <div class="card-deck">
                 {% for personal in personal %}
                     <div class="col-md-4 mb-4">
                         <div class="card h-100">
@@ -65,15 +64,14 @@
                         </div>
                     </div>
                 {% endfor %}
-                
-            {% else %}
-                <div class="col-md-12">
-                    <p>No Hay Resultados</p>
-                </div>
-            {% endif %}
-        </div> 
+            </div>    
+        {% else %}
+            <div id="sin-resultados">
+                <p>No Hay Resultados</p>
+            </div>
+        {% endif %}
     </div>
-    <!-- Paginacion -->
+<!-- Paginacion -->
     <div class="container">
         <div class="row">
             <div class="col-md-12">
@@ -115,6 +113,6 @@
             </div>
         </div>
     </div>
-  </section>
+</section>
   
 {% endblock %}

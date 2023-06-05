@@ -544,3 +544,31 @@ th, td {
 .form-group-descripcion label {
   margin-right: 10px;
 }
+
+#sin-resultados {
+  background-color: #e2dfdf;
+  color: #666666;
+  border-color: #a3a3a3;
+  position: relative;
+  padding: .75rem 1.25rem;
+  margin: 20px auto;
+  border: 1px solid transparent;
+  border-radius: .25rem;
+  text-align: center;
+  max-width: 100%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+@media (min-width: 768px) {
+  #sin-resultados {
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+#sin-resultados p {
+  color: #666666;
+  font-size: 16px;
+  margin-bottom: 0;
+}

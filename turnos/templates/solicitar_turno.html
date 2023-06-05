@@ -3,14 +3,14 @@
 {% block content %}
   <h1>Solicitar turno</h1>
     {% if messages %}
-   <ul class="messages">
-       {% for message in messages %}
-       <div id="msg"class="alert alert-{{ message.tags }}">
-           {{ message }}
-       </div>
-       {% endfor %}
-   </ul>
-   {% endif %}
+      <ul class="messages">
+          {% for message in messages %}
+          <div id="msg-{{ message.tags }}"class="alert alert-{{ message.tags }}">
+              {{ message }}
+          </div>
+          {% endfor %}
+      </ul>
+    {% endif %}
   <form method="post" id="solicitar-turno-form">
     {% csrf_token %}
     <div class="form-group">

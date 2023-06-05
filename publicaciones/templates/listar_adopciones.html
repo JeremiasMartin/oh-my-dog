@@ -17,16 +17,16 @@
   <div class="container">
     {% if messages %}
       <ul class="messages">
-        {% for message in messages %}
-          <div id="msg"class="alert alert-{{ message.tags }}">
+          {% for message in messages %}
+          <div id="msg-{{ message.tags }}"class="alert alert-{{ message.tags }}">
             {{ message }}
           </div>
         {% endfor %}
       </ul>
     {% endif %}
 
+    {% if adopciones %}
     <div class="card-deck">
-      {% if adopciones %}
         {% for adopcion in adopciones %}
           <div class="col-md-4 mb-4">
             <div class="card h-100">
@@ -61,10 +61,12 @@
             </div>
           </div>
         {% endfor %}
-      </div>
+    </div> 
     {% else %}
+    <div id="sin-resultados">
       <!-- Mostrar el mensaje de "No hay resultados" -->
       <p>No hay perros en adopción.</p>
+    </div>
     {% endif %}
   </div>
 </section>
