@@ -44,7 +44,7 @@ class Publicacion(models.Model):
 
 class Postulacion(models.Model):
     publicacion_adopcion = models.ForeignKey('Adopcion', on_delete=models.CASCADE, related_name='postulaciones')
-    email = models.EmailField('Mail', unique=True, max_length=254, blank=True, null=False) 
+    email = models.EmailField('Mail', unique=False, max_length=254, blank=True, null=False) 
     mensaje = models.TextField('Mensaje', blank=False, null=False)
     nombre = models.CharField('Nombre', max_length=20, blank=False, null=False, default='')
     apellido = models.CharField('Apellido', max_length=20, blank=False, null=False, default='')
