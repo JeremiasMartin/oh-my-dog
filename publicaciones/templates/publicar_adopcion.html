@@ -3,7 +3,7 @@
 {% load crispy_forms_tags %}
 {% block content %}
 <p>Completa el formulario para registrar un perro en adopción:</p>
-<form method="POST" enctype="multipart/form-data">
+<form method="POST">
   {% csrf_token %}
   {{ form.as_p }}
   

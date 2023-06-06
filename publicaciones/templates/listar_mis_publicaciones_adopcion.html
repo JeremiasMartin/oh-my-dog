@@ -34,10 +34,6 @@
                     <h5 class="card-title">{{ adopcion.id_publicacion.id_perro_publicacion.nombre }}</h5>
                   </div>
                 <hr>
-                <div class="foto-perfil">
-                  <img class='foto-perfil' src="{{ adopcion.id_publicacion.id_perro_publicacion.foto.url }}" alt="{{ adopcion.id_publicacion.id_perro_publicacion.nombre }}" class="card-img-top">
-                </div>
-                <hr>
                 <p class="card-text"><strong>Tamaño:</strong> {{ adopcion.id_publicacion.id_perro_publicacion.tamanio }}</p>
                 <hr>
                 <p class="card-text"><strong>Sexo:</strong> {{ adopcion.id_publicacion.id_perro_publicacion.get_sexo_display }}</p>

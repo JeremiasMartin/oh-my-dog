@@ -26,7 +26,6 @@ def publicar_adopcion(request):
                 color=form.cleaned_data.get('color'),
                 edad=form.cleaned_data.get('edad'),
                 raza=form.cleaned_data.get('raza'),
-                foto=form.cleaned_data.get('foto'),
             )
             perro_publicacion.save()
 
@@ -45,7 +44,7 @@ def publicar_adopcion(request):
             )
             adopcion.save()
 
-            messages.success(request, 'Subido exitosamente')
+            messages.success(request, 'Publicación exitosa')
             return redirect('/')
         else:
             messages.error(request, 'Debe completar todos los campos')
