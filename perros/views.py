@@ -87,7 +87,6 @@ def editar_perfil_mascota(request, id):
 
 def editar_foto_mi_mascota(request, id):
     perro = get_object_or_404(Perro, id=id)
-    cliente = get_object_or_404(Cliente, cliente_id=perro.cliente_id)
     if request.method == 'POST':
         form = editar_foto_form(request.POST or None, request.FILES or None, instance=perro)
         if form.is_valid():
