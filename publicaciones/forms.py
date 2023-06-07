@@ -1,6 +1,6 @@
 
 from django import forms
-from .models import Perro_publicacion
+from .models import Perro_publicacion, Publicacion
 from .models import Postulacion
 
 class AdopcionForm(forms.ModelForm):
@@ -25,3 +25,11 @@ class PostulacionForm(forms.ModelForm):
     class Meta:
         model = Postulacion
         fields = ['nombre', 'apellido', 'email', 'telefono', 'mensaje']
+
+
+class EditarAdopcionForm(forms.ModelForm):
+    origen = forms.CharField(max_length=100, widget=forms.Textarea(attrs={'rows': 4, 'cols': 40}))
+    motivo_adopcion = forms.CharField(max_length=100, widget=forms.Textarea(attrs={'rows': 4, 'cols': 40}))
+    class Meta:
+        model = Perro_publicacion
+        fields = ['nombre', 'tamanio', 'sexo', 'color', 'edad', 'raza']

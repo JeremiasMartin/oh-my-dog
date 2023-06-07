@@ -11,5 +11,5 @@ urlpatterns = [
     path('postularse/<int:adopcion_id>/', views.postularse, name='postularse'),
     path('listar_postulantes_adopcion/<int:adopcion_id>/', views.listar_postulantes_adopcion, name='listar_postulantes_adopcion'),
     path('seleccionar_postulante_adopcion/<int:postulante_id>/', views.seleccionar_postulante_adopcion, name='seleccionar_postulante_adopcion'),
-
+    path('editar_adopcion/<int:adopcion_id>/', views.editar_adopcion, name='editar_adopcion')
 ]

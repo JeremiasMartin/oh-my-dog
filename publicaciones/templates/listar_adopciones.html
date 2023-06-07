@@ -30,7 +30,7 @@
     <div class="card-deck">
         {% for adopcion in adopciones %}
           <div class="col-md-4 mb-4">
-            <div class="card h-100">
+            <div class="card h-80">
               <div class="card-body">
                 <div class="listing-heading text-center">
                   <h5 class="card-title">{{ adopcion.id_publicacion.id_perro_publicacion.nombre }}</h5>
@@ -46,15 +46,18 @@
                 <hr>
                 <p class="card-text"><strong>Raza:</strong> {{ adopcion.id_publicacion.id_perro_publicacion.raza }}</p>
                 <hr>
-                <p class="card-text"><strong>Motivo de adopción:</strong> {{ adopcion.motivo_adopcion }}</p>
-                <hr>
                 <p class="card-text"><strong>Origen de adopción:</strong> {{ adopcion.origen }}</p>
+                <hr>
+                <p class="card-text"><strong>Motivo de adopción:</strong> {{ adopcion.motivo_adopcion }}</p>
 
-                {% if adopcion.id_publicacion.id != request.user.id %}
+                {% if adopcion.id_publicacion.id_usuario_id != request.user.id %}
                   <form action="{% url 'postularse' adopcion.id %}" method="POST">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-primary">Postularse</button>
+                    <button type="submit" class="btn btn-primary btn-block">Postularse</button>
                   </form>
+                {% else %}
+                  <a class="btn btn-primary btn-block" href="{% url 'listar_postulantes_adopcion' adopcion.id %}">Ver Postulantes</a>
+                  <a class="btn btn-primary btn-block" href="{% url 'editar_adopcion' adopcion.id %}">Editar Publicación</a>
                 {% endif %}
               </div> 
             </div>

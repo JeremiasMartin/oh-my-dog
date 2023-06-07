@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .forms import AdopcionForm, PostulacionForm
+from .forms import AdopcionForm, PostulacionForm, EditarAdopcionForm
 from .models import *
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -266,3 +266,47 @@ def buscar_postulantes(request, consulta, postulantes):
         postulantes_filtrados = postulantes
 
     return postulantes_filtrados
+
+def editar_adopcion(request, adopcion_id):
+    adopcion = get_object_or_404(Adopcion, id=adopcion_id)
+    publicacion = get_object_or_404(Publicacion, id=adopcion.id_publicacion_id)
+    perro_publicacion = get_object_or_404(Perro_publicacion, id=publicacion.id_perro_publicacion_id)
+
+    path_anterior = request.META.get('HTTP_REFERER')
+
+    if request.method == 'POST':
+        form = EditarAdopcionForm(request.POST or None)
+        if form.is_valid():
+            path_anterior = request.POST.get('path_anterior', '/')
+
+            perro_publicacion.nombre = form.cleaned_data.get('nombre')
+            perro_publicacion.tamanio = form.cleaned_data.get('tamanio')
+            perro_publicacion.sexo = form.cleaned_data.get('sexo')
+            perro_publicacion.color = form.cleaned_data.get('color')
+            perro_publicacion.edad = form.cleaned_data.get('edad')
+            perro_publicacion.raza = form.cleaned_data.get('raza')
+            perro_publicacion.save()
+
+            publicacion.descripcion = form.cleaned_data.get('motivo_adopcion')
+            publicacion.save()
+
+            adopcion.origen = form.cleaned_data.get('origen')
+            adopcion.motivo_adopcion = form.cleaned_data.get('motivo_adopcion')
+            adopcion.save()
+
+            messages.success(request, "¡Información actualizada correctamente!")
+            return redirect(path_anterior)
+    else:
+        form = EditarAdopcionForm(initial={
+            'nombre': perro_publicacion.nombre,
+            'tamanio': perro_publicacion.tamanio,
+            'sexo': perro_publicacion.sexo,
+            'color': perro_publicacion.color,
+            'edad': perro_publicacion.edad,
+            'raza': perro_publicacion.raza,
+            'motivo_adopcion': publicacion.descripcion,
+            'origen': adopcion.origen,
+        })
+    context = {'form': form, 'errors': form.errors, 'path_anterior': path_anterior}
+    return render(request, 'editar_adopcion.html', context)
+
