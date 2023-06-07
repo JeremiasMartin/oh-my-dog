@@ -45,7 +45,7 @@ def publicar_adopcion(request):
             adopcion.save()
 
             messages.success(request, 'Publicación exitosa')
-            return redirect('/')
+            return redirect('listar_mis_publicaciones_adopcion')
         else:
             messages.error(request, 'Debe completar todos los campos')
     else:
