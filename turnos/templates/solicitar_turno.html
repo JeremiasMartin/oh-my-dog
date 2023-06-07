@@ -34,7 +34,7 @@
     </div>
 
     <div class="form-group-descripcion">
-      <label for="{{ form.descripcion.id_for_label }}">Descripcion:</label>
+      <label for="{{ form.descripcion.id_for_label }}">Descripcion*:</label>
         {{ form.descripcion }}
     </div>
     
@@ -61,8 +61,9 @@
     function validateForm() {
       const fecha = document.getElementById('id_fecha').value;
       const tipoAtencion = document.getElementById('id_tipo_atencion').value;
+      const descripcion = document.getElementById('id_descripcion').value;
 
-      if (fecha.trim() === '' || tipoAtencion.trim() === '') {
+      if (fecha.trim() === '' || tipoAtencion.trim() === '' || descripcion.trim() === '') {
         btnSolicitarTurno.disabled = true;
         return false;
       } else {

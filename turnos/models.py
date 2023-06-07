@@ -22,7 +22,7 @@ class Turno(models.Model):
     fecha = models.DateTimeField()
     estado = models.ForeignKey(EstadoTurno, on_delete=models.CASCADE)
     perro = models.CharField('Perro', max_length=20, blank=False, null=False, default='')
-    descripcion = models.TextField('Descripcion', blank=True, null=True)
+    descripcion = models.TextField('Descripcion', blank=False, null=False)
 
     def __str__(self):
         return f"Turno de {self.cliente} para {self.tipo_atencion} el día {self.fecha}"
