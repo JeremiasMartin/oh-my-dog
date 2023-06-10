@@ -51,30 +51,43 @@ def solicitar_turno(request):
 
 @login_required
 def listar_turnos_pendientes(request):
-    filtro = request.GET.get('filtro', None)
-    consulta = request.GET.get('consulta', None)
     turnos = Turno.objects.filter(estado_id=3)
-    if filtro and consulta:
-        turnos = buscar(request, filtro, consulta, turnos)
+    filtros = {
+        'fecha_consulta': request.GET.get('fecha-consulta'),
+        'atencion_consulta': request.GET.get('atencion-consulta'),
+        'dni_consulta': request.GET.get('dni-consulta'),
+        'nombre_apellido_consulta': request.GET.get('nombre_apellido-consulta')
+    }
+    if any(value for value in filtros.values()):
+        turnos = buscar(request, filtros, turnos)
 
     return render(request, 'listar_pendientes.html', {'turnos': paginar(request, turnos, 6)})
 
 def listar_turnos_confirmados(request):
-    filtro = request.GET.get('filtro', None)
-    consulta = request.GET.get('consulta', None)
     turnos = Turno.objects.filter(estado_id=1)
-    if filtro and consulta:
-        turnos = buscar(request, filtro, consulta, turnos)
+    filtros = {
+        'fecha_consulta': request.GET.get('fecha-consulta'),
+        'atencion_consulta': request.GET.get('atencion-consulta'),
+        'dni_consulta': request.GET.get('dni-consulta'),
+        'nombre_apellido_consulta': request.GET.get('nombre_apellido-consulta')
+    }
+    if any(value for value in filtros.values()):
+        turnos = buscar(request, filtros, turnos)
 
     return render(request, 'listar_confirmados.html', {'turnos': paginar(request, turnos, 6)})
 
 def listar_confirmados_del_dia(request):
-    filtro = request.GET.get('filtro', None)
-    consulta = request.GET.get('consulta', None)
     fecha_actual = timezone.localtime().date()
     turnos = Turno.objects.filter(estado_id=1, fecha__date=fecha_actual)
-    if filtro and consulta:
-        turnos = buscar(request, filtro, consulta, turnos)
+    filtros = {
+        'fecha_consulta': request.GET.get('fecha-consulta'),
+        'atencion_consulta': request.GET.get('atencion-consulta'),
+        'dni_consulta': request.GET.get('dni-consulta'),
+        'nombre_apellido_consulta': request.GET.get('nombre_apellido-consulta')
+    }
+    if any(value for value in filtros.values()):
+        turnos = buscar(request, filtros, turnos)
+        
     return render(request, 'listar_confirmados.html', {'turnos': paginar(request, turnos, 6)})
 
 
@@ -247,28 +260,32 @@ def rechazar_solicitud(request, id_turno):
     return redirect('/turnos/listar_turnos_pendientes/')
 
 
-def buscar(request, filtro, consulta, turnos):
-    print("FILTRO",filtro)
-    print("CONSULTA",consulta)
+def buscar(request, filtros, turnos):
+    print("FILTRO",filtros)
+
+    turnos_filtrados = turnos
+
+    if filtros['fecha_consulta']:
+        consulta = filtros['fecha_consulta']
+        turnos_filtrados = turnos_filtrados.filter(fecha__date=consulta)
     
-    if filtro == 'fecha':
-        consulta = datetime.datetime.strptime(consulta, "%d/%m/%Y").date() 
-        turnos_filtrados = turnos.filter(fecha__date=consulta)
-    
-    elif filtro == 'atencion':
-        consulta = unidecode(consulta)
-        turnos_filtrados = turnos.annotate(tipo_without_accents=Func(F('tipo_atencion__tipo'), function='unaccent')).\
+    if filtros['atencion_consulta']:
+        consulta = unidecode(filtros['atencion_consulta'])
+        turnos_filtrados = turnos_filtrados.annotate(tipo_without_accents=Func(F('tipo_atencion__tipo'), function='unaccent')).\
                 filter(tipo_without_accents__icontains=consulta)
     
-    elif filtro == 'cliente_dni':
-        turnos_filtrados = turnos.filter(cliente__user__dni__icontains=consulta)
+    if filtros['dni_consulta']:
+        consulta = filtros['dni_consulta']
+        turnos_filtrados = turnos_filtrados.filter(cliente__user__dni__icontains=consulta)
     
-    elif filtro == 'cliente_nombre_apellido':
-        turnos_filtrados = turnos.annotate(nombre_completo=Concat('cliente__user__nombre', V(' '), 'cliente__user__apellido')).\
+    if filtros['nombre_apellido_consulta']:
+        consulta = filtros['nombre_apellido_consulta']
+        turnos_filtrados = turnos_filtrados.annotate(nombre_completo=Concat('cliente__user__nombre', V(' '), 'cliente__user__apellido')).\
                 filter(
                     Q(nombre_completo__icontains=unidecode(consulta)) |
                     Q(nombre_completo__icontains=unidecode(" ".join(reversed(consulta.split()))))
                 )
+        
     if  not turnos_filtrados:
         messages.add_message(request, messages.ERROR, 'No hay turnos para la búsqueda realizada')
         turnos_filtrados = turnos

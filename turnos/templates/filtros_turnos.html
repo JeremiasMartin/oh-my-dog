@@ -1,65 +1,87 @@
 {% load static %}
-<div class="search-container">
-    <form method="GET" action="" id='turno-buscar'>
-        <select name='filtro' id='filtro-turnos'>
-            {% if request.path != '/turnos/listar_confirmados_dia/'%}
-                <option id='fecha' value='fecha'>Fecha</option>
-            {% endif %}
-            <option id='atencion' value='atencion'>Atención</option>
-            <option id= 'cliente_dni' value='cliente_dni'>DNI</option>
-            <option id= 'cliente_nombre_apellido' value='cliente_nombre_apellido'>Nombre Apellido</option>
-        </select>
-        <input type="text" class="search-input" id='consulta-input' name="consulta" placeholder="Buscar...">
-        <button type="submit" id="btn-buscar" class="search-button">Buscar</button>
-    </form>
+<div class="filtro">
+  <form method="GET" action="" id='turno-buscar'>
+    {% if request.path != '/turnos/listar_confirmados_dia/'%}
+      <input type="date" class="search-input" id='fecha-input' name="fecha-consulta" placeholder="Fecha"> 
+    {% endif %}
+    <select class="search-input" id="atencion-input" name="atencion-consulta" onchange="toggleAtencionOption(this)">
+      <option value="" selected hidden>Atención</option>
+      <option value="Vacuna antiviral">Vacuna antiviral</option>
+      <option value="Vacuna antirrábica">Vacuna antirrábica</option>
+      <option value="Desparasitante">Desparasitante</option>
+      <option value="Atención Clínica">Atención Clínica</option>
+      <option value="Castración">Castración</option>
+    </select>
+    <input type="text" class="search-input" id='dni-input' name="dni-consulta" placeholder="DNI">
+    <input type="text" class="search-input" id='nombre_apellido-input' name="nombre_apellido-consulta" placeholder="Nombre Apellido">
+    <button type="submit" id="btn-buscar" class="search-button">Buscar</button>
+  </form>
 </div>
 
 <script>
-  var filtroSelect = document.getElementById('filtro-turnos');
-  var consultaInput = document.getElementById('consulta-input');
+  var consultaFecha = document.getElementById('fecha-input');
+  var consultaAtencion = document.getElementById('atencion-input');
+  var consultaDNI = document.getElementById('dni-input');
+  var consultaNomApe = document.getElementById('nombre_apellido-input');
+
   var btnBuscar = document.getElementById('btn-buscar');
   var errorText = '';
 
-  filtroSelect.addEventListener('change', validarFiltro);
-  consultaInput.addEventListener('input', validarConsulta);
+  consultaAtencion.addEventListener('input', validarConsulta);
+  consultaDNI.addEventListener('input', validarConsulta);
+  consultaNomApe.addEventListener('input', validarConsulta);
 
-  consultaInput.addEventListener('mouseenter', function() {
+  consultaAtencion.addEventListener('mouseenter', function() {
     if (btnBuscar.disabled) {
-      consultaInput.title = errorText;
+      consultaAtencion.title = errorText;
     }
   });
 
-  consultaInput.addEventListener('mouseleave', function() {
-    consultaInput.title = '';
+  consultaAtencion.addEventListener('mouseleave', function() {
+    consultaAtencion.title = '';
+  });
+
+  consultaDNI.addEventListener('mouseenter', function() {
+    if (btnBuscar.disabled) {
+      consultaDNI.title = errorText;
+    }
+  });
+
+  consultaDNI.addEventListener('mouseleave', function() {
+    consultaDNI.title = '';
+  });
+
+  consultaNomApe.addEventListener('mouseenter', function() {
+    if (btnBuscar.disabled) {
+      consultaNomApe.title = errorText;
+    }
+  });
+
+  consultaNomApe.addEventListener('mouseleave', function() {
+    consultaNomApe.title = '';
   });
 
   function validarBusqueda() {
     var isFormValid = true;
 
-    if (filtroSelect.value === 'fecha') {
-      var formato_fecha = /^(0?[1-9]|[12][0-9]|3[01])\/(0?[1-9]|1[0-2])\/\d{4}$/;
-      if (!formato_fecha.test(consultaInput.value)) {
-        errorText = 'Por favor, ingrese una fecha en el formato dd/mm/yyyy.';
-        isFormValid = false;
-      }
-    }
-
-    else if (filtroSelect.value === 'cliente_dni') {
-      var dni = consultaInput.value;
+    var numeros = /^[0-9]+$/;
+    var regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
+    
+    if(consultaDNI.value != ''){
+      var dni = consultaDNI.value;
       if (dni.length < 7) {
         errorText = 'Por favor, ingrese un DNI con al menos 7 dígitos.';
         isFormValid = false;
       }
-      var numeros = /^[0-9]+$/;
+
       if (!dni.match(numeros)) {
         errorText = 'Por favor, ingrese un DNI con al menos 7 dígitos.';
         isFormValid = false;
       }
     }
-
-    else if (filtroSelect.value === 'atencion' || filtroSelect.value === 'cliente_nombre_apellido') {
-      var regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
-      if (!regex.test(consultaInput.value)) {
+        
+    if(consultaNomApe.value != ''){
+      if (!regex.test(consultaNomApe.value)) {
         errorText = 'Por favor, ingrese solo letras (incluyendo acentos) en el campo de consulta.';
         isFormValid = false;
       }
@@ -68,11 +90,25 @@
     btnBuscar.disabled = !isFormValid;
   }
 
-  function validarFiltro() {
+  function validarConsulta() {
     validarBusqueda();
   }
 
-  function validarConsulta() {
-    validarBusqueda();
+  mobiscroll.datepicker('#fecha-input', {
+    controls: ['calendar'],
+    selectMultiple: true
+  });
+
+  function toggleAtencionOption(selectElement) {
+    var atencionOption = selectElement.querySelector('option[value=""]');
+    var selectedOption = selectElement.value;
+
+    if (selectedOption !== '') {
+      atencionOption.hidden = false;
+      atencionOption.textContent = '-------';
+    } else {
+      atencionOption.hidden = true;
+      atencionOption.textContent = 'Atención';
+    }
   }
 </script>

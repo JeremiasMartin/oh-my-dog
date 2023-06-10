@@ -572,3 +572,25 @@ th, td {
   font-size: 16px;
   margin-bottom: 0;
 }
+
+.filtro {
+  background-color: #f2f2f2; /* Use a slightly gray color */
+  padding: 10px;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+  width: 85%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.filtro .search-input {
+  width: 300px;
+}
+
+.filtro .search-button {
+  margin-top: 20px;
+  width: fit-content;
+}
