@@ -60,7 +60,7 @@
     function validateForm() {
       const fecha = document.getElementById('id_fecha').value;
       const tipoAtencion = document.getElementById('id_tipo_atencion').value;
-      const descripcion = document.getElementById('id_descripcion').value;
+      const descripcion = document.getElementById('id_mensaje').value;
 
       if (fecha.trim() === '' || tipoAtencion.trim() === '' || descripcion.trim() === '') {
         btnSolicitarTurno.disabled = true;
