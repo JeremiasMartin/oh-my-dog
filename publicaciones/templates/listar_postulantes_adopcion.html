@@ -42,9 +42,13 @@
                                 <hr>
                                 <p class="card-text"><i class="fa-solid fa-phone-volume" style="color: #e4a64e;"></i> Teléfono: {{ postulante.telefono }}</p>
                                 <hr>
-                                <div style="display: flex; flex-direction: column; align-items: center;"class="d-flex flex-column">
-                                    <a href= "{% url 'seleccionar_postulante_adopcion' postulante.id %}" class="btn btn-primary btn-block">Seleccionar como Adoptante</a>
-                                </div>
+                                {% if adoptante_seleccionado and postulante.id == adoptante_seleccionado.id %}
+                                    <div class="alert alert-info">Seleccionado</div>
+                                {% elif not adoptante_seleccionado %}
+                                    <div style="display: flex; flex-direction: column; align-items: center;" class="d-flex flex-column">
+                                        <a href="{% url 'seleccionar_postulante_adopcion' postulante.id %}" class="btn btn-primary btn-block">Seleccionar como Adoptante</a>
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>

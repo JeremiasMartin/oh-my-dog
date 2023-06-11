@@ -1,6 +1,7 @@
 ¡{{ nombre_postulante }}, tu postulación ha sido enviada!
 
-Si eres seleccionado como adoptante de {{ nombre_mascota }}, recibirás otro correo con los datos del usuario que realizó la publicación para que puedan coordinar la adopción.
+Si eres seleccionado como adoptante de {% if adopcion.id_publicacion.id_perro_publicacion.nombre %}
+{{ nombre_mascota }} {% endif %}, recibirás otro correo con los datos del usuario que realizó la publicación para que puedan coordinar la adopción.
 
 ¡Muchas gracias por utilizar nuestro sistema!
 

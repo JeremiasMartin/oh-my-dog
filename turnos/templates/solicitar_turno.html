@@ -35,9 +35,8 @@
 
     <div class="form-group-descripcion">
       <label for="{{ form.descripcion.id_for_label }}">Descripcion*:</label>
-        {{ form.descripcion }}
+      <textarea style="width:500px" id="id_mensaje" name="mensaje" class="form-control" placeholder="Por favor, cuéntanos brevemente tus necesidades o motivo del turno. Ayúdanos a brindarte el mejor servicio." required></textarea>  
     </div>
-    
   <button type="submit" class="btn btn-primary" id="btn-solicitar-turno" disabled>Solicitar Turno</button>
 </form>
 

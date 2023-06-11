@@ -48,7 +48,7 @@ class Postulacion(models.Model):
     mensaje = models.TextField('Mensaje', blank=False, null=False)
     nombre = models.CharField('Nombre', max_length=20, blank=False, null=False, default='')
     apellido = models.CharField('Apellido', max_length=20, blank=False, null=False, default='')
-    telefono = models.BigIntegerField('Telefono', blank=False, null=False, default='')
+    telefono = models.BigIntegerField('Telefono', blank=False, null=False, default=0)
 
     class Meta:
         db_table = 'postulaciones'

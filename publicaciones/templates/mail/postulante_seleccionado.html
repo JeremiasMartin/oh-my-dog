@@ -120,7 +120,8 @@ table, td { color: #000000; } </style>
       <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Google Sans', arial,helvetica,sans-serif;" align="left">
         
   <h1 style="margin: 0px; line-height: 140%; text-align: center; word-wrap: break-word; font-weight: normal; font-family:'Google Sans', arial black,avant garde,arial; font-size: 24px;">
-    ¡{{ nombre_postulante }}, has sido seleccionado como adoptante de {{ nombre_mascota }}!
+    ¡{{ nombre_postulante }}, has sido seleccionado como adoptante {% if adopcion.id_publicacion.id_perro_publicacion.nombre %}
+    de {{ nombre_mascota }} {% endif %}!
   </h1>
 
       </td>

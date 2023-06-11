@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .forms import AdopcionForm, PostulacionForm, EditarAdopcionForm
 from .models import *
+from usuarios.models import Cliente
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
@@ -15,12 +16,19 @@ from unidecode import unidecode
 from django.db.models.functions import Concat
 from django.db.models import Q, Value as V
 
+from django.shortcuts import render, redirect
+from django.contrib import messages
+
 def publicar_adopcion(request):
     if request.method == 'POST':
         form = AdopcionForm(request.POST, request.FILES)
         if form.is_valid():
+            perro_nombre = form.cleaned_data.get('nombre')
+            if perro_nombre is not None and perro_nombre.strip() == '':
+                perro_nombre = None  # Si el nombre está vacío, se establece como None
+
             perro_publicacion = Perro_publicacion(
-                nombre=form.cleaned_data.get('nombre'),
+                nombre=perro_nombre,
                 tamanio=form.cleaned_data.get('tamanio'),
                 sexo=form.cleaned_data.get('sexo'),
                 color=form.cleaned_data.get('color'),
@@ -84,7 +92,7 @@ def listar_mis_publicaciones_adopcion(request):
     
 
 def listar_adopciones(request):
-    adopciones = Adopcion.objects.filter(id_publicacion__activo=True)
+    adopciones = Adopcion.objects.all()
     filtro = request.GET.get('filtro', None)
     
     if filtro:
@@ -112,24 +120,38 @@ def listar_adopciones(request):
 
 
 def postularse(request, adopcion_id):
-    adopcion = Adopcion.objects.get(id=adopcion_id)
+    adopcion = get_object_or_404(Adopcion, id=adopcion_id)
+    esRegistrado = request.user.is_authenticated
+    if esRegistrado:
+        perfil = request.user
+
     if request.method == 'POST':
-        form = PostulacionForm(request.POST)
+        form = PostulacionForm(request.POST, esRegistrado=esRegistrado)
+        print(form.errors)
         if form.is_valid():
-            adopcion = get_object_or_404(Adopcion, id=adopcion_id)
             postulacion = form.save(commit=False)
             postulacion.publicacion_adopcion = adopcion
+
+            if esRegistrado:
+                postulacion.nombre = perfil.nombre
+                postulacion.apellido = perfil.apellido
+                postulacion.email = perfil.email
+                postulacion.telefono = perfil.telefono
+
             postulacion.save()
 
             subject = 'Postulación Exitosa'
             from_email = 'Ejtech <%s>' % (settings.EMAIL_HOST_USER)
-            to_email = '%s' % (form.cleaned_data.get('email'))
+            to_email = postulacion.email if esRegistrado else form.cleaned_data.get('email')
             reply_to_email = 'noreply@ejtechsoft.com'
 
+            nombre_postulante = postulacion.nombre if esRegistrado else form.cleaned_data.get('nombre')
+
             context = {
-                    'nombre_postulante' : form.cleaned_data.get('nombre'),
-                    'nombre_mascota'  : postulacion.publicacion_adopcion.id_publicacion.id_perro_publicacion.nombre,
-                    }
+                'nombre_postulante': nombre_postulante,
+                'nombre_mascota': postulacion.publicacion_adopcion.id_publicacion.id_perro_publicacion.nombre,
+            }
+
             text_content = get_template('mail/postulacion_mail.txt')
             html_content = get_template('mail/postulacion_mail.html')
             text_content = text_content.render(context)
@@ -140,16 +162,20 @@ def postularse(request, adopcion_id):
             email.content_subtype = 'html'
             email.attach_alternative(html_content, 'text/html')
             email.send(fail_silently=False)
-            enviar_postulante_a_publicador(postulacion)
+            enviar_postulante_a_publicador(postulacion, form.cleaned_data.get('mensaje'))
             messages.success(request, 'Postulación enviada')
             return redirect('listar_adopciones')
     else:
         form = PostulacionForm()
-    return render(request, 'postularse.html', {'form': form, 'adopcion_id': adopcion_id})
+    return render(request, 'postularse.html', {'form': form, 'adopcion_id': adopcion_id, 'esRegistrado': esRegistrado})
 
 
-def enviar_postulante_a_publicador(postulacion):
-    subject = f"Nuevo postulante de {postulacion.publicacion_adopcion.id_publicacion.id_perro_publicacion.nombre}"
+
+def enviar_postulante_a_publicador(postulacion, mensaje):
+    subject = f"Nuevo postulante"
+    if postulacion.publicacion_adopcion.id_publicacion.id_perro_publicacion.nombre:
+        subject += f" de {postulacion.publicacion_adopcion.id_publicacion.id_perro_publicacion.nombre}"
+
     from_email = 'Ejtech <%s>' % (settings.EMAIL_HOST_USER)
     to_email = '%s' % (postulacion.publicacion_adopcion.id_publicacion.id_usuario.email)
     reply_to_email = 'noreply@ejtechsoft.com'
@@ -159,7 +185,7 @@ def enviar_postulante_a_publicador(postulacion):
                     'apellido_postulante' : postulacion.apellido,
                     'telefono_postulante' : postulacion.telefono,
                     'email_postulante' : postulacion.email,
-                    'motivo_postulante' : postulacion.mensaje,
+                    'motivo_postulante' : mensaje,
                     'nombre_mascota'  : postulacion.publicacion_adopcion.id_publicacion.id_perro_publicacion.nombre,
                     }
     text_content = get_template('mail/datos_postulante.txt')
@@ -180,7 +206,15 @@ def listar_postulantes_adopcion(request, adopcion_id):
     consulta = request.GET.get('consulta', None)
     if consulta:
         postulantes = buscar_postulantes(request, consulta, postulantes)
-    return render(request, 'listar_postulantes_adopcion.html', {'postulantes': paginar(request, postulantes, 6)})
+
+    tiene_adoptante = False
+    adoptante_seleccionado = None
+    publicacion = Adopcion.objects.filter(id=adopcion_id, adoptante__isnull=False).first()
+    if publicacion:
+        tiene_adoptante = True
+        adoptante_seleccionado = publicacion.adoptante
+    
+    return render(request, 'listar_postulantes_adopcion.html', {'postulantes': paginar(request, postulantes, 6), 'tiene_adoptante': tiene_adoptante, 'adoptante_seleccionado': adoptante_seleccionado})
 
 def seleccionar_postulante_adopcion(request, postulante_id):
     postulante = Postulacion.objects.get(id=postulante_id)
@@ -193,7 +227,10 @@ def seleccionar_postulante_adopcion(request, postulante_id):
     return redirect('listar_adopciones')
 
 def enviar_seleccionado_adopcion(postulante):
-    subject = f"Postulante seleccionado de {postulante.publicacion_adopcion.id_publicacion.id_perro_publicacion.nombre}"
+    subject = f"Postulante seleccionado"
+    if postulante.publicacion_adopcion.id_publicacion.id_perro_publicacion.nombre:
+        subject += f" de {postulante.publicacion_adopcion.id_publicacion.id_perro_publicacion.nombre}"
+
     from_email = 'Ejtech <%s>' % (settings.EMAIL_HOST_USER)
     to_email = '%s' % (postulante.email)
     reply_to_email = 'noreply@ejtechsoft.com'

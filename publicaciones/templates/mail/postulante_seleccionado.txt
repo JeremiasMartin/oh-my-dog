@@ -1,4 +1,5 @@
-¡{{ nombre_postulante }}, has sido seleccionado como adoptante de {{ nombre_mascota }}!
+¡{{ nombre_postulante }}, has sido seleccionado como adoptante de {% if adopcion.id_publicacion.id_perro_publicacion.nombre %}
+{{ nombre_mascota }} {% endif %}!
 
 A continuación te enviamos los datos de {{ nombre_publicador }} para que puedas contactarlo:
 

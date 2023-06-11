@@ -30,10 +30,12 @@
             <div class="col-md-4 mb-4">
               <div class="card h-80">
                 <div class="card-body">
+                  {% if adopcion.id_publicacion.id_perro_publicacion.nombre %}
                   <div class="listing-heading text-center">
                     <h5 class="card-title">{{ adopcion.id_publicacion.id_perro_publicacion.nombre }}</h5>
                   </div>
                   <hr>
+                  {% endif %}
                   <p class="card-text"><strong>Tamaño:</strong> {{ adopcion.id_publicacion.id_perro_publicacion.tamanio }}</p>
                   <hr>
                   <p class="card-text"><strong>Sexo:</strong> {{ adopcion.id_publicacion.id_perro_publicacion.get_sexo_display }}</p>
@@ -47,8 +49,21 @@
                   <p class="card-text"><strong>Origen de adopción:</strong> {{ adopcion.origen }}</p>
                   <hr>
                   <p class="card-text"><strong>Motivo de adopción:</strong> {{ adopcion.motivo_adopcion }}</p>
-                  <a class="btn btn-primary btn-block" href="{% url 'listar_postulantes_adopcion' adopcion.id %}">Ver Postulantes</a>
-                  <a class="btn btn-primary btn-block" href="{% url 'editar_adopcion' adopcion.id %}">Editar Publicación</a>
+
+                  <!-- Ver postulantes -->
+                {% if adopcion.adoptante and adopcion.id_publicacion.id_usuario_id != request.user.id %}
+                <div class="alert alert-success">¡Adoptado!</div>
+                {% endif %}
+              
+              <!-- Editar publicación -->
+              {% if adopcion.adoptante and adopcion.id_publicacion.id_usuario_id == request.user.id %}
+              <div class="alert alert-success">Esta publicación ya tiene adoptante y no se puede editar.</div>
+                <a class="btn btn-primary btn-block" href="{% url 'listar_postulantes_adopcion' adopcion.id %}">Ver Postulantes</a>
+              {% elif adopcion.id_publicacion.id_usuario_id == request.user.id %}
+                <a class="btn btn-primary btn-block" href="{% url 'listar_postulantes_adopcion' adopcion.id %}">Ver Postulantes</a>
+                <a href="{% url 'editar_adopcion' adopcion.id %}" class="btn btn-primary btn-block">Editar Publicación</a>
+              {% endif %}
+
                 </div>
               </div>
             </div>

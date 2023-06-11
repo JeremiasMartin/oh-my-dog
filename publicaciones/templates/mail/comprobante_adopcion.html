@@ -45,9 +45,12 @@
         </div>
         <div class="content" style="font-size: 15px">
             Estimado(a) {{ nombre_postulante }},
-            Felicidades, has sido seleccionado(a) como adoptante de la mascota "{{ nombre_mascota }}". A continuación, se detallan los datos de la adopción:
+            Felicidades, has sido seleccionado(a) como adoptante {% if adopcion.id_publicacion.id_perro_publicacion.nombre %}
+            de la mascota "{{ nombre_mascota }}" {% endif %}. A continuación, se detallan los datos de la adopción:
             <hr>
+            {% if adopcion.id_publicacion.id_perro_publicacion.nombre %}
             <strong>Nombre de la mascota en adopción:</strong> {{ nombre_mascota }}
+            {% endif %}
             <br>
             <strong>Fecha de adopción:</strong> {{ fecha_adopcion }}
             <br><br>
