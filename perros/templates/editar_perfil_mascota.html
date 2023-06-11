@@ -76,10 +76,11 @@
       var raza = document.getElementById('id_raza').value;
       var color = document.getElementById('id_color').value;
       var tamanio = document.getElementById('id_tamanio').value;
+      var sexo = document.getElementById('id_sexo').value;
       var fechaNacimiento = document.getElementById('id_fecha_nac').value;
 
       // Validación de campos vacíos
-      if (nombre.trim() === '' || raza.trim() === '' || color.trim() === '' || fechaNacimiento.trim() === '' || tamanio.trim() === '') {
+      if (nombre.trim() === '' || raza.trim() === '' || color.trim() === '' || fechaNacimiento.trim() === '' || tamanio.trim() === '' || sexo.trim() === '') {
         alert('Por favor, completa todos los campos.');
         return false;
       }
@@ -128,6 +129,7 @@
       var color = document.getElementById('id_color').value;
       var fechaNacimiento = document.getElementById('id_fecha_nac').value;
       var tamanio = document.getElementById('id_tamanio').value;
+      var sexo = document.getElementById('id_sexo').value;
 
       var regex = /^[a-zA-Z\s]*$/; // Expresión regular para solo letras y espacios
       var fechaNacimientoParts = fechaNacimiento.split('/');
@@ -139,6 +141,7 @@
       var isFormValid =
         nombre.trim() !== '' &&
         regex.test(nombre) &&
+        sexo.trim() !== '' &&
         raza.trim() !== '' &&
         tamanio.trim() !== '' &&
         regex.test(raza) &&
