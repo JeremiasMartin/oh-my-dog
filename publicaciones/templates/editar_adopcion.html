@@ -5,72 +5,152 @@
 
 <h1>Editar Publicación de Adopción</h1>
 
- <div class="container">
-    {% for message in messages %}
-      <div id="msg"class="alert alert-{{ message.tags }}">
+<div class="container">
+  {% for message in messages %}
+    <div id="msg" class="alert alert-{{ message.tags }}">
       {{ message }}
-      </div>
-    {% endfor %}
-    <div class="card-deck">
-        <div class="col-md-6 mb-5">
-            <div class="card h-100">
-                <div class="card-body">
-                    <div class="listing-heading text-center">
-                        <h5 class="card-title">Publicación</h5>
-                    </div>
-                    <form method="post" action="" style="color: black;" enctype='multipart/form-data'>
-                        {% csrf_token %}
-                        <p class="card-text">
-                            <i class="fa-solid fa-dog" style="color: #e4a64e;"></i>
-                            Nombre: {{ form.nombre }}
-                         </p>
-                        <hr>
-                        <p class="card-text">
-                            <i class="fa-solid fa-ruler-vertical"style="color: #e4a64e;"></i>
-                            Tamaño*: {{ form.tamanio }}
-                        </p>
-                        <hr>
-                        <p class="card-text">
-                            <i class="fa-solid fa-paw" style="color: #e4a64e;"></i>
-                            Sexo*: {{ form.sexo }}
-                        </p>
-                        <hr>
-                        <p class="card-text">
-                            <i class="fa-solid fa-palette" style="color: #e4a64e;"></i>
-                            Color*: {{ form.color }}
-                        </p>
-                        <hr>
-                        <p class="card-text">
-                            <i class="fa-solid fa-calendar-days" style="color: #e4a64e;"></i>
-                            Edad*: {{ form.edad}}
-                        </p>
-                        <hr>
-                        <p class="card-text">
-                            <i class="fa-solid fa-dog" style="color: #e4a64e;"></i>
-                            Raza*: {{ form.raza }}
-                        </p>  
-                        <hr>
-                        <p class="card-text">
-                            <i class="fa-solid fa-dog" style="color: #e4a64e;"></i>
-                            Origen de la mascota*: {{ form.origen }}
-                        </p>  
-                        <hr>
-                        <p class="card-text">
-                            <i class="fa-solid fa-comment" style="color: #e4a64e;"></i>
-                            Motivo de adopción*: {{ form.motivo_adopcion }}
-                        </p>
-                        <hr>
-                        <button type="submit" id="btn-registrar" class="btn btn-success">Confirmar</button>
-                        <a href="{{ path_anterior }}" name="path_anterior" class="btn btn-primary">Cancelar</a>
-                        <!-- para poder saber el url anterior, ya que se puede acceder desde dos partes-->
-                        <input type="hidden" name="path_anterior" value="{{ path_anterior }}"></input>
-
-                    </form>
-                </div>
-            </div>
-        </div>
     </div>
+  {% endfor %}
+  <div class="card-deck">
+    <div class="col-md-6 mb-5">
+      <div class="card h-100">
+        <div class="card-body">
+          <div class="listing-heading text-center">
+            <h5 class="card-title">Publicación</h5>
+          </div>
+          <form method="post" action="" style="color: black;" enctype='multipart/form-data' onsubmit="return validarFormulario()">
+            {% csrf_token %}
+            <p class="card-text">
+              <i class="fa-solid fa-dog" style="color: #e4a64e;"></i>
+              Nombre: {{ form.nombre }}
+            </p>
+            <hr>
+            <p class="card-text">
+              <i class="fa-solid fa-ruler-vertical" style="color: #e4a64e;"></i>
+              Tamaño*: {{ form.tamanio }}
+            </p>
+            <hr>
+            <p class="card-text">
+              <i class="fa-solid fa-paw" style="color: #e4a64e;"></i>
+              Sexo*: {{ form.sexo }}
+            </p>
+            <hr>
+            <p class="card-text">
+              <i class="fa-solid fa-palette" style="color: #e4a64e;"></i>
+              Color*: {{ form.color }}
+            </p>
+            <hr>
+            <p class="card-text">
+              <i class="fa-solid fa-calendar-days" style="color: #e4a64e;"></i>
+              Edad*: {{ form.edad }}
+            </p>
+            <hr>
+            <p class="card-text">
+              <i class="fa-solid fa-dog" style="color: #e4a64e;"></i>
+              Raza*: {{ form.raza }}
+            </p>
+            <hr>
+            <p class="card-text">
+              <i class="fa-solid fa-dog" style="color: #e4a64e;"></i>
+              Origen de la mascota*: {{ form.origen }}
+            </p>
+            <hr>
+            <p class="card-text">
+              <i class="fa-solid fa-comment" style="color: #e4a64e;"></i>
+              Motivo de adopción*: {{ form.motivo_adopcion }}
+            </p>
+            <hr>
+            <button type="submit" id="btn-confirmar" class="btn btn-success">Confirmar</button>
+            <a href="{{ path_anterior }}" name="path_anterior" class="btn btn-primary">Cancelar</a>
+            <!-- para poder saber el url anterior, ya que se puede acceder desde dos partes-->
+            <input type="hidden" name="path_anterior" value="{{ path_anterior }}"></input>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
+<script>
+  function validarFormulario() {
+    var nombre = document.getElementById('id_nombre').value;
+    var raza = document.getElementById('id_raza').value;
+    var color = document.getElementById('id_color').value;
+    var origen = document.getElementById('id_origen').value;
+    var motivo = document.getElementById('id_motivo').value;
+    var edad = document.getElementById('id_edad').value;
+    var sexo = document.getElementById('id_sexo').value;
+    var tamaño = document.getElementById('id_tamaño').value;
+
+    if (
+      raza.trim() === '' ||
+      color.trim() === '' ||
+      origen.trim() === '' ||
+      motivo.trim() === '' ||
+      edad.trim() === '' ||
+      sexo.trim() === '' ||
+      tamaño.trim() === ''
+    ) {
+      alert('Por favor, completa todos los campos obligatorios.');
+      return false;
+    }
+
+    var regexLetras = /^[a-zA-Z\s]+$/;
+    var regexNumeros = /^\d+$/;
+    
+    if (nombre.trim() !== '' && !regexLetras.test(nombre)) {
+      alert('El campo "Nombre" solo puede contener letras.');
+      return false;
+    }
+
+    if (!regexLetras.test(raza)) {
+      alert('El campo "Raza" solo puede contener letras.');
+      return false;
+    }
+
+    if (!regexLetras.test(color)) {
+      alert('El campo "Color" solo puede contener letras.');
+      return false;
+    }
+
+    if (!regexNumeros.test(edad)) {
+      alert('El campo "Edad" solo puede contener números.');
+      return false;
+    }
+
+    return true;
+  }
+
+
+  var formInputs = document.querySelectorAll('input[type="text"], select');
+  var btnConfirmar = document.getElementById('btn-confirmar');
+
+  formInputs.forEach(function (input) {
+    input.addEventListener('input', function () {
+      validarCampos();
+    });
+  });
+
+  function validarCampos() {
+    var isFormValid = Array.from(formInputs).every(function (input) {
+      return input.checkValidity();
+    });
+
+    var regex = /^[a-zA-Z\s]*$/; // Expresión regular para solo letras y espacios
+    if (!regex.test(document.getElementById('id_nombre').value) || !regex.test(document.getElementById('id_raza').value) || !regex.test(document.getElementById('id_color').value)) {
+      isFormValid = false;
+    }
+
+    var regexNumeros = /^\d+$/;
+    if (!regexNumeros.test(document.getElementById('id_edad').value)) {
+      isFormValid = false;
+    }
+
+    btnConfirmar.disabled = !isFormValid;
+  }
+
+  // Validar campos al cargar la página
+  validarCampos();
+</script>
 
 {% endblock %}

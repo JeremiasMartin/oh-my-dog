@@ -89,4 +89,58 @@
         </div>
     </div>
 </div>
+<script>
+    function validarFormulario() {
+      var form = document.getElementById('personal-form');
+      
+      // Verificar si algún campo está vacío o contiene caracteres no permitidos
+      var inputs = form.querySelectorAll('input, select');
+      for (var i = 0; i < inputs.length; i++) {
+        var input = inputs[i];
+        if (input.value.trim() === '') {
+          alert('Por favor, complete todos los campos.');
+          return false;
+        }
+
+        var regexLetras = /^[a-zA-Z\s]*$/;
+        if (input.id === 'id_nombre' && !regexLetras.test(input.value.trim())) {
+          alert('El campo "nombre" solo puede contener letras.');
+          return false;
+        }
+      }
+      
+      // Habilitar o deshabilitar el botón de guardar según la validez del formulario
+      var btnGuardar = document.getElementById('btn-registrar');
+      btnGuardar.disabled = !form.checkValidity();
+      
+      // El formulario es válido, realiza cualquier otra acción necesaria
+      return true;
+    }
+
+    // Validar campos en tiempo real
+    var formInputs = document.querySelectorAll('input[type="text"], select');
+    var btnGuardar = document.getElementById('btn-registrar');
+
+    formInputs.forEach(function (input) {
+      input.addEventListener('input', function () {
+        validarCampos();
+      });
+    });
+
+    function validarCampos() {
+      var isFormValid = Array.from(formInputs).every(function (input) {
+        return input.checkValidity();
+      });
+
+      var regex = /^[a-zA-Z\s]*$/; // Expresión regular para solo letras y espacios
+      if (!regex.test(document.getElementById('id_nombre').value)) {
+        isFormValid = false;
+      }
+
+      btnGuardar.disabled = !isFormValid;
+    }
+
+    // Validar campos al cargar la página
+    validarCampos();
+  </script>
 {% endblock %}
