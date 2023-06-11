@@ -2,24 +2,42 @@
 {% load static %}
 {% block content %}
 
-<h2>Iniciar Sesión</h2>
-<form method="POST" id="login-form">
-    {% csrf_token %}
-    <input type="email" id="email" name="email" placeholder="Correo electrónico" required>
-    <input type="password" id="password" name="password" placeholder="Contraseña" required>
-    <button type="submit" id="submit-btn" disabled>Iniciar sesión</button>
-    <a style="margin:15" href="/usuarios/restablecer_contrasenia/">No recuerdo mi clave</a>
-</form>
+<h2></h2>
 
 {% if messages %}
 <ul class="messages">
     {% for message in messages %}
-    <div id="msg" class="alert alert-{{ message.tags }} ">
+    <div id="msg-{{ message.tags }}" class="alert alert-{{ message.tags }} ">
         {{ message|safe }}
     </div>
     {% endfor %}
 </ul>
 {% endif %}
+
+<div class="col-md-4 offset-md-4" style="margin-top: 20px;">
+    <div class="card h-40">
+        <h2 class= "text-center" style="margin-top: 10px;">Iniciar Sesión</h2>
+        <div class="card-body d-flex">
+        <form method="POST" id="login-form" class="login-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="email">Correo electrónico</label>
+                <input type="email" id="email" name="email" class="form-control" style="border-color: black;" placeholder="Correo electrónico" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Contraseña</label>
+                <input type="password" id="password" name="password" class="form-control" style="border-color: black;" placeholder="Contraseña" required>
+            </div>
+            <div>
+            <button style="margin-top: 10px; margin-bottom: 10px;" type="submit" id="submit-btn" class="btn btn-primary" disabled>Iniciar sesión</button>
+            </div>
+            <div style="margin-top: 10px;">
+            <a href="/usuarios/restablecer_contrasenia/">No recuerdo mi clave</a>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
 
 <script>
     const form = document.getElementById('login-form');
