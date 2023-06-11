@@ -123,28 +123,24 @@
     
     var isFormValid = true; // Assume form is valid
 
-    if ((!document.getElementById('id_nombre') || nombre.trim() === '') ||
-        (!document.getElementById('id_apellido') || apellido.trim() === '') ||
-        (!document.getElementById('id_email') || mail.trim() === '') ||
-        (!document.getElementById('id_telefono') || telefono.trim() === '') ||
-        mensaje.trim() === '') {
-      // Disable the button if any of the required fields is empty
+    if ((!document.getElementById('id_nombre') || nombre.trim() === '') &&
+      (!document.getElementById('id_apellido') || apellido.trim() === '') &&
+      (!document.getElementById('id_email') || mail.trim() === '') &&
+      (!document.getElementById('id_telefono') || telefono.trim() === '') &&
+      (!document.getElementById('id_mensaje') || mensaje.trim() === '')) {
+    // Disable the button if all fields are empty
+      isFormValid = false;
+    }
+    
+    if (telefono.trim() !== '' && (telefono.trim().length < 10 || !numeros.test(telefono))) {
       isFormValid = false;
     }
 
-    if (telefono.trim().length < 10) {
+    if (nombre.trim() !== '' && (!regex.test(nombre) || !regex.test(apellido))) {
       isFormValid = false;
     }
 
-    if (!regex.test(nombre) || !regex.test(apellido)) {
-      isFormValid = false;
-    }
-
-    if (!emailPattern.test(mail)) {
-      isFormValid = false;
-    }
-
-    if (!numeros.test(telefono)) {
+    if (mail.trim() !== '' && !emailPattern.test(mail)) {
       isFormValid = false;
     }
 
