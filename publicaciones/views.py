@@ -126,6 +126,16 @@ def postularse(request, adopcion_id):
     if esRegistrado:
         perfil = request.user
 
+    if esRegistrado:
+        if Postulacion.objects.filter(publicacion_adopcion=adopcion, email=request.user.email).exists():
+            messages.error(request, 'Ya te has postulado para esta mascota.')
+            return redirect('listar_adopciones')
+    else:
+        email_postulante = request.POST.get('email')  # Obtener el correo electrónico ingresado por el usuario no registrado
+        if Postulacion.objects.filter(publicacion_adopcion=adopcion, email=email_postulante).exists():
+            messages.error(request, 'Ya te has postulado para esta mascota.')
+            return redirect('listar_adopciones')
+
     if request.method == 'POST':
         form = PostulacionForm(request.POST, esRegistrado=esRegistrado)
         print(form.errors)
@@ -267,9 +277,21 @@ def enviar_seleccionado_adopcion(postulante):
             pdf_file.seek(0)
             email.attach('comprobante_adopcion.pdf', pdf_file.read(), 'application/pdf')
 
-
-
     email.send(fail_silently=False)
+
+def listar_mis_postulaciones(request):
+    postulaciones = Postulacion.objects.filter(email=request.user.email)
+    consulta = request.GET.get('consulta', None)
+    if consulta:
+        postulaciones = buscar_postulaciones(request, consulta, postulaciones)
+    return render(request, 'listar_mis_postulaciones.html', {'postulaciones': paginar(request, postulaciones, 6)})
+
+def buscar_postulaciones(request, consulta, postulaciones):
+    postulaciones_filtradas = postulaciones.filter(id_publicacion__id_perro_publicacion__nombre__icontains=unidecode(consulta))
+    if not postulaciones_filtradas:
+        messages.add_message(request, messages.INFO, 'No se encontraron resultados para la búsqueda')
+    return postulaciones_filtradas
+
 
 def buscar_mascotas(request, filtros, adopciones):
     print("FILTRO",filtros)
