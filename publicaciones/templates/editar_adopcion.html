@@ -77,10 +77,10 @@
     var raza = document.getElementById('id_raza').value;
     var color = document.getElementById('id_color').value;
     var origen = document.getElementById('id_origen').value;
-    var motivo = document.getElementById('id_motivo').value;
+    var motivo = document.getElementById('id_motivo_adopcion').value;
     var edad = document.getElementById('id_edad').value;
     var sexo = document.getElementById('id_sexo').value;
-    var tamaño = document.getElementById('id_tamaño').value;
+    var tamaño = document.getElementById('id_tamanio').value;
 
     if (
       raza.trim() === '' ||
@@ -113,16 +113,11 @@
       return false;
     }
 
-    if (!regexNumeros.test(edad)) {
-      alert('El campo "Edad" solo puede contener números.');
-      return false;
-    }
-
     return true;
   }
 
 
-  var formInputs = document.querySelectorAll('input[type="text"], select');
+  var formInputs = document.querySelectorAll('input[type="text"], select, textarea');;
   var btnConfirmar = document.getElementById('btn-confirmar');
 
   formInputs.forEach(function (input) {
@@ -132,18 +127,28 @@
   });
 
   function validarCampos() {
+    var nombre = document.getElementById('id_nombre').value;
+    var raza = document.getElementById('id_raza').value;
+    var color = document.getElementById('id_color').value;
+    var origen = document.getElementById('id_origen').value;
+    var motivo = document.getElementById('id_motivo_adopcion').value;
+    var edad = document.getElementById('id_edad').value;
+    var sexo = document.getElementById('id_sexo').value;
+    var tamaño = document.getElementById('id_tamanio').value;
+  
     var isFormValid = Array.from(formInputs).every(function (input) {
       return input.checkValidity();
     });
 
     var regex = /^[a-zA-Z\s]*$/; // Expresión regular para solo letras y espacios
-    if (!regex.test(document.getElementById('id_nombre').value) || !regex.test(document.getElementById('id_raza').value) || !regex.test(document.getElementById('id_color').value)) {
+    if (!regex.test(raza) || !regex.test(color)) {
       isFormValid = false;
     }
 
-    var regexNumeros = /^\d+$/;
-    if (!regexNumeros.test(document.getElementById('id_edad').value)) {
-      isFormValid = false;
+    if(nombre.trim() !== ''){
+      if(!regex.test(nombre)){
+        isFormValid = false;
+      }
     }
 
     btnConfirmar.disabled = !isFormValid;
