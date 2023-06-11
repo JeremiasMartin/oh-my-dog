@@ -70,7 +70,11 @@
             </div>    
             {% else %}
             <div id="sin-resultados">
+            {% if request.path == '/turnos/listar_confirmados_dia/'%}
+                <p>No hay turnos confirmados del día</p>
+            {% else %}
                 <p>No hay turnos confirmados</p>
+            {% endif %}
             </div>
         {% endif %} 
     </div>
