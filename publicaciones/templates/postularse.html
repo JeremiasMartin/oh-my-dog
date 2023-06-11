@@ -97,55 +97,60 @@
     });
   });
 
-  function validarCampos() {
-    var nombre = '';
-    var apellido = '';
-    var mail = '';
-    var telefono = '';
+function validarCampos() {
+  var nombre = '';
+  var apellido = '';
+  var mail = '';
+  var telefono = '';
 
-    if (document.getElementById('id_nombre')) {
-      nombre = document.getElementById('id_nombre').value;
-    }
-
-    if (document.getElementById('id_apellido')) {
-      apellido = document.getElementById('id_apellido').value;
-    }
-
-    if (document.getElementById('id_email')) {
-      mail = document.getElementById('id_email').value;
-    }
-
-    if (document.getElementById('id_telefono')) {
-      telefono = document.getElementById('id_telefono').value;
-    }
-
-    var mensaje = document.getElementById('id_mensaje').value;
-    
-    var isFormValid = true; // Assume form is valid
-
-    if ((!document.getElementById('id_nombre') || nombre.trim() === '') &&
-      (!document.getElementById('id_apellido') || apellido.trim() === '') &&
-      (!document.getElementById('id_email') || mail.trim() === '') &&
-      (!document.getElementById('id_telefono') || telefono.trim() === '') &&
-      (!document.getElementById('id_mensaje') || mensaje.trim() === '')) {
-    // Disable the button if all fields are empty
-      isFormValid = false;
-    }
-    
-    if (telefono.trim() !== '' && (telefono.trim().length < 10 || !numeros.test(telefono))) {
-      isFormValid = false;
-    }
-
-    if (nombre.trim() !== '' && (!regex.test(nombre) || !regex.test(apellido))) {
-      isFormValid = false;
-    }
-
-    if (mail.trim() !== '' && !emailPattern.test(mail)) {
-      isFormValid = false;
-    }
-
-    btnEnviar.disabled = !isFormValid;
+  if (document.getElementById('id_nombre')) {
+    nombre = document.getElementById('id_nombre').value;
   }
+
+  if (document.getElementById('id_apellido')) {
+    apellido = document.getElementById('id_apellido').value;
+  }
+
+  if (document.getElementById('id_email')) {
+    mail = document.getElementById('id_email').value;
+  }
+
+  if (document.getElementById('id_telefono')) {
+    telefono = document.getElementById('id_telefono').value;
+  }
+
+  var mensaje = document.getElementById('id_mensaje').value;
+
+  var isFormValid = true; // Assume form is valid
+
+  if (mensaje.trim() === '') {
+    isFormValid = false;
+  }
+
+  if ((!document.getElementById('id_nombre') || nombre.trim() === '') &&
+    (!document.getElementById('id_apellido') || apellido.trim() === '') &&
+    (!document.getElementById('id_email') || mail.trim() === '') &&
+    (!document.getElementById('id_telefono') || telefono.trim() === '') &&
+    mensaje.trim() === '') {
+    // Disable the button if all fields are empty
+    isFormValid = false;
+  }
+
+  if (telefono.trim() !== '' && (telefono.trim().length < 10 || !numeros.test(telefono))) {
+    isFormValid = false;
+  }
+
+  if (nombre.trim() !== '' && (!regex.test(nombre) || !regex.test(apellido))) {
+    isFormValid = false;
+  }
+
+  if (mail.trim() !== '' && !emailPattern.test(mail)) {
+    isFormValid = false;
+  }
+
+  btnEnviar.disabled = !isFormValid;
+}
+
   // Validar campos al cargar la página
   validarCampos();
 </script>
