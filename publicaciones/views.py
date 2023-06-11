@@ -64,7 +64,7 @@ def publicar_adopcion(request):
 
 @login_required
 def listar_mis_publicaciones_adopcion(request):
-    adopciones = Adopcion.objects.filter(id_publicacion__id_usuario=request.user.id)
+    adopciones = Adopcion.objects.filter(id_publicacion__id_usuario=request.user.id).order_by('-id')
     
     filtros = {
         'raza_consulta': request.GET.get('raza-consulta'),
@@ -92,8 +92,7 @@ def listar_mis_publicaciones_adopcion(request):
     
 
 def listar_adopciones(request):
-    adopciones = Adopcion.objects.all()
-    filtro = request.GET.get('filtro', None)
+    adopciones = Adopcion.objects.all().order_by('-id')
     
     filtros = {
         'raza_consulta': request.GET.get('raza-consulta'),
@@ -165,7 +164,7 @@ def postularse(request, adopcion_id):
             email.send(fail_silently=False)
             enviar_postulante_a_publicador(postulacion, form.cleaned_data.get('mensaje'))
             messages.success(request, 'Postulación enviada')
-            return redirect('listar_adopciones')
+            return redirect('listar_mis_publicaciones_adopcion')
     else:
         form = PostulacionForm()
     return render(request, 'postularse.html', {'form': form, 'adopcion_id': adopcion_id, 'esRegistrado': esRegistrado})
