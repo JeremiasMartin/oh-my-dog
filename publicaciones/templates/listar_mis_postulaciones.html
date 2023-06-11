@@ -12,7 +12,7 @@
     </div>
   </section>
 
-  <section id="listado" class="py-4">
+<section id="listado" class="py-4">
     <div class="container">
       {% if messages %}
         <ul class="messages">
@@ -23,38 +23,43 @@
           {% endfor %}
         </ul>
       {% endif %}
-    {% if postulaciones %}
-      {% for postulacion in postulaciones %}
-        {{postulacion.publicacion_adopcion.id_publicacion.}}
-        <div class="col-md-4 mb-4">
-            <div class="card h-80">
-              <div class="card-body">
-                {% if postulacion.publicacion_adopcion.publicacion.id_perro_publicacion.nombre %}
-                <div class="listing-heading text-center">
-                  <h5 class="card-title">{{postulacion.publicacion_adopcion.publicacion.id_perro_publicacion.nombre }}</h5>
+      {% if postulaciones %}
+        <div class="card-deck">
+        {% include 'filtros_perros.html' %} 
+        {% for postulacion in postulaciones %}
+          {{postulacion.publicacion_adopcion.id_publicacion.}}
+          <div class="col-md-4 mb-4">
+              <div class="card h-80">
+                <div class="card-body">
+                  {% if postulacion.publicacion_adopcion.publicacion.id_perro_publicacion.nombre %}
+                  <div class="listing-heading text-center">
+                    <h5 class="card-title">{{postulacion.publicacion_adopcion.publicacion.id_perro_publicacion.nombre }}</h5>
+                  </div>
+                  <hr>
+                  {% endif %}
+                  <p class="card-text"><strong>Raza:</strong> {{postulacion.publicacion_adopcion.id_publicacion.id_perro_publicacion.raza }}</p>
+                  <hr>
+                  <p class="card-text"><strong>Tamaño:</strong> {{postulacion.publicacion_adopcion.id_publicacion.id_perro_publicacion.tamanio }}</p>
+                  <hr>
+                  <p class="card-text"><strong>Sexo:</strong> {{ postulacion.publicacion_adopcion.id_publicacion.id_perro_publicacion.get_sexo_display }}</p>
+                  <hr>
+                  <p class="card-text"><strong>Color:</strong> {{ postulacion.publicacion_adopcion.id_publicacion.id_perro_publicacion.color }}</p>
+                  <hr>
+                  <p class="card-text"><strong>Edad:</strong> {{postulacion.publicacion_adopcion.id_publicacion.id_perro_publicacion.edad }}</p>
+                  <hr>
                 </div>
-                <hr>
-                {% endif %}
-                <p class="card-text"><strong>Raza:</strong> {{postulacion.publicacion_adopcion.id_publicacion.id_perro_publicacion.raza }}</p>
-                <hr>
-                <p class="card-text"><strong>Tamaño:</strong> {{postulacion.publicacion_adopcion.id_publicacion.id_perro_publicacion.tamanio }}</p>
-                <hr>
-                <p class="card-text"><strong>Sexo:</strong> {{ postulacion.publicacion_adopcion.id_publicacion.id_perro_publicacion.get_sexo_display }}</p>
-                <hr>
-                <p class="card-text"><strong>Color:</strong> {{ postulacion.publicacion_adopcion.id_publicacion.id_perro_publicacion.color }}</p>
-                <hr>
-                <p class="card-text"><strong>Edad:</strong> {{postulacion.publicacion_adopcion.id_publicacion.id_perro_publicacion.edad }}</p>
-                <hr>
-              </div>
             </div>
+          </div>
+        {% endfor %}
         </div>
-    {% endfor %}
-    {% else %}
-      <p>No hay postulaciones</p>
+      {% else %}
+      <div id="sin-resultados"> 
+        <p>No hay postulaciones</p>
+      </div>
     {% endif %}
-    </div>
-<!-- Paginacion -->
-<div class="container">
+  </div>
+  <!-- Paginacion -->
+  <div class="container">
     <div class="row">
         <div class="col-md-12">
             {% if postulaciones.has_other_pages %}
@@ -94,6 +99,6 @@
             {% endif %}
         </div>
     </div>
-</div>
+  </div>
 </section>
 {% endblock %}

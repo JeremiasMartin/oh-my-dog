@@ -280,16 +280,52 @@ def enviar_seleccionado_adopcion(postulante):
 
 def listar_mis_postulaciones(request):
     postulaciones = Postulacion.objects.filter(email=request.user.email)
-    consulta = request.GET.get('consulta', None)
-    if consulta:
-        postulaciones = buscar_postulaciones(request, consulta, postulaciones)
-    return render(request, 'listar_mis_postulaciones.html', {'postulaciones': paginar(request, postulaciones, 6)})
+    print(postulaciones)
+    filtros = {
+        'raza_consulta': request.GET.get('raza-consulta'),
+        'sexo_consulta': request.GET.get('sexo-consulta'),
+        'tamanio_consulta': request.GET.get('tamanio-consulta'),
+    }
+    if any(value for value in filtros.values()):
+        postulaciones = buscar_postulaciones(request, filtros, postulaciones)
 
-def buscar_postulaciones(request, consulta, postulaciones):
-    postulaciones_filtradas = postulaciones.filter(id_publicacion__id_perro_publicacion__nombre__icontains=unidecode(consulta))
-    if not postulaciones_filtradas:
-        messages.add_message(request, messages.INFO, 'No se encontraron resultados para la búsqueda')
+    tamanio_opciones = (
+        ('Pequeño', 'Pequeño'),
+        ('Mediano', 'Mediano'),
+        ('Grande', 'Grande'),
+    )
+    sexo_opciones = (
+        ('M', 'Macho'),
+        ('H', 'Hembra')
+    )
+    contexto = {
+        "postulaciones":paginar(request, postulaciones, 3),
+        "opciones_tamanios": tamanio_opciones,
+        'opciones_sexo': sexo_opciones
+    }
+    return render(request, 'listar_mis_postulaciones.html', contexto)
+
+def buscar_postulaciones(request, filtros, postulaciones):
+    postulaciones_filtradas = postulaciones
+    
+    if filtros['raza_consulta']:
+        consulta = filtros['raza_consulta']
+        postulaciones_filtradas = postulaciones_filtradas.filter(publicacion_adopcion__id_publicacion__id_perro_publicacion__raza__icontains=unidecode(consulta))
+        
+    if filtros['sexo_consulta']:
+        consulta = filtros['sexo_consulta']
+        postulaciones_filtradas = postulaciones_filtradas.filter(publicacion_adopcion__id_publicacion__id_perro_publicacion__sexo=consulta)
+    
+    if filtros['tamanio_consulta']:
+        consulta = filtros['tamanio_consulta']
+        postulaciones_filtradas = postulaciones_filtradas.filter(publicacion_adopcion__id_publicacion__id_perro_publicacion__tamanio=consulta)
+    
+    if  not postulaciones_filtradas:
+        messages.add_message(request, messages.ERROR, 'No se encontraron resultados para la búsqueda')
+        postulaciones_filtradas = postulaciones
+
     return postulaciones_filtradas
+
 
 
 def buscar_mascotas(request, filtros, adopciones):
