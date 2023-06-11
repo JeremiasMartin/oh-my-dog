@@ -2,15 +2,98 @@
 {% load static %}
 {% load crispy_forms_tags %}
 {% block content %}
-<p>Completa el formulario para registrar un perro en adopción:</p>
-<form method="POST">
-  {% csrf_token %}
-  {{ form.as_p }}
-  
-  <!-- Campos adicionales de Publicacion -->
-  {{ form.instance.id_perro_publicacion.descripcion.label_tag }} {{ form.instance.id_perro_publicacion.descripcion }}
-  {{ form.instance.id_perro_publicacion.activo.label_tag }} {{ form.instance.id_perro_publicacion.activo }}
+   
+<h1 style="text-align: center; margin-top: 10px;">Cargar Perro para Adopción</h1>
+<h4 style="text-align: center; margin-bottom: 10px;">Completa el formulario para registrar un perro en adopción:</h4>
 
-  <button type="submit">Subir</button>
-</form>
+  {% for message in messages %}
+      <div id="msg-{{ message.tags }}"class="alert alert-{{ message.tags }}">
+        {{ message }}
+      </div>
+  {% endfor %}
+  <form method="POST">
+    {% csrf_token %}
+    <div style="width: 75%; margin: auto;">
+        {{ form|crispy }}
+      <!-- Campos adicionales de Publicacion -->
+      {{ form.instance.id_perro_publicacion.descripcion.label_tag }} {{ form.instance.id_perro_publicacion.descripcion }}
+      {{ form.instance.id_perro_publicacion.activo.label_tag }} {{ form.instance.id_perro_publicacion.activo }}
+
+      <button type="submit" id="btn-subir" class="btn btn-success">Subir</button>
+    </div>
+  </form>
+
+<script>
+    function validarFormulario() {
+      var nombre = document.getElementById('id_nombre').value;
+      var raza = document.getElementById('id_raza').value;
+      var color = document.getElementById('id_color').value;
+      var tamanio = document.getElementById('id_tamanio').value;
+      var edad = document.getElementById('id_edad').value;
+      var sexo = document.getElementById('id_sexo').value;
+      var origen = document.getElementById('id_origen').value;
+      var motivo = document.getElementById('id_motivo_adopcion').value;
+    
+      // Validación de campos vacíos
+      if (edad.trim() === '' || raza.trim() === '' || color.trim() === '' || tamanio.trim() === '' || sexo.trim() === '' || origen.trim() === '' || motivo.trim() === '') {
+        alert('Por favor, completa todos los campos.');
+        return false;
+      }
+    
+      // Validación de campos no numéricos
+      var regex = /^[a-zA-Z\s]*$/; // Expresión regular para solo letras y espacios
+      if (!regex.test(nombre) || !regex.test(raza) || !regex.test(color)) {
+        alert('Los campos "Nombre", "Raza" y "Color" no pueden contener números.');
+        return false;
+      }
+      if(nombre.trim != ''){
+        if(!regex.test(nombre)){
+          alert('Los campos "Nombre", "Raza" y "Color" no pueden contener números.');
+          return false;
+        }
+      }
+    
+      return true; // todo ok
+    }
+    
+    // Validar campos en tiempo real
+    var formInputs = document.querySelectorAll('input[type="text"], input[type="number"], select');
+    var btnSubir = document.getElementById('btn-subir');
+    
+    formInputs.forEach(function(input) {
+      input.addEventListener('input', function() {
+        validarCampos();
+      });
+    });
+    
+    function validarCampos() {
+      var nombre = document.getElementById('id_nombre').value;
+      var raza = document.getElementById('id_raza').value;
+      var color = document.getElementById('id_color').value;
+      var tamanio = document.getElementById('id_tamanio').value;
+      var edad = document.getElementById('id_edad').value;
+      var sexo = document.getElementById('id_sexo').value;
+      var origen = document.getElementById('id_origen').value;
+      var motivo = document.getElementById('id_motivo_adopcion').value;
+    
+      var regex = /^[a-zA-Z\s]*$/; // Expresión regular para solo letras y espacios
+    
+      var isFormValid =
+        regex.test(nombre) &&
+        edad.trim() !== '' &&
+        raza.trim() !== '' &&
+        tamanio.trim() !== '' &&
+        regex.test(raza) &&
+        color.trim() !== '' &&
+        regex.test(color) &&
+        origen.trim() !== '' &&
+        motivo.trim() !== ''
+    
+      btnSubir.disabled = !isFormValid;
+    }
+    
+    // Validar campos al cargar la página
+    validarCampos();
+</script>
+
 {% endblock %}
