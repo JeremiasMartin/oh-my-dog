@@ -47,7 +47,7 @@ def registrar_mascota(request, cliente_id):
             nombre_mascota = form.cleaned_data['nombre']
             nombre_mascota_minuscula = nombre_mascota.lower()
             if Perro.objects.filter(cliente=cliente, nombre__iexact=nombre_mascota_minuscula).exists():
-                messages.error(request, 'El cliente ya tiene una mascota con ese nombre registrada.')
+                messages.error(request, 'El cliente ya tiene una mascota registrada con ese nombre.')
             else: 
                 mascota = form.save(commit=False)
                 mascota.cliente = cliente
@@ -74,7 +74,7 @@ def editar_perfil_mascota(request, id):
             nombre_mascota_minuscula = nombre_mascota.lower()
             #chequea si el nombre existe, pero no incluye al mismo perro para asi poder cambiar a mayusculas y minusculas
             if Perro.objects.exclude(id=perro.id).filter(cliente=cliente, nombre__iexact=nombre_mascota_minuscula).exists():
-                messages.error(request, 'El cliente ya tiene una mascota con ese nombre registrada.')
+                messages.error(request, 'El cliente ya tiene una mascota registrada con ese nombre.')
             else: 
                 form.save()
                 messages.success(request, '¡Información actualizada correctamente!')
