@@ -65,14 +65,14 @@ def publicar_adopcion(request):
 @login_required
 def listar_mis_publicaciones_adopcion(request):
     adopciones = Adopcion.objects.filter(id_publicacion__id_usuario=request.user.id)
-    filtro = request.GET.get('filtro', None)
     
-    if filtro:
-        consulta_param = f"{filtro}-consulta"
-        consulta = request.GET.get(consulta_param, None)
-
-    if filtro and consulta:
-        adopciones = buscar_mascotas(request, filtro, consulta, adopciones)
+    filtros = {
+        'raza_consulta': request.GET.get('raza-consulta'),
+        'sexo_consulta': request.GET.get('sexo-consulta'),
+        'tamanio_consulta': request.GET.get('tamanio-consulta'),
+    }
+    if any(value for value in filtros.values()):
+        adopciones = buscar_mascotas(request, filtros, adopciones)
 
     tamanio_opciones = (
         ('Pequeño', 'Pequeño'),
@@ -95,12 +95,13 @@ def listar_adopciones(request):
     adopciones = Adopcion.objects.all()
     filtro = request.GET.get('filtro', None)
     
-    if filtro:
-        consulta_param = f"{filtro}-consulta"
-        consulta = request.GET.get(consulta_param, None)
-
-    if filtro and consulta:
-        adopciones = buscar_mascotas(request, filtro, consulta, adopciones)
+    filtros = {
+        'raza_consulta': request.GET.get('raza-consulta'),
+        'sexo_consulta': request.GET.get('sexo-consulta'),
+        'tamanio_consulta': request.GET.get('tamanio-consulta'),
+    }
+    if any(value for value in filtros.values()):
+        adopciones = buscar_mascotas(request, filtros, adopciones)
 
     tamanio_opciones = (
         ('Pequeño', 'Pequeño'),
@@ -270,18 +271,21 @@ def enviar_seleccionado_adopcion(postulante):
 
     email.send(fail_silently=False)
 
-def buscar_mascotas(request, filtro, consulta, adopciones):
-    print("FILTRO",filtro)
-    print("CONSULTA",consulta)
+def buscar_mascotas(request, filtros, adopciones):
+    print("FILTRO",filtros)
+    adopciones_filtradas = adopciones
     
-    if filtro == 'tamanio':
-        adopciones_filtradas = adopciones.filter(id_publicacion__id_perro_publicacion__tamanio=consulta)
+    if filtros['raza_consulta']:
+        consulta = filtros['raza_consulta']
+        adopciones_filtradas = adopciones_filtradas.filter(id_publicacion__id_perro_publicacion__raza__icontains=unidecode(consulta))
         
-    elif filtro == 'raza':
-        adopciones_filtradas = adopciones.filter(id_publicacion__id_perro_publicacion__raza__icontains=unidecode(consulta))
-
-    elif filtro == 'sexo':
-        adopciones_filtradas = adopciones.filter(id_publicacion__id_perro_publicacion__sexo=consulta)
+    if filtros['sexo_consulta']:
+        consulta = filtros['sexo_consulta']
+        adopciones_filtradas = adopciones_filtradas.filter(id_publicacion__id_perro_publicacion__sexo=consulta)
+    
+    if filtros['tamanio_consulta']:
+        consulta = filtros['tamanio_consulta']
+        adopciones_filtradas = adopciones_filtradas.filter(id_publicacion__id_perro_publicacion__tamanio=consulta)
     
     if  not adopciones_filtradas:
         messages.add_message(request, messages.ERROR, 'No hay perros para la búsqueda realizada')

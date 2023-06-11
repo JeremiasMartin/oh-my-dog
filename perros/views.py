@@ -13,23 +13,27 @@ from unidecode import unidecode
 
 def listar_mascotas_cliente(request, cliente_id):
     mascotas = Perro.objects.filter(cliente_id__user_id=cliente_id)
-    filtro = request.GET.get('filtro', None)
-    
-    if filtro:
-        consulta_param = f"{filtro}-consulta"
-        consulta = request.GET.get(consulta_param, None)
-
-    if filtro and consulta:
-        mascotas = buscar(request, filtro, consulta, mascotas)
+    filtros = {
+        'raza_consulta': request.GET.get('raza-consulta'),
+        'sexo_consulta': request.GET.get('sexo-consulta'),
+        'tamanio_consulta': request.GET.get('tamanio-consulta'),
+    }
+    if any(value for value in filtros.values()):
+        mascotas = buscar(request, filtros, mascotas)
 
     tamanio_opciones = (
         ('Pequeño', 'Pequeño'),
         ('Mediano', 'Mediano'),
         ('Grande', 'Grande'),
     )
+    opciones_sexo = (
+        ('Macho','Macho'),
+        ('Hembra','Hembra'),
+    )
     contexto = {
         "mascotas":paginar(request, mascotas, 6),
-        "opciones_tamanios": tamanio_opciones
+        "opciones_tamanios": tamanio_opciones,
+        "opciones_sexo": opciones_sexo,
     }
     return render(request, 'listar_mascotas.html', contexto)
 
@@ -219,15 +223,21 @@ def listar_vacunas(request, id_mascota):
     }
     return render(request, 'listar_vacunas.html', context)
 
-def buscar(request, filtro, consulta, mascotas):
-    print("FILTRO",filtro)
-    print("CONSULTA",consulta)
+def buscar(request, filtros, mascotas):
+    print("FILTRO",filtros)
+    mascotas_filtradas = mascotas
     
-    if filtro == 'tamanio':
-        mascotas_filtradas = mascotas.filter(tamanio=consulta)
+    if filtros['raza_consulta']:
+        consulta = filtros['raza_consulta']
+        mascotas_filtradas = mascotas_filtradas.filter(raza__icontains=unidecode(consulta))
         
-    elif filtro == 'raza':
-        mascotas_filtradas = mascotas.filter(raza__icontains=unidecode(consulta))
+    if filtros['sexo_consulta']:
+        consulta = filtros['sexo_consulta']
+        mascotas_filtradas = mascotas_filtradas.filter(sexo=consulta)
+    
+    if filtros['tamanio_consulta']:
+        consulta = filtros['tamanio_consulta']
+        mascotas_filtradas = mascotas_filtradas.filter(tamanio=consulta)
     
     if  not mascotas_filtradas:
         messages.add_message(request, messages.ERROR, 'No hay perros para la búsqueda realizada')

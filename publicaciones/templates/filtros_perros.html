@@ -1,56 +1,73 @@
 {% load static %}
-<div class="search-container">
-    <form method="GET" action="" id='perro-buscar'>
-        <select name='filtro' id='filtro-perros'>
-            <option id='raza' value='raza'>Raza</option>
-            <option id= 'tamanio' value='tamanio'>Tamaño</option>
-            {% if '/perros/listar-mascotas-cliente/' not in request.path %}
-                <option id='sexo' value='sexo'>Sexo</option>
-            {% endif %}
-        </select>
-        <select class="search-input" id='tamanio-select' name="tamanio-consulta" style="display: none;">
-            {% for value, display_text in opciones_tamanios %}
-                <option value="{{ value }}">{{ display_text }}</option>
-            {% endfor %}
-        </select>
-        <select class="search-input" id='sexo-select' name="sexo-consulta" style="display: none;">
-            {% for value, display_text in opciones_sexo %}
-                <option value="{{ value }}">{{ display_text }}</option>
-            {% endfor %}
-        </select>
-        <input type="text" class="search-input" id='raza-consulta' name="raza-consulta" placeholder="Buscar...">
-        <button type="submit" id="btn-buscar" class="search-button">Buscar</button> 
-    </form>
+<div class="filtro">
+  <form method="GET" action="" id='perro-buscar'>
+    
+    <select class="search-input" id="sexo-select" name="sexo-consulta" onchange="toggleOption(this, 'Sexo')">
+      <option value="" selected hidden>Sexo</option>
+      {% for value, display_text in opciones_sexo %}
+        <option value="{{ value }}">{{ display_text }}</option>
+      {% endfor %}
+    </select>
+
+    <select class="search-input" id='tamanio-select' name="tamanio-consulta" onchange="toggleOption(this, 'Tamaño')">
+      <option value="" selected hidden>Tamaño</option>
+      {% for value, display_text in opciones_tamanios %}
+        <option value="{{ value }}">{{ display_text }}</option>
+      {% endfor %}
+    </select>
+
+    <input type="text" class="search-input" id='raza-input' name="raza-consulta" placeholder="Raza">
+    <button type="submit" id="btn-buscar" class="search-button">Buscar</button>
+  </form>
 </div>
 
-
 <script>
-  var filtroSelect = document.getElementById('filtro-perros');
-  var consultaInput = document.getElementById('raza-consulta');
-  var sexoSelect = document.getElementById('sexo-select');
-  var tamanioSelect = document.getElementById('tamanio-select');
+  var consultaRaza = document.getElementById('raza-input');
+  var consultaSexo = document.getElementById('sexo-select');
+  var consultaTamanio = document.getElementById('tamanio-select');
   var btnBuscar = document.getElementById('btn-buscar');
   var errorText = '';
 
-  filtroSelect.addEventListener('change', validarFiltro);
-  consultaInput.addEventListener('input', validarConsulta);
+  consultaRaza.addEventListener('input', validarConsulta);
+  consultaSexo.addEventListener('input', validarConsulta);
+  consultaTamanio.addEventListener('input', validarConsulta);
 
-  consultaInput.addEventListener('mouseenter', function() {
+  consultaRaza.addEventListener('mouseenter', function() {
     if (btnBuscar.disabled) {
-      consultaInput.title = errorText;
+      consultaRaza.title = errorText;
     }
   });
 
-  consultaInput.addEventListener('mouseleave', function() {
-    consultaInput.title = '';
+  consultaRaza.addEventListener('mouseleave', function() {
+    consultaRaza.title = '';
+  });
+
+  consultaSexo.addEventListener('mouseenter', function() {
+    if (btnBuscar.disabled) {
+      consultaSexo.title = errorText;
+    }
+  });
+
+  consultaSexo.addEventListener('mouseleave', function() {
+    consultaSexo.title = '';
+  });
+
+  consultaTamanio.addEventListener('mouseenter', function() {
+    if (btnBuscar.disabled) {
+      consultaTamanio.title = errorText;
+    }
+  });
+
+  consultaTamanio.addEventListener('mouseleave', function() {
+    consultaTamanio.title = '';
   });
 
   function validarBusqueda() {
     var isFormValid = true;
-
-    if (filtroSelect.value === 'raza') {
-      var regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
-      if (!regex.test(consultaInput.value)) {
+    var regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
+     
+    if(consultaRaza.value != ''){
+      if (!regex.test(consultaRaza.value)) {
         errorText = 'Por favor, ingrese solo letras (incluyendo acentos) en el campo de consulta.';
         isFormValid = false;
       }
@@ -59,24 +76,21 @@
     btnBuscar.disabled = !isFormValid;
   }
 
-  function validarFiltro() {
-    validarBusqueda();
-    if (filtroSelect.value === 'tamanio') {
-      consultaInput.style.display = 'none';
-      tamanioSelect.style.display = 'inline';
-      sexoSelect.style.display = 'none';
-    } else if (filtroSelect.value === 'sexo') {
-      consultaInput.style.display = 'none';
-      tamanioSelect.style.display = 'none';
-      sexoSelect.style.display = 'inline';
-    } else {
-      consultaInput.style.display = 'inline';
-      tamanioSelect.style.display = 'none';
-      sexoSelect.style.display = 'none';
-    }
-  }
-
   function validarConsulta() {
     validarBusqueda();
   }
+
+  function toggleOption(selectElement, texto) {
+    var atencionOption = selectElement.querySelector('option[value=""]');
+    var selectedOption = selectElement.value;
+
+    if (selectedOption !== '') {
+      atencionOption.hidden = false;
+      atencionOption.textContent = '-------';
+    } else {
+      atencionOption.hidden = true;
+      atencionOption.textContent = texto;
+    }
+  }
+
 </script>
