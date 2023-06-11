@@ -6,7 +6,7 @@ from django.utils.encoding import force_str
 class perro_form(forms.ModelForm):
     class Meta:
         model = Perro
-        fields = ['nombre', 'raza', 'tamanio', 'fecha_nac', 'color', 'foto'] 
+        fields = ['nombre', 'raza', 'tamanio', 'sexo', 'fecha_nac', 'color', 'foto'] 
         
 class editar_foto_form(forms.ModelForm):
     class Meta:

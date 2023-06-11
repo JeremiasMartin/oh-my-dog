@@ -14,7 +14,14 @@ class Perro(models.Model):
         ('Mediano','Mediano'),
         ('Grande','Grande'),
     )
+
+    opciones_sexo = (
+        ('Macho','Macho'),
+        ('Hembra','Hembra'),
+    )
+
     tamanio = models.CharField('Tamanio', max_length=10, blank=False, null=False, choices= opciones_tamanio)
+    sexo = models.CharField('Sexo', max_length=10, blank=False, null=False, choices= opciones_sexo)
     fecha_nac = models.DateField('Nacimiento',blank=False, null=False)
     color = models.CharField('Color', max_length=100, blank=False, null=False)
     foto = models.ImageField(null=True, blank = True, upload_to='mascotas')
