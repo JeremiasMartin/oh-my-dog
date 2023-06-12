@@ -124,13 +124,16 @@ def postularse(request, adopcion_id):
     esRegistrado = request.user.is_authenticated
     if esRegistrado:
         perfil = request.user
-
-    if esRegistrado:
         if Postulacion.objects.filter(publicacion_adopcion=adopcion, email=request.user.email).exists():
             messages.error(request, 'Ya te has postulado para esta mascota.')
             return redirect('listar_postulaciones_adopcion')
     else:
-        email_postulante = request.POST.get('email')  # Obtener el correo electrónico ingresado por el usuario no registrado
+        email_postulante = request.POST.get('email')
+
+        if adopcion.id_publicacion.id_usuario.email == email_postulante:
+            messages.error(request, 'No puedes postularte para tu propia publicación.')
+            return redirect('postularse', adopcion_id=adopcion_id)
+
         if Postulacion.objects.filter(publicacion_adopcion=adopcion, email=email_postulante).exists():
             messages.error(request, 'Ya te has postulado para esta mascota.')
             return redirect('postularse', adopcion_id=adopcion_id)
