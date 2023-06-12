@@ -178,7 +178,7 @@ def postularse(request, adopcion_id):
             enviar_postulante_a_publicador(postulacion, form.cleaned_data.get('mensaje'))
             messages.success(request, 'Postulación enviada')
             if(esRegistrado):
-                return redirect('listar_mis_publicaciones_adopcion')
+                 return redirect('listar_postulaciones_adopcion')
             else:
                 return redirect('listar_adopciones')
 
