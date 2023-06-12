@@ -35,7 +35,7 @@
     if (filtroSelect.value === 'cliente_dni') {
       var dni = consultaInput.value;
       var numeros = /^[0-9]+$/;
-      if (!dni.match(numeros)) {
+      if (!dni.match(numeros) || dni.trim().length < 7) {
         errorText = 'Por favor, ingrese solo dígitos y al menos uno.';
         isFormValid = false;
       }
