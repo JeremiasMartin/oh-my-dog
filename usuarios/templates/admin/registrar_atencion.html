@@ -4,9 +4,9 @@
 
 {% block content %}
   {% if messages %}
-    <ul class="messages">
+    <ul class="messages" style="margin-top:10px">
       {% for message in messages %}
-        <div id="msg" class="alert alert-{{ message.tags }}">
+        <div id="msg-{{ message.tags }}" class="alert alert-{{ message.tags }}">
           {{ message }}
         </div>
       {% endfor %}
