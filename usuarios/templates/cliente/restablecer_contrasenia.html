@@ -2,15 +2,16 @@
 {% load static %}
 {% block title %} <title> Restablecer contraseña </title>{%endblock%}
 {% block content %}
-<form method="post"> 
-    {% if messages %}
+
+{% if messages %}
     {% for message in messages %}
-    <div class="{% if message.tags == 'error' %} alert alert-warning {% else %} alert alert-success {% endif %}" style="padding-top: 10px;">
-        <button class="close" data-dismiss="alert" aria-label="close">&times;</button>
+    <div id="msg-{{ message.tags }}" class="{% if message.tags == 'error' %} msg-error {% else %} alert alert-success {% endif %}" style="padding-top: 10px; margin-top:10px">
+        <!--<button class="close" data-dismiss="alert" aria-label="close">&times;</button>-->
         {{ message }}
     </div>
     {% endfor %}
-    {% endif %}
+{% endif %}
+<form method="post"> 
     ¿Olvidaste tu contraseña? Ingrese su dirección de correo electrónico a continuación y le enviaremos las instrucciones para configurar una nueva.
     {% csrf_token %} 
     {{ form.as_p}} 
