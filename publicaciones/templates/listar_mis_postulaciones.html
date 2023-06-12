@@ -27,13 +27,12 @@
         <div class="card-deck">
         {% include 'filtros_perros.html' %} 
         {% for postulacion in postulaciones %}
-          {{postulacion.publicacion_adopcion.id_publicacion.}}
           <div class="col-md-4 mb-4">
               <div class="card h-80">
                 <div class="card-body">
-                  {% if postulacion.publicacion_adopcion.publicacion.id_perro_publicacion.nombre %}
+                  {% if postulacion.publicacion_adopcion.id_publicacion.id_perro_publicacion.nombre %}
                   <div class="listing-heading text-center">
-                    <h5 class="card-title">{{postulacion.publicacion_adopcion.publicacion.id_perro_publicacion.nombre }}</h5>
+                    <h5 class="card-title">{{postulacion.publicacion_adopcion.id_publicacion.id_perro_publicacion.nombre }}</h5>
                   </div>
                   <hr>
                   {% endif %}
