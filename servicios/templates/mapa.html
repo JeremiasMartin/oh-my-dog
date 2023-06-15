@@ -35,11 +35,50 @@
       border-radius: 5px;
       cursor: pointer;
     }
+    #map-container {
+      width: 80%;
+      height: 700px;
+      margin: 0 auto;
+      border: 2px solid #0c3c41;
+      border-radius: 5px;
+      font-family: 'Roboto', sans-serif;
+      font-size: 17px;
+      position: relative;
+    }
+    
   </style>
 </head>
 <body>
-  <br><br>
-  <div id="map-container" style="width: 80%; height: 700px; margin: 0 auto; border: 2px solid #0c3c41; border-radius: 5px; "></div>
+  <br>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 offset-lg-2 col-xl-12 offset-xl-0 bg-light p-4 my-4">
+        <h1 class="display-4 text-center">Mapa de Servicios</h1>
+        <hr>
+        <p class="lead">En este mapa, encontrará información detallada sobre nuestra ubicación y los diferentes tipos de servicios que ofrecemos.</p>
+        <div class="services-list">
+          <div class="service">
+            <i class="fas fa-home custom-icon"></i>
+            <p class="service-name">Veterinaria</p>
+          </div>
+          <div class="service">
+            <i class="fas fa-dog custom-icon"></i>
+            <p class="service-name">Paseador</p>
+          </div>
+          <div class="service">
+            <i class="fas fa-shield-dog custom-icon"></i>
+            <p class="service-name">Cuidador</p>
+          </div>
+          <div class="service">
+            <i class="fas fa-house-chimney-medical custom-icon"></i>
+            <p class="service-name">Guardería</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>  
+  
+  <div id="map-container"></div>
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -80,6 +119,10 @@
             Nombre: {{person.nombre}}
             <br>
             Tipo: {{person.tipo}}
+            <br>
+            Email: {{person.email}}
+            <br>
+            Telefono: {{person.telefono}}
             <br> 
             Horarios: {{person.horario}}
             <br> 
@@ -87,6 +130,8 @@
             <br><br>
             {% if user.is_admin %}
               <a href='{% url 'Editar_personal' person.id %}' class='btn btn-primary siempre-visible' style="font-size:15px; color: white;">Editar Informaci&oacute;n</a>
+            {% else %}
+              <a href='#' class='btn btn-primary siempre-visible' style="font-size:15px; color: white;">Contactarse</a>    
             {% endif %}
         `);
       {% endfor %}
@@ -109,7 +154,7 @@
         <p>No hay servicios de terceros registrados.</p>
         <button class="btn btn-aceptar">Aceptar</button>
       `;
-      document.body.appendChild(mensajeNoPersonal);
+      document.getElementById('map-container').appendChild(mensajeNoPersonal);
 
       var btnAceptar = mensajeNoPersonal.querySelector('.btn-aceptar');
       btnAceptar.addEventListener('click', function () {

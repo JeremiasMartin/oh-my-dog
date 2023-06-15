@@ -17,10 +17,6 @@
         <li class="nav-item {% if request.path == '/' %}current_page_item{%endif %}">
           <a class="nav-link" href="{% url 'Home' %}">Inicio</a>
         </li>
-         <!-- Mapa Paseadores/cuidadores/guarderia -->
-        <li class="nav-item {% if request.path == '/servicios/mapa/' %}current_page_item{% endif %}">
-          <a class="nav-link" href="{% url 'Mapa' %}">Mapa</a>
-        </li> 
         
         <!-- Dropdown Publicaciones -->
         <li class="nav-item dropdown {% if request.path|slice:":14" == '/publicaciones'%}current_page_item{%endif %}">
@@ -81,9 +77,13 @@
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="{% url 'Registrar_personal' %}">Registrar Servicio</a></li>
                         <li><a class="dropdown-item" href="{% url 'Listar_personal' %}">Ver Servicios</a></li>
+                        <li><a class="dropdown-item" href="{% url 'Mapa' %}">Mapa de Servicios</a></li>
                     </ul>
                 </li>
             {% else %}
+                <li class="nav-item {% if request.path == '/servicios/mapa/' %}current_page_item{% endif %}">
+                  <a class="nav-link" href="{% url 'Mapa' %}">Mapa de Servicios</a>
+                </li>
                 <!-- Mascotas cliente -->
                 <li class="nav-item {% if request.path|slice:":7" == '/perros' %}current_page_item{%endif %}">
                     <a class="nav-link" href="{% url 'perros:Listar_mascotas_cliente' user.id %}">Ver Mascotas</a>
@@ -93,7 +93,6 @@
                     <a class="nav-link" href="{% url 'solicitar_turno' %}">Solicitar turno</a>
                 </li>    
             {% endif %}
-        
         <!-- Perfil -->
         <li class="nav-item {% if request.path == '/usuarios/ver_perfil/' %}current_page_item{%endif %}">
             <a class="nav-link" href="{% url 'Ver_perfil' %}">Mi Perfil</a>
@@ -106,6 +105,9 @@
         </li>
       </ul>
     {% else %}
+      <li class="nav-item {% if request.path == '/servicios/mapa/' %}current_page_item{% endif %}">
+        <a class="nav-link" href="{% url 'Mapa' %}">Mapa de Servicios</a>
+      </li>
       <!-- Login -->
       <li class="nav-item {% if request.path == '/usuarios/login/' %}current_page_item{% endif %}">
         <a class="btn btn-primary" href="{% url 'Login' %}">

@@ -38,6 +38,8 @@
                                     <h5 class="card-title">{{ postulante.nombre }} {{ postulante.apellido }}</h5>
                                 </div>
                                 <hr>
+                                <p class="card-text text-wrap"><i class="fa-solid fa-envelope" style="color: #e4a64e;"></i> Motivo: {{ postulante.publicacion_adopcion.motivo_adopcion }}</p>
+                                <hr>
                                 <p class="card-text text-wrap"><i class="fa-solid fa-envelope" style="color: #e4a64e;"></i> Email: {{ postulante.email }}</p>
                                 <hr>
                                 <p class="card-text"><i class="fa-solid fa-phone-volume" style="color: #e4a64e;"></i> Teléfono: {{ postulante.telefono }}</p>
