@@ -1,0 +1,41 @@
+{% extends 'OhMyDogApp/base.html' %}
+
+{% block content %}
+<section id="showcase-inner" class="py-5 text-black">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-md-12">
+          <h2 class="display-4">Consulta</h2>
+        </div>
+      </div>
+    </div>
+  </section>
+<!-- Listado -->
+<section id="listado" class="py-4">
+    <div class="container">
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <div id="msg-{{ message.tags }}"class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+  <form method="post" action="{% url 'Contacto' personal_id=person.id %}">
+    {% csrf_token %}
+    <div>
+      <label for="consulta">Consulta:</label>
+      <textarea id="consulta" name="consulta" rows="4" cols="50"></textarea>
+    </div>
+    {% if not user.is_authenticated %}
+    <div>
+      <label for="email">Mi Correo electrónico:</label>
+      <input type="email" id="email" name="email">
+    </div>
+    {% endif %}
+    <button type="submit">Enviar</button>
+  </form>
+</section>
+{% endblock %}

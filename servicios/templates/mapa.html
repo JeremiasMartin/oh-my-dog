@@ -45,7 +45,6 @@
       font-size: 17px;
       position: relative;
     }
-    
   </style>
 </head>
 <body>
@@ -131,7 +130,7 @@
             {% if user.is_admin %}
               <a href='{% url 'Editar_personal' person.id %}' class='btn btn-primary siempre-visible' style="font-size:15px; color: white;">Editar Informaci&oacute;n</a>
             {% else %}
-              <a href='#' class='btn btn-primary siempre-visible' style="font-size:15px; color: white;">Contactarse</a>    
+              <a href='{% url 'Contacto' person.id %}' class='btn btn-primary siempre-visible' style="font-size:15px; color: white;">Contactarse</a>    
             {% endif %}
         `);
       {% endfor %}

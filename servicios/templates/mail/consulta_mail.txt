@@ -1,0 +1,10 @@
+¡Ha recibido una consulta del servicio de terceros de Oh My Dog!
+
+Consulta: {{consulta}}
+De: {{mail_consulta}}
+
+
+¡Muchas gracias por utilizar nuestro sistema!
+
+
+Oh My Dog!

@@ -46,6 +46,16 @@
                         </p>
                         <hr>
                         <p class="card-text">
+                            <i class="fa-solid fa-user" style="color: #e4a64e;"></i>
+                            Email*: {{ form.email }}
+                            <p>
+                                {% for error in form.email.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                            </p>
+                        </p>
+                        <hr>
+                        <p class="card-text">
                             <i class="fa-solid fa-phone-volume" style="color: #e4a64e;"></i>
                             Tel&eacute;fono*: {{ form.telefono }}
                             <p>
