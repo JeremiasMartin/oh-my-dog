@@ -106,91 +106,6 @@ def editar_foto_mi_mascota(request, id):
     }
     return render(request, 'editar_foto_mi_mascota.html', context)
 
-def registrar_atencion(request, id_mascota):
-    perro = get_object_or_404(Perro, id=id_mascota)
-    tiene_error = False
-    
-    if request.method == 'POST':
-        form = registrar_atencion_form(request.POST)
-        if form.is_valid():
-            atencion = form.save(commit=False)
-            atencion.mascota = perro
-            atencion.fecha = datetime.now()
-            
-            if atencion.tipo.tipo == 'Castración' and Atencion.objects.filter(mascota=perro, tipo__tipo='Castración').exists():
-                messages.error(request, 'La mascota ya ha recibido una atención de tipo "Castración" anteriormente')
-                tiene_error = True
-            
-            if atencion.tipo.tipo == 'Vacuna antirrábica' and Atencion.objects.filter(mascota=perro, tipo__tipo='Vacuna antirrábica').exists():
-                # tiene mas de 4 meses porque recibió vacuna
-                ultima_vacuna = Atencion.objects.filter(mascota=perro, tipo__tipo='Vacuna antirrábica').latest('fecha')
-                ultima_vacuna_datetime = datetime.combine(ultima_vacuna.fecha, datetime.min.time())
-                if (datetime.now() - ultima_vacuna_datetime) < timedelta(days=365):
-                    messages.error(request, 'La mascota ya recibió una vacuna antirrábica hace menos de un año')
-                    tiene_error = True
-
-            if atencion.tipo.tipo == 'Vacuna antiviral' and Atencion.objects.filter(mascota=perro, tipo__tipo='Vacuna antiviral').exists():
-                ultima_vacuna = Atencion.objects.filter(mascota=perro, tipo__tipo='Vacuna antiviral').latest('fecha')
-                ultima_vacuna_datetime = datetime.combine(ultima_vacuna.fecha, datetime.min.time())
-                if (date.today() - perro.fecha_nac).days < 120:
-                    # tiene entre 2 y 4 meses
-                    if(datetime.now() - ultima_vacuna_datetime) < timedelta(days=21):
-                        # recibio la vacuna hace menos de 21
-                        messages.error(request, 'La mascota ya recibió una vacuna antiviral hace menos de 21 días')
-                        tiene_error = True
-                else:
-                    # tiene mas de 4 meses
-                    if(datetime.now() - ultima_vacuna_datetime) < timedelta(days=365):
-                        # recibio la vacuna hace menos de 1 año
-                        messages.error(request, 'La mascota ya recibió una vacuna antiviral hace menos de un año')
-                        tiene_error = True
-
-            elif atencion.tipo.tipo == 'Vacuna antirrábica' and (date.today() - perro.fecha_nac).days > 120:
-                turno = Turno.objects.create(
-                    cliente_id=perro.cliente_id,
-                    tipo_atencion_id=atencion.tipo.id,
-                    fecha=date.today() + timedelta(days=365),
-                    estado_id=3,
-                )
-            
-            elif atencion.tipo.tipo == 'Vacuna antiviral' and (date.today() - perro.fecha_nac).days > 60:
-                # tiene mas de 2 meses y no recibio vacuna en último periodo
-                # Generación de turno 
-                if (date.today()-perro.fecha_nac).days < 120:
-                    # tiene menos de 4 meses
-                    turno = Turno.objects.create(
-                        cliente_id=perro.cliente_id,
-                        tipo_atencion_id=atencion.tipo.id,
-                        fecha=date.today() + timedelta(days=21),
-                        estado_id=3,
-                    )
-                else:
-                    turno = Turno.objects.create(
-                        cliente_id=perro.cliente_id,
-                        tipo_atencion_id=atencion.tipo.id,
-                        fecha=date.today() + timedelta(days=365),
-                        estado_id=3,
-                    )
-            else:
-                if atencion.tipo.tipo == 'Vacuna antirrábica':
-                    messages.error(request, 'Esta mascota es menor de 4 meses, no puede recibir la vacuna antirrábica')
-                    tiene_error = True
-                elif(atencion.tipo.tipo == 'Vacuna antiviral'):
-                        messages.error(request, 'Esta mascota es menor de 2 meses, no puede recibir la vacuna antiviral')
-                        tiene_error = True
-            
-            if not tiene_error:
-                atencion.save()
-                messages.success(request, 'Atención registrada exitosamente')
-                return redirect(f'/perros/registrar-atencion/{perro.id}/')
-    else:
-        form = registrar_atencion_form()
-    context={
-        'form': form,
-        'perro': perro,
-    }
-    return render(request, 'admin/registrar_atencion.html', context)
-
 def ver_historia_clinica(request, id_mascota):
     perro = get_object_or_404(Perro, id=id_mascota)
     atenciones = Atencion.objects.filter(mascota_id=id_mascota)
@@ -244,3 +159,125 @@ def buscar(request, filtros, mascotas):
         mascotas_filtradas = mascotas
 
     return mascotas_filtradas
+
+def registrar_atencion(request, id_mascota):
+    perro = get_object_or_404(Perro, id=id_mascota)
+    tiene_error = False
+
+    if request.method == 'POST':
+        form = registrar_atencion_form(request.POST)
+        if form.is_valid():
+            atencion = form.save(commit=False)
+            atencion.mascota = perro
+            atencion.fecha = datetime.now()
+            tipo_atencion = atencion.tipo.tipo
+
+            if tipo_atencion == 'Castración' and Atencion.objects.filter(mascota=perro, tipo__tipo='Castración').exists():
+                messages.error(request, 'La mascota ya ha recibido una atención de tipo "Castración" anteriormente')
+                tiene_error = True
+            
+            elif tipo_atencion == 'Vacuna antirrábica' or tipo_atencion == 'Vacuna antiviral':
+                edad_dias_perro=(date.today() - perro.fecha_nac).days
+                generar_turno = False
+
+                if tipo_atencion == 'Vacuna antirrábica':
+                    if edad_dias_perro < 120:
+                        messages.error(request, 'Esta mascota es menor de 4 meses, no puede recibir la vacuna antirrábica')
+                        tiene_error = True
+                    
+                    elif Atencion.objects.filter(mascota=perro, tipo__tipo='Vacuna antirrábica').exists():
+                        ultima_vacuna = Atencion.objects.filter(mascota=perro, tipo__tipo='Vacuna antirrábica').latest('fecha')
+                        ultima_vacuna_datetime = datetime.combine(ultima_vacuna.fecha, datetime.min.time())
+                        if (datetime.now() - ultima_vacuna_datetime) < timedelta(days=365):
+                            # Última vacuna recibida hace MENOS de 1 año
+                            messages.error(request, 'La mascota ya recibió una vacuna antirrábica hace menos de un año')
+                            tiene_error = True
+                        else:
+                            # Última aplicada hace MÁS de 1 año
+                            generar_turno = True
+                    else:
+                        # No tiene Vacuna antirrábica registrada y es mayor a 4 meses
+                        generar_turno = True
+
+                    if generar_turno:
+                        crear_turno(
+                            perro.cliente_id,
+                            atencion.tipo.id,
+                            365,
+                            perro.nombre,
+                            "Turno generado automático para la próxima aplicación de vacuna antirrábica"
+                        )
+
+                elif tipo_atencion == 'Vacuna antiviral':
+                    print("SELECCIONA ANTIVIRAL")
+                    if edad_dias_perro < 60:
+                        messages.error(request, 'Esta mascota es menor de 2 meses, no puede recibir la vacuna antiviral')
+                        tiene_error = True
+                    else:
+                        tiene_vacuna = Atencion.objects.filter(mascota=perro, tipo__tipo='Vacuna antiviral').exists()
+                        if tiene_vacuna:
+                            ultima_vacuna = Atencion.objects.filter(mascota=perro, tipo__tipo='Vacuna antiviral').latest('fecha')
+                            ultima_vacuna_datetime = datetime.combine(ultima_vacuna.fecha, datetime.min.time())
+                        if edad_dias_perro < 120:
+                            # Tiene entre 2 y 4 MESES
+                            if tiene_vacuna:
+                                if(datetime.now() - ultima_vacuna_datetime) < timedelta(days=21):
+                                    # Recibió la vacuna hace menos de 21 días
+                                    messages.error(request, 'La mascota ya recibió una vacuna antiviral hace menos de 21 días')
+                                    tiene_error = True
+                                else:
+                                    generar_turno = True
+                            else:
+                                generar_turno = True
+                            if generar_turno:
+                                # Turno para dentro de 21 DIAS
+                                crear_turno(
+                                    perro.cliente_id,
+                                    atencion.tipo.id,
+                                    21,
+                                    perro.nombre,
+                                    "Turno generado automáticamente para la próxima aplicación de vacuna antiviral"
+                                )
+                        else:
+                            # Tiene más de 4 MESES
+                            if tiene_vacuna:
+                                if(datetime.now() - ultima_vacuna_datetime) < timedelta(days=365):
+                                    messages.error(request, 'La mascota ya recibió una vacuna antiviral hace menos de un año')
+                                    tiene_error = True
+                                else:
+                                    generar_turno = True
+                            else:
+                                generar_turno = True
+                            if generar_turno:
+                                # Turno para dentro de 1 AÑO
+                                crear_turno(
+                                    perro.cliente_id,
+                                    atencion.tipo.id,
+                                    365,
+                                    perro.nombre,
+                                    "Turno generado automáticamente para la próxima aplicación de vacuna antiviral"
+                                )
+                            
+            if not tiene_error:
+                atencion.save()
+                messages.success(request, 'Atención registrada exitosamente')
+                return redirect(f'/perros/registrar-atencion/{perro.id}/')
+    else:
+        form = registrar_atencion_form()
+    
+    context = {
+        'form': form,
+        'perro': perro,
+    }
+    return render(request, 'admin/registrar_atencion.html', context)
+
+def crear_turno(cliente_id, tipo_atencion_id, dias_espera, perro_nombre, descripcion):
+    fecha_turno = date.today() + timedelta(days=dias_espera)
+    Turno.objects.create(
+        cliente_id=cliente_id,
+        tipo_atencion_id=tipo_atencion_id,
+        fecha=fecha_turno,
+        estado_id=3,
+        perro=perro_nombre,
+        descripcion=descripcion
+    )
