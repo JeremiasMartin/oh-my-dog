@@ -44,7 +44,53 @@
                   </a>
                 </li>
               {% endif %}
-            </ul>
+
+              <!-- Submenu de Perdidos -->
+              {% if user.is_authenticated %}
+                <li class="nav-item dropend">
+                    <a class="dropdown-item dropdown-toggle " href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      Perdidos
+                    </a>
+                    <ul class="dropdown-menu ">
+                        <!-- Aca va link de este parecido a este "/publicaciones/cargar_perro_perdido/" -->
+                        <li><a class="dropdown-item" href="#">Cargar Perro Perdido</a></li>
+                        <!-- Aca va link de este parecido a este "listar_perdidos" -->
+                        <li><a class="dropdown-item" href="#">Publicaciones Perdidos</a></li>
+                        <!-- Aca va link de este parecido a este "listar_mis_perdidos" -->
+                        <li><a class="dropdown-item" href="#">Mis Publicaciones Perdidos</a></li>
+                    </ul>
+                </li>
+              {% else %}   
+                <li>
+                  <a class="dropdown-item" href="/publicaciones/listar_perdidos/" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Perros Perdidos
+                  </a>
+                </li>
+              {% endif %}
+
+              <!--Submenu de Encontrados-->
+              {% if user.is_authenticated %}
+                <li class="nav-item dropend">
+                    <a class="dropdown-item dropdown-toggle " href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      Encontrados
+                    </a>
+                    <ul class="dropdown-menu ">
+                        <!-- Aca va link de este parecido a este "/publicaciones/cargar_perro_encontrado/"" -->
+                        <li><a class="dropdown-item" href="#">Cargar Perro Encontrados</a></li>
+                        <!-- Aca va link de este parecido a este "listar_encontrados" -->
+                        <li><a class="dropdown-item" href="#">Publicaciones Encontrados</a></li>
+                        <!-- Aca va link de este parecido a este "listar_mis_encontrados" -->
+                        <li><a class="dropdown-item" href="#">Mis Publicaciones Encontrados</a></li>
+                    </ul>
+                </li>
+              {% else %}   
+                <li>
+                  <a class="dropdown-item" href="/publicaciones/listar_encontrados/" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Perros Encontrados
+                  </a>
+                </li>
+              {% endif %}
+          </ul>
         </li>
 
         {% if user.is_authenticated %}
