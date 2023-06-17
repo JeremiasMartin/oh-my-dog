@@ -35,7 +35,7 @@ class PersonalEditForm(forms.ModelForm):
 
     class Meta:
         model = Personal
-        fields = ('nombre', 'telefono', 'tipo', 'descripcion', 'horario', 'ubicacion')
+        fields = ('nombre', 'email', 'telefono', 'tipo', 'descripcion', 'horario', 'ubicacion')
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
