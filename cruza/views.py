@@ -5,6 +5,14 @@ from .models import Cruza
 from .forms import CruzaForm
 from publicaciones.models import Perro_publicacion, Publicacion
 
+
+def listar_mis_mascotas_cruza(request):
+    mascotas = Cruza.objects.filter(publicacion__id_usuario=request.user.id)
+    contexto = {
+        "cruzas":paginar(request, mascotas, 3),
+    }
+    return render(request, 'mis_mascotas_cruza.html', contexto)
+
 def registrar_mascota_cruza(request):
     if request.method == 'POST':
         form = CruzaForm(request.POST, request.FILES)

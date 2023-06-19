@@ -1,0 +1,112 @@
+{% extends "OhMyDogApp/base.html" %}
+
+{% load static %}
+
+{% block content %}
+ 
+<section id="showcase-inner" class="py-4 text-black">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-md-12">
+          <h2 class="display-4">Listado de Mascotas</h2>
+        </div>
+      </div>
+    </div>
+</section>
+<!-- Listado -->
+{% if cruzas %}
+    <section id="listado" class="py-4">
+        <div class="container">
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <div id="msg-{{ message.tags }}" class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        {% include 'filtros_perros.html' %} 
+            <div class="row">
+                {% for cruza in cruzas %}
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card listing-preview">
+                            <div class="card-body">
+                                <div class="listing-heading text-center">
+                                    <h5 class="card-title">{{ cruza.publicacion.id_perro_publicacion.nombre }}</h5>
+                                </div>
+                                <hr>
+                                <div class="foto-cruza">
+                                    <img class='foto-cruza' src="{{ cruza.publicacion.id_perro_publicacion.foto.url }}" alt="foto cruza"> 
+                                </div> 
+                                <hr>
+                                <p class="card-text"><i class="fa-solid fa-dog" style="color: #e4a64e;"></i> Raza: {{ cruza.publicacion.id_perro_publicacion.raza }}</p>
+                                <hr>
+                                <p class="card-text"><i class="fa-solid fa-ruler-vertical"style="color: #e4a64e;"></i> Tamaño: {{ cruza.publicacion.id_perro_publicacion.tamanio }}</p>
+                                <hr>
+                                <p class="card-text"><i class="fa-solid fa-dog" style="color: #e4a64e;"></i> Sexo: {{ cruza.publicacion.id_perro_publicacion.get_sexo_display }}</p>
+                                {% if cruza.publicacion.id_perro_publicacion.sexo == 'H' %}
+                                <hr>
+                                <p class="card-text"><i class="fa-solid fa-calendar-days" style="color: #e4a64e;"></i> Per&iacute;odo Celo: {{ cruza.publicacion.descripcion }}</p>
+                                {% endif%}
+                                <hr>
+                                <p class="card-text"><i class="fa-solid fa-palette" style="color: #e4a64e;"></i> Color: {{ cruza.publicacion.id_perro_publicacion.color }}</p>
+                                <hr>
+                                <a href="#" class="btn btn-primary btn-block">Editar Información</a>
+                                <a href="#" class="btn btn-primary btn-block">Ver Recomendados</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div> 
+        </div> 
+        <!-- Paginacion -->
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                {% if cruzas.has_other_pages %}
+                    <ul class="pagination">
+                        {% if cruzas.has_previous %}
+                            <li class='page-item'>
+                            <a href="?page={{cruzas.previous_page_number}}" class="page-link">&laquo;
+                            </a> 
+                            </li>
+                        {% else %}
+                            <li class= "page-item disabled">
+                            <a class="page-link">&laquo;
+                            </a> 
+                            </li>
+                        {% endif %}
+                        {% for i in cruzas.paginator.page_range %}
+                            {% if cruzas.number == i %}
+                                <li class='page-item active'>
+                                    <a class="page-link">{{i}}</a> 
+                                </li>
+                            {% else %}
+                                <li class='page-item'>
+                                    <a href="?page={{i}}" class="page-link">{{i}}</a>
+                                </li>
+                            {% endif%}
+                        {% endfor %}
+                        {% if cruzas.has_next %}
+                            <li class="page-item">
+                                <a href="?page={{cruzas.next_page_number}}" class="page-link">&raquo;</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <a class="page-link">&raquo;</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+{% else %}
+    <div id="sin-resultados">
+        <p>Todavía no cuenta con perros en el Servicio de Cruza.</p>
+    </div>
+{% endif %}
+
+{% endblock %}
