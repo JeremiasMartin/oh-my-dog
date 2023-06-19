@@ -56,6 +56,7 @@
     var periodoCeloField = document.getElementById('id_periodo_celo');
     var periodoCeloLabel = document.querySelector('label[for="id_periodo_celo"]');
     var sexoField = document.getElementById('id_sexo');
+    var fotoField = document.getElementById('id_foto');
 
     formInputs.forEach(function (input) {
         input.addEventListener('input', function () {
@@ -69,7 +70,11 @@
     periodoCeloField.addEventListener('input', function () {
         validarCampos();
     });
-    
+
+    fotoField.addEventListener('change', function () {
+        validarCampos();
+    });
+
     function validarCampos() {
         var nombre = document.getElementById('id_nombre').value;
         var raza = document.getElementById('id_raza').value;
@@ -77,6 +82,7 @@
         var tamanio = document.getElementById('id_tamanio').value;
         var edad = document.getElementById('id_edad').value;
         var sexo = document.getElementById('id_sexo').value;
+        var fotoFiles = fotoField.files;
     
         var regex = /^[a-zA-Z\s]*$/; // Expresión regular para solo letras y espacios
     
@@ -89,22 +95,24 @@
             regex.test(raza) &&
             color.trim() !== '' &&
             regex.test(color) &&
-            sexo.trim() !== '';
+            sexo.trim() !== '' &&
+            fotoFiles.length === 1;
 
         if (sexo === 'H') {
             periodoCeloField.style.display = 'block';
-            periodoCeloLabel.innerHTML = 'Periodo de Celo:<span class="required">*</span>';
+            periodoCeloLabel.innerHTML = 'Periodo de Celo<span class="required">*</span>';
             if(periodoCeloField.value.trim() === ''){
-                isFormValid=false;
+                isFormValid = false;
             }
             else{
-                isFormValid=true;
+                isFormValid = true;
             }
         } else {
             periodoCeloField.style.display = 'none';
             periodoCeloLabel.innerHTML = ''; 
         }
 
+        console.log(fotoFiles.length);
         btnRegistrar.disabled = !isFormValid;
     }
     

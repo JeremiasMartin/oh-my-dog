@@ -16,5 +16,6 @@ class CruzaForm(forms.ModelForm):
         self.fields['color'].required = True
         self.fields['edad'].required = True
         self.fields['raza'].required = True
+        self.fields['foto'].required = True
         self.fields['periodo_celo'].widget.attrs['style'] = 'display: none;'
         
