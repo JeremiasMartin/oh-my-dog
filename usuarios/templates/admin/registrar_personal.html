@@ -5,52 +5,148 @@
 <head>
   {% leaflet_js plugins="forms" %}
   {% leaflet_css plugins="forms" %}
+      <style>
+        .formulario-ampliado {
+            width: 100%;
+            max-width: 800px; /* Ajusta el ancho máximo del formulario según tus necesidades */
+            margin: 0 auto; /* Centra el formulario horizontalmente */
+        }
+    </style>  
  </head>
-  <h1>Registrar Servicio de Terceros</h1>
+<h1 style="text-align: center; padding: 30px;">Registrar Servicio de Terceros</h1>
   {% for message in messages %}
       <div id="msg-{{ message.tags }}"class="alert alert-{{ message.tags }}">
         {{ message }}
       </div>
   {% endfor %}
-  <form method="post" enctype="multipart/form-data" id="personal-form">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <div id="map"></div>
-    <input type="submit" class="btn btn-primary" value="Guardar" id="btn-guardar">
-  </form>
+<div class="container">
+    <div class="card-deck">
+        <div class="col-md-4 mb-4 formulario-ampliado">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="listing-heading text-center">
+                        <h5 class="card-title" style="text-align: center; padding: 10px;">Formulario de Registro</h5>
+                    </div>
+                    <form id="personal-form" method="post" onsubmit="return validarFormulario()" enctype="multipart/form-data" style="color: black;">
+                        {% csrf_token %}
+                        <p class="card-text">
+                            <i class="fa-solid fa-user" style="color: #e4a64e;"></i>
+                            Nombre*: {{ form.nombre }}
+                            <p>
+                                {% for error in form.nombre.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                            </p>
+                        </p>
+                        <hr>
+                        <p class="card-text">
+                            <i class="fa-solid fa-user" style="color: #e4a64e;"></i>
+                            Email*: {{ form.email }}
+                            <p>
+                                {% for error in form.email.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                            </p>
+                        </p>
+                        <hr>
+                        <p class="card-text">
+                            <i class="fa-solid fa-phone-volume" style="color: #e4a64e;"></i>
+                            Tel&eacute;fono*: {{ form.telefono }}
+                            <p>
+                                {% for error in form.telefono.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                            </p>
+                        </p>
+                        <hr>
+                        <p class="card-text">
+                            <i class="fa-solid fa-phone-volume" style="color: #e4a64e;"></i>
+                            Tipo*: {{ form.tipo }}
+                        </p>
+                        <hr>
+                        <!-- Agrega los campos adicionales aquí -->
+                        <p class="card-text">
+                            <i class="fa-solid fa-clock" style="color: #e4a64e;"></i>
+                            Horario*: {{ form.horario }}
+                            <p>
+                                {% for error in form.horario.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                            </p>
+                        </p>
+                        <hr>
+                        <p class="card-text">
+                            <i class="fa-solid fa-user" style="color: #e4a64e;"></i>
+                            Descripción*: {{ form.descripcion }}
+                            <p>
+                                {% for error in form.descripcion.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                            </p>
+                        </p>
+                        <hr>
+                        <p class="card-text">
+                            <i class="fa-solid fa-map-marker-alt" style="color: #e4a64e"></i>
+                            Ubicación*: <div id="id_ubicacion-map" style="width: 700px; height: 400px;">{{ form.ubicacion }}</div>
+                            <p>
+                                {% for error in form.ubicacion.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                            </p>
+                        </p>
+                        <hr>
+                        <input type="submit" class="btn btn-primary" value="Guardar" id="btn-guardar">
+                        <a href="/servicios/listar_personal/" class="btn btn-primary">Cancelar</a>
+                      </form>  
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-  <script>
+<script>
     function validarFormulario() {
-      var form = document.getElementById('personal-form');
-      
-      // Verificar si algún campo está vacío o contiene caracteres no permitidos
-      var inputs = form.querySelectorAll('input, select');
-      for (var i = 0; i < inputs.length; i++) {
-        var input = inputs[i];
-        if (input.value.trim() === '') {
-          alert('Por favor, complete todos los campos.');
-          return false;
+        var form = document.getElementById('personal-form');
+        var nombre = document.getElementById('id_nombre').value;
+        var descripcion = document.getElementById('id_descripcion').value;
+        var email = document.getElementById('id_email').value;
+        var telefono = document.getElementById('id_telefono').value;
+        var horario = document.getElementById('id_horario').value;
+
+        if (nombre.trim() === '' || descripcion.trim() === '' || email.trim() === '' || telefono.trim() === '' || horario.trim() === '') {
+            alert('Por favor, complete todos los campos.');
+            return false;
         }
 
         var regexLetras = /^[a-zA-Z\s]*$/;
-        if (input.id === 'id_nombre' && !regexLetras.test(input.value.trim())) {
-          alert('El campo "nombre" solo puede contener letras.');
-          return false;
+        if (!regexLetras.test(nombre.trim())) {
+            alert('El campo "nombre" solo puede contener letras.');
+            return false;
         }
-      }
-      
-      // Habilitar o deshabilitar el botón de guardar según la validez del formulario
-      var btnGuardar = document.getElementById('btn-guardar');
-      btnGuardar.disabled = !form.checkValidity();
-      
-      // El formulario es válido, realiza cualquier otra acción necesaria
-      return true;
+
+        if (telefono.trim().length < 10) {
+            alert('El campo "teléfono" debe tener al menos 10 dígitos.');
+            return false;
+        }
+
+        var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!email.match(emailPattern)) {
+            alert('Por favor, ingrese un correo electrónico válido.');
+            return false;
+        }
+
+        // Habilitar o deshabilitar el botón de guardar según la validez del formulario
+        var btnGuardar = document.getElementById('btn-guardar');
+        btnGuardar.disabled = !form.checkValidity();
+
+        // El formulario es válido, realiza cualquier otra acción necesaria
+        return true;
     }
 
     // Validar campos en tiempo real
-    var formInputs = document.querySelectorAll('input[type="text"], select');
+    var formInputs = document.querySelectorAll('input[type="text"], input[type="number"], input[type="email"], select');
     var btnGuardar = document.getElementById('btn-guardar');
-
+    
     formInputs.forEach(function (input) {
       input.addEventListener('input', function () {
         validarCampos();
@@ -58,19 +154,36 @@
     });
 
     function validarCampos() {
-      var isFormValid = Array.from(formInputs).every(function (input) {
-        return input.checkValidity();
-      });
+        var nombre = document.getElementById('id_nombre').value;
+        var descripcion = document.getElementById('id_descripcion').value;
+        var email = document.getElementById('id_email').value;
+        var telefono = document.getElementById('id_telefono').value;
+        var horario = document.getElementById('id_horario').value;
 
-      var regex = /^[a-zA-Z\s]*$/; // Expresión regular para solo letras y espacios
-      if (!regex.test(document.getElementById('id_nombre').value)) {
-        isFormValid = false;
-      }
+        var isFormValid = true;
 
-      btnGuardar.disabled = !isFormValid;
+        if (nombre.trim() === '' || descripcion.trim() === '' || email.trim() === '' || telefono.trim() === '' || horario.trim() === '') {
+            isFormValid = false;
+        }
+
+        var regex = /^[a-zA-Z\s]*$/; // Expresión regular para solo letras y espacios
+        if (!regex.test(nombre)) {
+            isFormValid = false;
+        }
+
+        var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!email.match(emailPattern)) {
+            isFormValid = false;
+        }
+
+        if (telefono.trim().length < 10) {
+            isFormValid = false;
+        }
+
+        btnGuardar.disabled = !isFormValid;
     }
 
     // Validar campos al cargar la página
     validarCampos();
-  </script>
+</script>
 {% endblock %}
