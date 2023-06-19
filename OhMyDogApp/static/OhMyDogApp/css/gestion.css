@@ -321,6 +321,7 @@ p {
 
 .btn {
   box-shadow: 0px 3px 3px 0px rgba(33, 37, 41, 0.1);
+  margin-top: 10px;
 }
 
 
@@ -593,4 +594,20 @@ th, td {
 .filtro .search-button {
   margin-top: 20px;
   width: fit-content;
+}
+
+
+.foto-cruza {
+  width: 300px;
+  height: 400px;
+  overflow: hidden;
+  margin: 0 auto;
+  /* border-radius: 50%;*/
+}
+
+.foto-cruza img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
