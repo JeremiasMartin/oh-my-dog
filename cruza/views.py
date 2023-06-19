@@ -1,13 +1,12 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from turnos.views import paginar
-from .models import Cruza
 from .forms import CruzaForm
 from publicaciones.models import Perro_publicacion, Publicacion
 
 
 def listar_mis_mascotas_cruza(request):
-    mascotas = Cruza.objects.filter(publicacion__id_usuario=request.user.id)
+    mascotas = Publicacion.objects.filter(tipo="Cruza", id_usuario=request.user.id)
     contexto = {
         "cruzas":paginar(request, mascotas, 3),
     }
@@ -38,13 +37,9 @@ def registrar_mascota_cruza(request):
                 id_usuario=request.user,
                 id_perro_publicacion=perro_publicacion,
                 activo=True,
+                tipo = "Cruza",
             )
             publicacion.save()
-
-            cruza = Cruza(
-                publicacion=publicacion,
-            )
-            cruza.save()
 
             messages.success(request, 'Registro exitoso')
             return redirect('Mis_mascotas_cruza')

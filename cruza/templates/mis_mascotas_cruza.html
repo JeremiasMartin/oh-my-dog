@@ -33,24 +33,24 @@
                         <div class="card listing-preview">
                             <div class="card-body">
                                 <div class="listing-heading text-center">
-                                    <h5 class="card-title">{{ cruza.publicacion.id_perro_publicacion.nombre }}</h5>
+                                    <h5 class="card-title">{{ cruza.id_perro_publicacion.nombre }}</h5>
                                 </div>
                                 <hr>
                                 <div class="foto-cruza">
-                                    <img class='foto-cruza' src="{{ cruza.publicacion.id_perro_publicacion.foto.url }}" alt="foto cruza"> 
+                                    <img class='foto-cruza' src="{{ cruza.id_perro_publicacion.foto.url }}" alt="foto cruza"> 
                                 </div> 
                                 <hr>
-                                <p class="card-text"><i class="fa-solid fa-dog" style="color: #e4a64e;"></i> Raza: {{ cruza.publicacion.id_perro_publicacion.raza }}</p>
+                                <p class="card-text"><i class="fa-solid fa-dog" style="color: #e4a64e;"></i> Raza: {{ cruza.id_perro_publicacion.raza }}</p>
                                 <hr>
-                                <p class="card-text"><i class="fa-solid fa-ruler-vertical"style="color: #e4a64e;"></i> Tamaño: {{ cruza.publicacion.id_perro_publicacion.tamanio }}</p>
+                                <p class="card-text"><i class="fa-solid fa-ruler-vertical"style="color: #e4a64e;"></i> Tamaño: {{ cruza.id_perro_publicacion.tamanio }}</p>
                                 <hr>
-                                <p class="card-text"><i class="fa-solid fa-dog" style="color: #e4a64e;"></i> Sexo: {{ cruza.publicacion.id_perro_publicacion.get_sexo_display }}</p>
-                                {% if cruza.publicacion.id_perro_publicacion.sexo == 'H' %}
+                                <p class="card-text"><i class="fa-solid fa-dog" style="color: #e4a64e;"></i> Sexo: {{ cruza.id_perro_publicacion.get_sexo_display }}</p>
+                                {% if cruza.id_perro_publicacion.sexo == 'H' %}
                                 <hr>
-                                <p class="card-text"><i class="fa-solid fa-calendar-days" style="color: #e4a64e;"></i> Per&iacute;odo Celo: {{ cruza.publicacion.descripcion }}</p>
+                                <p class="card-text"><i class="fa-solid fa-calendar-days" style="color: #e4a64e;"></i> Per&iacute;odo Celo: {{ cruza.descripcion }}</p>
                                 {% endif%}
                                 <hr>
-                                <p class="card-text"><i class="fa-solid fa-palette" style="color: #e4a64e;"></i> Color: {{ cruza.publicacion.id_perro_publicacion.color }}</p>
+                                <p class="card-text"><i class="fa-solid fa-palette" style="color: #e4a64e;"></i> Color: {{ cruza.id_perro_publicacion.color }}</p>
                                 <hr>
                                 <a href="#" class="btn btn-primary btn-block">Editar Información</a>
                                 <a href="#" class="btn btn-primary btn-block">Ver Recomendados</a>
