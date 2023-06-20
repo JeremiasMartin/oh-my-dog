@@ -1,0 +1,164 @@
+{% extends 'OhMyDogApp/base.html' %}
+{% load static %}
+{% block content %}
+   
+<h1 style="text-align: center; margin-top: 10px;">Editar Perfil en Servicio de Cruza</h1>
+
+<div class="container">
+  {% for message in messages %}
+    <div id="msg" class="alert alert-{{ message.tags }}">
+      {{ message }}
+    </div>
+  {% endfor %}
+  <div class="card-deck justify-content-center">
+    <div class="col-md-6 mb-5">
+      <div class="card h-100">
+        <div class="card-body">
+          <div class="listing-heading text-center">
+            <h5 class="card-title" style="margin-bottom:10px">Perfil Mascota en Servicio de Cruza</h5>
+          </div>
+          <form method="post" action="" style="color: black;" enctype='multipart/form-data' onsubmit="return validarFormulario()">
+            {% csrf_token %}
+            <p class="card-text">
+              <i class="fa-solid fa-dog" style="color: #e4a64e;"></i>
+              Nombre: {{ form.nombre }}
+            </p>
+            <hr>
+            <p class="card-text">
+              <i class="fa-solid fa-ruler-vertical" style="color: #e4a64e;"></i>
+              Tamaño*: {{ form.tamanio }}
+            </p>
+            <hr>
+            <p class="card-text">
+              <i class="fa-solid fa-palette" style="color: #e4a64e;"></i>
+              Color*: {{ form.color }}
+            </p>
+            <hr>
+            <p class="card-text">
+              <i class="fa-solid fa-calendar-days" style="color: #e4a64e;"></i>
+              Edad*: {{ form.edad }}
+            </p>
+            <hr>
+            <p class="card-text">
+              <i class="fa-solid fa-dog" style="color: #e4a64e;"></i>
+              Raza*: {{ form.raza }}
+            </p>
+            <hr>
+            <p class="card-text">
+              <i class="fa-solid fa-paw" style="color: #e4a64e;"></i>
+              Sexo*: {{ form.sexo }}
+            </p>
+            <hr>
+            <p class="card-text" id='celo_label'>
+              <i class="fa-solid fa-calendar-days" style="color: #e4a64e;"></i>
+              Período Celo*: {{ form.periodo_celo }}
+            </p>
+            <hr>
+            <p class="card-text">
+                <i class="fa-solid fa-image" style="color: #e4a64e;"></i>Foto: 
+            </p>
+            <p>{{ form.foto }}</p>
+            <hr>
+            <button type="submit" id="btn-confirmar" class="btn btn-success">Confirmar</button>
+            <a href="{% url "Mis_mascotas_cruza" %}" class="btn btn-primary">Cancelar</a>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    function validarFormulario() {
+        var nombre = document.getElementById('id_nombre').value;
+        var raza = document.getElementById('id_raza').value;
+        var color = document.getElementById('id_color').value;
+        var tamanio = document.getElementById('id_tamanio').value;
+        var edad = document.getElementById('id_edad').value;
+        var sexo = document.getElementById('id_sexo').value;
+
+        // Validación de campos vacíos
+        if (nombre.trim() === '' || edad.trim() === '' || raza.trim() === '' || color.trim() === '' || tamanio.trim() === '' || sexo.trim() === '') {
+            alert('Por favor, completa todos los campos.');
+            return false;
+        }
+        
+        // Validación de campos no numéricos
+        var regex = /^[a-zA-Z\s]+$/; // Expresión regular para solo letras y espacios
+        if (!regex.test(nombre) || !regex.test(raza) || !regex.test(color)) {
+            alert('Los campos "Nombre", "Raza" y "Color" no pueden contener números.');
+            return false;
+        }
+        if (sexo === 'H' && periodoCeloField.value.trim() === '') {
+            alert('Por favor, completa el campo "Periodo de Celo" para perros hembra.');
+            return false;
+        }
+
+        return true; // todo ok
+    }
+    
+    // Validar campos en tiempo real
+    var formInputs = document.querySelectorAll('input[type="text"], select');
+    var btnConfirmar = document.getElementById('btn-confirmar');
+    var periodoCeloField = document.getElementById('id_periodo_celo');
+    var periodoCeloLabel = document.getElementById('celo_label');
+    var sexoField = document.getElementById('id_sexo');
+    
+    formInputs.forEach(function (input) {
+        input.addEventListener('input', function () {
+        validarCampos();
+        });
+    });
+
+    sexoField.addEventListener('change', function () {
+        validarCampos();
+    });
+
+    periodoCeloField.addEventListener('input', function () {
+        validarCampos();
+    });
+
+
+    function validarCampos() {
+        var nombre = document.getElementById('id_nombre').value;
+        var raza = document.getElementById('id_raza').value;
+        var color = document.getElementById('id_color').value;
+        var tamanio = document.getElementById('id_tamanio').value;
+        var edad = document.getElementById('id_edad').value;
+        var sexo = document.getElementById('id_sexo').value;
+
+        var regex = /^[a-zA-Z\s]*$/; // Expresión regular para solo letras y espacios
+    
+        var isFormValid =
+            nombre.trim() !== '' &&  
+            regex.test(nombre) &&
+            edad.trim() !== '' &&
+            raza.trim() !== '' &&
+            tamanio.trim() !== '' &&
+            regex.test(raza) &&
+            color.trim() !== '' &&
+            regex.test(color) &&
+            sexo.trim() !== '';
+
+        var hrElement = document.querySelector('#celo_label ~ hr');
+        if (sexo === 'H') {
+            hrElement.style.display = 'block';
+            periodoCeloField.style.display = 'block';
+            periodoCeloLabel.style.display = 'block';
+            if(periodoCeloField.value.trim() === ''){
+                isFormValid = false;
+            }
+        } else {
+            hrElement.style.display = 'none';            
+            periodoCeloField.style.display = 'none';
+            periodoCeloLabel.style.display = 'none';
+        }
+
+        btnConfirmar.disabled = !isFormValid;
+    }
+    
+    // Validar campos al cargar la página
+    validarCampos();
+</script>
+
+{% endblock %}

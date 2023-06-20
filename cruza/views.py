@@ -50,3 +50,42 @@ def registrar_mascota_cruza(request):
         
     return render(request, 'registrar_mascota_cruza.html', {'form': form})
 
+def editar_perfil_mascota_cruza(request, id_publicacion):
+    publicacion = get_object_or_404(Publicacion, id=id_publicacion)
+    perro_publicacion = get_object_or_404(Perro_publicacion, id=publicacion.id_perro_publicacion_id)
+
+    if request.method == 'POST':
+        form = CruzaForm(request.POST, request.FILES)
+        if form.is_valid():
+            perro_publicacion.nombre = form.cleaned_data.get('nombre')
+            perro_publicacion.tamanio = form.cleaned_data.get('tamanio')
+            perro_publicacion.sexo = form.cleaned_data.get('sexo')
+            perro_publicacion.color = form.cleaned_data.get('color')
+            perro_publicacion.edad = form.cleaned_data.get('edad')
+            perro_publicacion.raza = form.cleaned_data.get('raza')
+            foto = form.cleaned_data.get('foto')
+            if foto:  # Check if a new photo is uploaded
+                perro_publicacion.foto = foto
+            perro_publicacion.save()
+            if (perro_publicacion.sexo == 'H'):
+                periodo_celo=form.cleaned_data.get('periodo_celo')
+            else:
+                periodo_celo=None
+
+            publicacion.descripcion = periodo_celo
+            publicacion.save()
+
+            messages.success(request, "¡Información actualizada correctamente!")
+            return redirect('Mis_mascotas_cruza')
+    else:
+        form = CruzaForm(initial={
+            'nombre': perro_publicacion.nombre,
+            'tamanio': perro_publicacion.tamanio,
+            'sexo': perro_publicacion.sexo,
+            'color': perro_publicacion.color,
+            'edad': perro_publicacion.edad,
+            'raza': perro_publicacion.raza,
+            'foto': perro_publicacion.foto,
+            'periodo_celo': publicacion.descripcion,
+        })
+    return render(request, 'editar_mascota_cruza.html', {'form': form})
