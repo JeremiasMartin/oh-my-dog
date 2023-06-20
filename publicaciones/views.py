@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
-from .forms import AdopcionForm, PostulacionForm, EditarAdopcionForm
+from .forms import AdopcionForm, PostulacionForm, EditarAdopcionForm, PublicarPerroPerdidoForm
 from .models import *
-from usuarios.models import Cliente
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
@@ -415,3 +414,21 @@ def editar_adopcion(request, adopcion_id):
     context = {'form': form, 'errors': form.errors, 'path_anterior': path_anterior}
     return render(request, 'editar_adopcion.html', context)
 
+def publicar_perro_perdido(request):
+    if request.method == 'POST':
+        form = PublicarPerroPerdidoForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save(request.user)
+            
+            return redirect('/')
+    else:
+        form = PublicarPerroPerdidoForm()
+
+    return render(request, 'publicar_perro_perdido.html', {'form': form})
+
+
+
+
+def listar_perros_perdidos(request):
+    perros_perdidos = Publicacion.objects.filter(id_perro_publicacion__activo=True, tipo_publicacion='Perdidos')
+    return render(request, 'listar_perros_perdidos.html', {'perros_perdidos': perros_perdidos})

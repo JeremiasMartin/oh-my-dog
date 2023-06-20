@@ -12,5 +12,7 @@ urlpatterns = [
     path('listar_postulaciones_adopcion/', views.listar_mis_postulaciones, name='listar_postulaciones_adopcion'),
     path('listar_postulantes_adopcion/<int:adopcion_id>/', views.listar_postulantes_adopcion, name='listar_postulantes_adopcion'),
     path('seleccionar_postulante_adopcion/<int:postulante_id>/', views.seleccionar_postulante_adopcion, name='seleccionar_postulante_adopcion'),
-    path('editar_adopcion/<int:adopcion_id>/', views.editar_adopcion, name='editar_adopcion')
+    path('editar_adopcion/<int:adopcion_id>/', views.editar_adopcion, name='editar_adopcion'),
+    path('publicar_perro_perdido/', views.publicar_perro_perdido, name='publicar_perro_perdido'),
+    path('listar_perros_perdidos/', views.listar_perros_perdidos, name='listar_perros_perdidos'),
 ]

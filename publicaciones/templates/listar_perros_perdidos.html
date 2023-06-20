@@ -1,0 +1,19 @@
+{% extends 'OhMyDogApp/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+<h2>Publicaciones de perros perdidos</h2>
+<ul>
+  {% for publicacion in perros_perdidos %}
+    <li>
+      <strong>Nombre:</strong> {{ publicacion.id_perro_publicacion.nombre }}<br>
+      <strong>Tamaño:</strong> {{ publicacion.id_perro_publicacion.get_tamanio_display }}<br>
+      <strong>Sexo:</strong> {{ publicacion.id_perro_publicacion.get_sexo_display }}<br>
+      <strong>Color:</strong> {{ publicacion.id_perro_publicacion.color }}<br>
+      <strong>Edad:</strong> {{ publicacion.id_perro_publicacion.edad }}<br>
+      <strong>Raza:</strong> {{ publicacion.id_perro_publicacion.raza }}<br>
+      <!-- Mostrar otros detalles de la publicación -->
+    </li>
+  {% endfor %}
+</ul>
+{%endblock%}
