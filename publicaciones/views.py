@@ -41,6 +41,7 @@ def publicar_adopcion(request):
                 id_usuario=request.user,
                 id_perro_publicacion=perro_publicacion,
                 activo=True,
+                tipo_publicacion = 'Adopcion',
             )
             publicacion.save()
 

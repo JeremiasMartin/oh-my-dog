@@ -66,11 +66,7 @@ class EditarAdopcionForm(forms.ModelForm):
 
 
 class PublicarPerroPerdidoForm(forms.Form):
-    TIPO_CHOICES = (
-        ('Adopcion', 'Adopción'),
-        ('Perdidos', 'Perdidos'),
-    )
-
+    
     nombre = forms.CharField(max_length=100)
     tamanio = forms.ChoiceField(choices=Perro_publicacion.opciones_tamanio)
     sexo = forms.ChoiceField(choices=Perro_publicacion.SEXO_CHOICES)
@@ -79,7 +75,7 @@ class PublicarPerroPerdidoForm(forms.Form):
     raza = forms.CharField(max_length=100)
     foto = forms.ImageField()
     descripcion = forms.CharField(widget=forms.Textarea)
-    tipo_publicacion = forms.ChoiceField(choices=TIPO_CHOICES, initial='Perdidos', widget=forms.HiddenInput)
+    tipo_publicacion = forms.CharField(max_length=20, initial='Perdidos', widget=forms.HiddenInput)
 
     def save(self, user):
         perro_perdido = Perro_publicacion.objects.create(

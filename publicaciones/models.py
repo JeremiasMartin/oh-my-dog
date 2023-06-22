@@ -33,12 +33,9 @@ class Publicacion(models.Model):
     id_usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     id_perro_publicacion = models.OneToOneField(Perro_publicacion, on_delete=models.CASCADE)
     activo = models.BooleanField(default=True)
-    TIPO_CHOICES = (
-    ('Adopcion', 'Adopción'),
-    ('Perdidos', 'Perdidos'),
-    )
+    tipo_publicacion = models.CharField(max_length=20, blank=False, null=False)
 
-    tipo_publicacion = models.CharField('Tipo de Publicación', max_length=20, choices=TIPO_CHOICES)
+
 
     def __str__(self):
         return f'{self.id_usuario}, {self.id_perro_publicacion}'
