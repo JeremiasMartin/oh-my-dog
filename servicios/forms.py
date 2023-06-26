@@ -2,6 +2,8 @@ from django import forms
 from django.contrib.gis import forms as gis_forms
 from leaflet.forms.widgets import LeafletWidget
 from .models import Personal
+from .models import Guardia
+from .models import Campaña
 
 class PersonalForm(forms.ModelForm):
     ubicacion = gis_forms.PointField(widget=LeafletWidget())
@@ -55,3 +57,27 @@ class PersonalEditForm(forms.ModelForm):
         if commit:
             personal.save()
         return personal
+    
+class GuardiaForm(forms.ModelForm):
+    
+    class Meta:
+        model = Guardia
+        fields = ('descripcion',)
+    
+    def save(self, commit=True):
+        guardia = super().save(commit=False)
+        if commit:
+            guardia.save()
+        return guardia
+    
+class CampañaForm(forms.ModelForm):
+    
+    class Meta:
+        model = Campaña
+        fields = ('nombre', 'motivo', 'fechaInicio', 'fechaFin')
+    
+    def save(self, commit=True):
+        campaña = super().save(commit=False)
+        if commit:
+            campaña.save()
+        return campaña
