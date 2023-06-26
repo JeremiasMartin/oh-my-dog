@@ -7,7 +7,7 @@ class CustomImageWidget(forms.ClearableFileInput):
 
 class CruzaForm(forms.ModelForm):
     periodo_celo = forms.CharField(widget=forms.Textarea(attrs={'rows': 4, 'cols': 40}), required=False)
-    foto = forms.ImageField(widget=CustomImageWidget, required=False)
+    foto = forms.ImageField(widget=CustomImageWidget, required=True)
 
     class Meta:
         model = Perro_publicacion

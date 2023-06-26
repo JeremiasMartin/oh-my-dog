@@ -6,7 +6,7 @@ from publicaciones.models import Perro_publicacion, Publicacion
 
 
 def listar_mis_mascotas_cruza(request):
-    mascotas = Publicacion.objects.filter(tipo="Cruza", id_usuario=request.user.id)
+    mascotas = Publicacion.objects.filter(tipo_publicacion="Cruza", id_usuario=request.user.id)
     contexto = {
         "cruzas":paginar(request, mascotas, 3),
     }
@@ -37,7 +37,7 @@ def registrar_mascota_cruza(request):
                 id_usuario=request.user,
                 id_perro_publicacion=perro_publicacion,
                 activo=True,
-                tipo = "Cruza",
+                tipo_publicacion = "Cruza",
             )
             publicacion.save()
 
