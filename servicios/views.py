@@ -8,6 +8,9 @@ from turnos.views import paginar
 from django.core.mail import send_mail
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
+import datetime
+import mercadopago
+from mercadopago.config import RequestOptions
 
 def listar_personal(request):
     personal = Personal.objects.all()
@@ -38,9 +41,6 @@ def editar_personal(request, personal_id):
 
     return render(request, 'editar_personal.html', context)
 
-from django.core.mail import send_mail
-from django.shortcuts import render, get_object_or_404
-from django.contrib import messages
 
 def enviar_consulta(request, personal_id):
     person = get_object_or_404(Personal, id=personal_id)
@@ -86,4 +86,102 @@ def mapa(request):
     }
 
     return render(request, 'mapa.html', context)
+
+def cargar_guardia(request):
+    guardia = Guardia.objects.first()
+
+    if request.method == 'POST':
+        form = GuardiaForm(request.POST, instance=guardia)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "¡Guardia cargada correctamente!")
+            return redirect('Listar_guardias')
+
+    else:
+        form = GuardiaForm(instance=guardia)
+
+    context = {'form': form, 'errors': form.errors}
+    return render(request, 'cargar_guardia.html', context)
+
+
+def listar_guardias(request):
+    guardias = Guardia.objects.all()
+    return render(request, 'listar_guardias.html', {"guardias":guardias, "fecha":datetime.datetime.now()})
+
+def editar_guardia(request):
+    guardia = Guardia.objects.first()
+
+    if request.method == 'POST':
+        form = GuardiaForm(request.POST, instance=guardia)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "¡Guardia editada correctamente!")
+            return redirect('Listar_guardias')
+    else:
+        form = GuardiaForm(instance=guardia)
+
+    context = {'form': form}
+    return render(request, 'editar_guardia.html', context)
+
+def cargar_campaña(request):
+    if request.method == 'POST':
+        form = CampañaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "¡Campaña cargada correctamente!")
+            return redirect('Listar_campañas')
+    else:
+        form = CampañaForm()
+        return render(request, 'cargar_campaña.html', {'form': form})
+    
+def editar_campaña(request, campaña_id):
+    campaña = get_object_or_404(Campaña, id=campaña_id)
+
+    if request.method == 'POST':
+        form = CampañaForm(request.POST, instance=campaña)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "¡Campaña editada correctamente!")
+            return redirect('Listar_campañas')
+    else:
+        form = CampañaForm(instance=campaña)
+
+    context = {'form': form}
+    return render(request, 'editar_campaña.html', context)
+
+
+def listar_campañas(request):
+    campañas = Campaña.objects.all()
+    context = {"campañas":paginar(request,campañas,6), "fechaHoy":datetime.datetime.today()}
+    return render(request, 'listar_campañas.html', context)
+
+
+def donar(request):
+    sdk = mercadopago.SDK("TEST-2247251725354942-061914-a9d31ca1c16d102f5554d58738633dc0-1134118165")
+
+
+ 
+    preference_data = {
+        "items": [
+            {
+                "title": "Producto 1",
+                "quantity": 1,
+                "currency_id": "ARS",
+                "unit_price": 100.0
+            }  
+        ],
+        "back_urls": {
+        "success": "localhost:8000/",
+        "failure": "localhost:8000/",
+        "pending": "localhost:8000/"
+    }
+    }
+    
+
+    preference = sdk.preference().create(preference_data)
+
+    payment_url = preference['response']['sandbox_init_point']
+    print(payment_url)
+    return redirect(payment_url)
+
 
