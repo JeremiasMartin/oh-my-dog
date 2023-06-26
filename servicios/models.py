@@ -25,3 +25,20 @@ class Personal(models.Model):
     def __str__(self):
         return self.nombre
 
+class Guardia(models.Model):
+    descripcion = models.TextField()
+
+    class Meta:
+        verbose_name = 'guardias'
+        db_table = 'servicios_guardias'
+
+class Campaña(models.Model):
+    nombre = models.CharField(max_length=100, blank=False, null=False, default='')
+    motivo = models.CharField(max_length=300, blank=False, null=False, default='')
+    fechaInicio = models.DateField(blank=False, null=False)
+    fechaFin = models.DateField(blank=False, null=False)
+
+    class Meta:
+        verbose_name = 'campañas'
+        db_table = 'servicios_campañas'
+
