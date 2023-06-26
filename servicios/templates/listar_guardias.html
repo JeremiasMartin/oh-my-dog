@@ -1,0 +1,59 @@
+{% extends "OhMyDogApp/base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<style>
+  .guardias-container {
+    margin: 20px 0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+  }
+
+  .guardias-title {
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  .guardia {
+    margin-bottom: 10px;
+    padding: 5px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+  }
+</style>
+
+
+<div class="container">
+  {% if messages %}
+  <ul class="messages">
+      {% for message in messages %}
+      <div id="msg-{{ message.tags }}"class="alert alert-{{ message.tags }}">
+          {{ message }}
+      </div>
+      {% endfor %}
+  </ul>
+  {% endif %}
+</div>
+
+<div class="guardias-container">
+  {% if guardias %}
+    <h1 class="guardias-title">Guardias de {{ fecha|date:"F Y" }}</h1>
+    {% if request.user.is_staff %}
+    <div style="display: flex; flex-direction: column;"class="d-flex flex-column">
+      <a class="btn btn-primary btn-block w-25" href="{% url 'Editar_guardias' %}">Editar guardias</a>
+    </div>
+    {% endif %}
+    {% for guardia in guardias %}
+      <div class="guardia">
+        {{ guardia.descripcion|linebreaks }}
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>No hay guardias cargadas.</p>
+  {% endif %}
+</div>
+
+{% endblock %}

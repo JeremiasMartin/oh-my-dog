@@ -1,0 +1,110 @@
+{% extends "OhMyDogApp/base.html" %}
+
+{% load static %}
+
+{% block content %}
+<section id="showcase-inner" class="py-5 text-black">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-md-12">
+          <h2 class="display-4">Listado de campañas</h2>
+        </div>
+      </div>
+    </div>
+  </section>
+<!-- Listado -->
+<section id="listado" class="py-4">
+    <div class="container">
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <div id="msg-{{ message.tags }}"class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        
+        {% if campañas %}
+            <div class="card-deck">
+                {% for campaña in campañas %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="listing-heading text-center">
+                                    <h5 class="card-title">{{ campaña.nombre }}</h5>
+                                </div>
+                                <hr>
+                                <p class="card-text"><i class="fa-solid fa-id-card" style="color: #e4a64e;"></i> {{ campaña.motivo }}</p>
+                                <hr>
+                                <p class="card-text"><i class="fa-solid fa-id-card" style="color: #e4a64e;"></i> Inicio: {{ campaña.fechaInicio }}</p>
+                                <hr>
+                                <p class="card-text"><i class="fa-solid fa-id-card" style="color: #e4a64e;"></i> Fin: {{ campaña.fechaFin }}</p>
+                                <hr>
+                                <div style="display: flex; flex-direction: column; align-items: center;"class="d-flex flex-column">
+                                    {% if user.is_staff %}
+                                    <a href= "{% url 'Editar_campaña' campaña.id %}" class="btn btn-primary btn-block">Editar Campaña</a>
+                                    {% endif %}
+                                    {% if campaña.fechaInicio|date:"Y-m-d" <= fechaHoy|date:"Y-m-d" and campaña.fechaFin|date:"Y-m-d" >= fechaHoy|date:"Y-m-d" %}
+                                        <a href= "{% url 'Donar' %}" class="btn btn-primary btn-block">Donar</a>
+                                    {% else %}
+                                    <br>
+                                        <div class="alert alert-info">Todavía no comenzó la colecta de donación</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>    
+            {% else %}
+                <div id="sin-resultados">
+                    <p>No Hay Resultados</p>
+                </div>
+            {% endif %}
+    </div>
+    <!-- Paginacion -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+            {% if campañas.has_other_pages %}
+                <ul class="pagination">
+                    {% if campañas.has_previous %}
+                        <li class='page-item'>
+                           <a href="?page={{campañas.previous_page_number}}" class="page-link">&laquo;
+                           </a> 
+                        </li>
+                    {% else %}
+                        <li class= "page-item disabled">
+                           <a class="page-link">&laquo;
+                           </a> 
+                        </li>
+                    {% endif %}
+                    {% for i in campañas.paginator.page_range %}
+                        {% if campañas.number == i %}
+                            <li class='page-item active'>
+                                <a class="page-link">{{i}}</a> 
+                            </li>
+                        {% else %}
+                            <li class='page-item'>
+                                <a href="?page={{i}}" class="page-link">{{i}}</a>
+                            </li>
+                        {% endif%}
+                    {% endfor %}
+                    {% if campañas.has_next %}
+                        <li class="page-item">
+                            <a href="?page={{campañas.next_page_number}}" class="page-link">&raquo;</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link">&raquo;</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            {% endif %}
+            </div>
+        </div>
+    </div>
+  </section>
+  
+{% endblock %}
