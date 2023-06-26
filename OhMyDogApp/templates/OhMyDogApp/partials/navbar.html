@@ -17,6 +17,7 @@
         <li class="nav-item {% if request.path == '/' %}current_page_item{%endif %}">
           <a class="nav-link" href="{% url 'Home' %}">Inicio</a>
         </li>
+        
         <!-- Dropdown Publicaciones -->
         <li class="nav-item dropdown {% if request.path|slice:":14" == '/publicaciones'%}current_page_item{%endif %}">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -52,9 +53,9 @@
                     </a>
                     <ul class="dropdown-menu ">
                         <!-- Aca va link de este parecido a este "/publicaciones/cargar_perro_perdido/" -->
-                        <li><a class="dropdown-item" href="/publicaciones/publicar_perro_perdido/">Cargar Perro Perdido</a></li>
+                        <li><a class="dropdown-item" href="#">Cargar Perro Perdido</a></li>
                         <!-- Aca va link de este parecido a este "listar_perdidos" -->
-                        <li><a class="dropdown-item" href="/publicaciones/listar_perros_perdidos/">Publicaciones Perdidos</a></li>
+                        <li><a class="dropdown-item" href="#">Publicaciones Perdidos</a></li>
                         <!-- Aca va link de este parecido a este "listar_mis_perdidos" -->
                         <li><a class="dropdown-item" href="#">Mis Publicaciones Perdidos</a></li>
                     </ul>
@@ -125,10 +126,37 @@
                         <li><a class="dropdown-item" href="{% url 'Mapa' %}">Mapa de Servicios</a></li>
                     </ul>
                 </li>
+                <li class="nav-item dropdown {% if request.path == '/servicios/listar_guardias/' %}current_page_item{%endif %}">
+                  <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      Guardias
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{%url 'Cargar_guardias' %}">Cargar Guardias</a></li>
+                    <li><a class="dropdown-item" href="{%url 'Listar_guardias' %}">Ver Guardias</a></li>
+                  </ul>
+              </li>
+              <li class="nav-item dropdown {% if request.path == '/servicios/listar_campañas/' %}current_page_item{%endif %}">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Campañas
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="{%url 'Cargar_campaña' %}">Cargar Campaña</a></li>
+                  <li><a class="dropdown-item" href="{%url 'Listar_campañas' %}">Ver Campañas</a></li>
+                </ul>
+            </li>
             {% else %}
                 <li class="nav-item {% if request.path == '/servicios/mapa/' %}current_page_item{% endif %}">
                   <a class="nav-link" href="{% url 'Mapa' %}">Mapa de Servicios</a>
                 </li>
+                <li class="nav-item dropdown {% if request.path == '/servicios/listar_campañas/' %}current_page_item{%endif %}">
+                  <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      Campañas
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{%url 'Listar_campañas' %}">Ver Campañas</a></li>
+                    <li><a class="dropdown-item" href="#">Mis Donaciones</a></li>
+                  </ul>
+              </li>
                 <!-- Mascotas cliente -->
                 <li class="nav-item {% if request.path|slice:":7" == '/perros' %}current_page_item{%endif %}">
                     <a class="nav-link" href="{% url 'perros:Listar_mascotas_cliente' user.id %}">Ver Mascotas</a>
@@ -138,38 +166,38 @@
                     <a class="nav-link" href="{% url 'solicitar_turno' %}">Solicitar turno</a>
                 </li>    
             {% endif %}
-            <!-- COMUN REGISTRADOS -->
-            <!-- Cruza-->
-            <li class="nav-item dropdown {% if request.path|slice:":6" == '/cruza' %}current_page_item{%endif %}">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Cruza de Perros
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="{% url 'Registrar_mascota_cruza' %}">Registrar Mascota</a></li>
-                    <li><a class="dropdown-item" href="{% url 'Mis_mascotas_cruza' %}">Mis Mascotas</a></li>
-                </ul>
-            </li>
-            <!-- Perfil -->
-            <li class="nav-item {% if request.path == '/usuarios/ver_perfil/' %}current_page_item{%endif %}">
-                <a class="nav-link" href="{% url 'Ver_perfil' %}">Mi Perfil</a>
-            </li>    
-            <!-- Logout -->
-            <li class="nav-item {% if request.path == '/usuarios/logout/' %}current_page_item{%endif %}">
-                <a class="nav-link" href="{% url 'Logout' %}"> Cerrar Sesión
-                  <!-- <i class="fa-solid fa-right-to-bracket"></i> -->
-                </a>
-            </li>
-        {% else %}
-          <li class="nav-item {% if request.path == '/servicios/mapa/' %}current_page_item{% endif %}">
-            <a class="nav-link" href="{% url 'Mapa' %}">Mapa de Servicios</a>
-          </li>
-          <!-- Login -->
-          <li class="nav-item {% if request.path == '/usuarios/login/' %}current_page_item{% endif %}">
-            <a class="btn btn-primary" href="{% url 'Login' %}">
-              <i class="fa-solid fa-right-to-bracket"></i>
+        <!-- Perfil -->
+        <li class="nav-item {% if request.path == '/usuarios/ver_perfil/' %}current_page_item{%endif %}">
+            <a class="nav-link" href="{% url 'Ver_perfil' %}">Mi Perfil</a>
+        </li>    
+        <!-- Logout -->
+        <li class="nav-item {% if request.path == '/usuarios/logout/' %}current_page_item{%endif %}">
+            <a class="nav-link" href="{% url 'Logout' %}"> Cerrar Sesión
+              <!-- <i class="fa-solid fa-right-to-bracket"></i> -->
             </a>
-          </li>
-        {% endif %} 
+        </li>
       </ul>
+    {% else %}
+    <li class="nav-item {% if request.path == '/servicios/mapa/' %}current_page_item{% endif %}">
+      <a class="nav-link" href="{% url 'Listar_guardias' %}">Guardias</a>
+    </li>
+      <li class="nav-item {% if request.path == '/servicios/mapa/' %}current_page_item{% endif %}">
+        <a class="nav-link" href="{% url 'Mapa' %}">Mapa de Servicios</a>
+      </li>
+      <li class="nav-item dropdown {% if request.path == '/servicios/listar_campañas/' %}current_page_item{%endif %}">
+        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Campañas
+        </a>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="{%url 'Listar_campañas' %}">Ver Campañas</a></li>
+        </ul>
+    </li>
+      <!-- Login -->
+      <li class="nav-item {% if request.path == '/usuarios/login/' %}current_page_item{% endif %}">
+        <a class="btn btn-primary" href="{% url 'Login' %}">
+          <i class="fa-solid fa-right-to-bracket"></i>
+        </a>
+      </li>
     </div>
+    {% endif %} 
 </nav>
