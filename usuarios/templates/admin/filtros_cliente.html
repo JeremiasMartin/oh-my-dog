@@ -7,10 +7,25 @@
         </select>
         <input type="text" class="search-input" id='consulta-input' name="consulta" placeholder="Buscar...">
         <button type="submit" id="btn-buscar" class="search-button">Buscar</button>
+        <a href="{{request.path}}" class="search-button" style="text-decoration: none;color: white;">Mostrar todos</a>
     </form>
 </div>
 
 <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var urlParams = new URLSearchParams(window.location.search);
+    var filtroSelect = document.getElementById('filtro-clientes');
+    var consultaInput = document.getElementById('consulta-input');
+    var btnBuscar = document.getElementById('btn-buscar');
+
+    // Setea con los parametros previos
+    filtroSelect.value = urlParams.get('filtro') || 'cliente_nombre_apellido';
+    consultaInput.value = urlParams.get('consulta') || '';
+
+    validarBusqueda();
+  });
+
+  
   var filtroSelect = document.getElementById('filtro-clientes');
   var consultaInput = document.getElementById('consulta-input');
   var btnBuscar = document.getElementById('btn-buscar');
@@ -31,6 +46,10 @@
 
   function validarBusqueda() {
     var isFormValid = true;
+
+    if(consultaInput.value === ''){
+      isFormValid = false;
+    }
 
     if (filtroSelect.value === 'cliente_dni') {
       var dni = consultaInput.value;

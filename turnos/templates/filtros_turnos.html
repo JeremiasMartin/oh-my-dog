@@ -15,6 +15,7 @@
     <input type="text" class="search-input" id='dni-input' name="dni-consulta" placeholder="DNI">
     <input type="text" class="search-input" id='nombre_apellido-input' name="nombre_apellido-consulta" placeholder="Nombre Apellido">
     <button type="submit" id="btn-buscar" class="search-button">Buscar</button>
+    <a href="{{request.path}}" class="search-button" style="text-decoration: none;color: white;">Mostrar todos</a>
   </form>
 </div>
 
@@ -23,6 +24,20 @@
   var consultaAtencion = document.getElementById('atencion-input');
   var consultaDNI = document.getElementById('dni-input');
   var consultaNomApe = document.getElementById('nombre_apellido-input');
+  
+  document.addEventListener('DOMContentLoaded', function() {
+    var turnoBuscarForm = document.getElementById('turno-buscar');
+    var currentUrl = new URL(window.location.href);
+    turnoBuscarForm.action = currentUrl.pathname + currentUrl.search;
+
+    // Setea con los parametros previos
+    consultaFecha.value = currentUrl.searchParams.get('fecha-consulta') || '';
+    consultaAtencion.value = currentUrl.searchParams.get('atencion-consulta') || '';
+    consultaDNI.value = currentUrl.searchParams.get('dni-consulta') || '';
+    consultaNomApe.value = currentUrl.searchParams.get('nombre_apellido-consulta') || '';
+
+    validarBusqueda();
+  });
 
   var btnBuscar = document.getElementById('btn-buscar');
   var errorText = '';
@@ -67,6 +82,10 @@
     var numeros = /^[0-9]+$/;
     var regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
     
+    if(consultaDNI.value === '' && consultaNomApe.value === '' && consultaAtencion.value  == '' && consultaFecha.value === ''){
+      isFormValid = false;
+    }
+
     if(consultaDNI.value != ''){
       var dni = consultaDNI.value;
       if (dni.length < 7) {

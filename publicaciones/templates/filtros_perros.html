@@ -18,6 +18,7 @@
 
     <input type="text" class="search-input" id='raza-input' name="raza-consulta" placeholder="Raza">
     <button type="submit" id="btn-buscar" class="search-button">Buscar</button>
+    <a href="{{request.path}}" class="search-button" style="text-decoration: none;color: white;">Mostrar todos</a>
   </form>
 </div>
 
@@ -28,6 +29,17 @@
   var btnBuscar = document.getElementById('btn-buscar');
   var errorText = '';
 
+  document.addEventListener('DOMContentLoaded', function() {
+    var perroBuscarForm = document.getElementById('perro-buscar');
+    var currentUrl = new URL(window.location.href);
+    perroBuscarForm.action = currentUrl.pathname + currentUrl.search;
+    // Setea con los parametros previos
+    consultaRaza.value = currentUrl.searchParams.get('raza-consulta') || '';
+    consultaSexo.value = currentUrl.searchParams.get('sexo-consulta') || '';
+    consultaTamanio.value = currentUrl.searchParams.get('tamanio-consulta') || '';
+
+    validarBusqueda();
+  });
   consultaRaza.addEventListener('input', validarConsulta);
   consultaSexo.addEventListener('input', validarConsulta);
   consultaTamanio.addEventListener('input', validarConsulta);
@@ -65,7 +77,10 @@
   function validarBusqueda() {
     var isFormValid = true;
     var regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
-     
+    if(consultaRaza.value === '' && consultaSexo.value === '' && consultaTamanio.value  == ''){
+      isFormValid = false;
+    }
+
     if(consultaRaza.value != ''){
       if (!regex.test(consultaRaza.value)) {
         errorText = 'Por favor, ingrese solo letras (incluyendo acentos) en el campo de consulta.';

@@ -513,6 +513,11 @@ th, td {
   border-radius: 4px;
   cursor: pointer;
   font-size: 16px;
+  transition: background-color 0.2s ease;
+}
+
+.search-button:hover {
+  background-color: #0056b3;
 }
 
 .search-button:disabled {
