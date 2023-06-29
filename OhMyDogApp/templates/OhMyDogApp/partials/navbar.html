@@ -52,10 +52,8 @@
                       Perdidos
                     </a>
                     <ul class="dropdown-menu ">
-                        <!-- Aca va link de este parecido a este "/publicaciones/cargar_perro_perdido/" -->
-                        <li><a class="dropdown-item" href="#">Cargar Perro Perdido</a></li>
-                        <!-- Aca va link de este parecido a este "listar_perdidos" -->
-                        <li><a class="dropdown-item" href="#">Publicaciones Perdidos</a></li>
+                        <li><a class="dropdown-item" href="/publicaciones/publicar_perro_perdido/">Cargar Perro Perdido</a></li>
+                        <li><a class="dropdown-item" href="/publicaciones/listar_perros_perdidos/">Publicaciones Perdidos</a></li>
                         <!-- Aca va link de este parecido a este "listar_mis_perdidos" -->
                         <li><a class="dropdown-item" href="#">Mis Publicaciones Perdidos</a></li>
                     </ul>
@@ -166,6 +164,17 @@
                     <a class="nav-link" href="{% url 'solicitar_turno' %}">Solicitar turno</a>
                 </li>    
             {% endif %}
+        <!-- COMUN REGISTRADOS -->
+        <!-- Cruza-->
+        <li class="nav-item dropdown {% if request.path|slice:":6" == '/cruza' %}current_page_item{%endif %}">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Cruza de Perros
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{% url 'Registrar_mascota_cruza' %}">Registrar Mascota</a></li>
+            <li><a class="dropdown-item" href="{% url 'Mis_mascotas_cruza' %}">Mis Mascotas</a></li>
+          </ul>
+        </li>
         <!-- Perfil -->
         <li class="nav-item {% if request.path == '/usuarios/ver_perfil/' %}current_page_item{%endif %}">
             <a class="nav-link" href="{% url 'Ver_perfil' %}">Mi Perfil</a>
