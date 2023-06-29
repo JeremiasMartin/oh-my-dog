@@ -11,10 +11,29 @@ from django.template.loader import get_template
 import datetime
 import mercadopago
 from mercadopago.config import RequestOptions
+from unidecode import unidecode
+
 
 def listar_personal(request):
     personal = Personal.objects.all()
-    return render(request, 'listar_personal.html', {"personal":paginar(request,personal,6)})
+    filtros = {
+        'tipo_consulta': request.GET.get('tipo-consulta'),
+        'nombre_consulta': request.GET.get('nombre-consulta')
+    }
+    if any(value for value in filtros.values()):
+        personal = buscar(request, filtros, personal)
+
+    tipo_opciones = (
+        ('paseador', 'Paseador'),
+        ('cuidador', 'Cuidador'),
+        ('guarderia', 'Guardería'),
+    )
+    contexto = {
+        "personal":paginar(request,personal,6),
+        "opciones_tipo": tipo_opciones,
+    }
+    return render(request, 'listar_personal.html', contexto)
+
 
 def cambiar_estado(request, personal_id):
     personal = Personal.objects.get(id=personal_id)
@@ -184,4 +203,21 @@ def donar(request):
     print(payment_url)
     return redirect(payment_url)
 
+def buscar(request, filtros, personal):
+    print("FILTRO",filtros)
 
+    personal_filtrados = personal
+
+    if filtros['tipo_consulta']:
+        consulta = filtros['tipo_consulta']
+        personal_filtrados = personal_filtrados.filter(tipo=consulta)
+    
+    if filtros['nombre_consulta']:
+        consulta = filtros['nombre_consulta']
+        personal_filtrados = personal_filtrados.filter(nombre__icontains=unidecode(consulta))
+        
+    if  not personal_filtrados:
+        messages.add_message(request, messages.ERROR, 'No hay turnos para la búsqueda realizada')
+        personal_filtrados = personal
+
+    return personal_filtrados

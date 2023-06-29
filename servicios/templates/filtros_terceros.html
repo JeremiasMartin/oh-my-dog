@@ -1,0 +1,79 @@
+{% load static %}
+<div class="filtro">
+  <form method="GET" action="" id='tercero-buscar'>
+    
+    <select class="search-input" id="tipo-select" name="tipo-consulta" onchange="toggleOption(this, 'Tipo')">
+      <option value="" selected hidden>Tipo De Servicio</option>
+      {% for value, display_text in opciones_tipo %}
+        <option value="{{ value }}">{{ display_text }}</option>
+      {% endfor %}
+    </select>
+
+    <input type="text" class="search-input" id='nombre-input' name="nombre-consulta" placeholder="Nombre Apellido">
+    <button type="submit" id="btn-buscar" class="search-button">Buscar</button>
+    <a href="{{request.path}}" class="search-button" style="text-decoration: none;color: white;">Mostrar todos</a>
+  </form>
+</div>
+
+<script>
+  var consultaTipo = document.getElementById('tipo-select');
+  var consultaNombre = document.getElementById('nombre-input');
+  var btnBuscar = document.getElementById('btn-buscar');
+  var errorText = '';
+
+  document.addEventListener('DOMContentLoaded', function() {
+    var tercerosBuscarForm = document.getElementById('tercero-buscar');
+    var currentUrl = new URL(window.location.href);
+    tercerosBuscarForm.action = currentUrl.pathname + currentUrl.search;
+    
+    // Setea con los parametros previos
+    consultaTipo.value = currentUrl.searchParams.get('tipo-consulta') || '';
+    consultaNombre.value = currentUrl.searchParams.get('nombre-consulta') || '';
+
+    validarBusqueda();
+  });
+
+  consultaTipo.addEventListener('input', validarConsulta);
+  consultaNombre.addEventListener('input', validarConsulta);
+
+  consultaTipo.addEventListener('mouseenter', function() {
+    if (btnBuscar.disabled) {
+      consultaTipo.title = errorText;
+    }
+  });
+
+  consultaTipo.addEventListener('mouseleave', function() {
+    consultaTipo.title = '';
+  });
+
+  consultaNombre.addEventListener('mouseenter', function() {
+    if (btnBuscar.disabled) {
+      consultaNombre.title = errorText;
+    }
+  });
+
+  consultaNombre.addEventListener('mouseleave', function() {
+    consultaNombre.title = '';
+  });
+
+  function validarBusqueda() {
+    var isFormValid = true;
+    var regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
+    if(consultaNombre.value === '' && consultaTipo.value === ''){
+      isFormValid = false;
+    }
+
+    if(consultaNombre.value != ''){
+      if (!regex.test(consultaNombre.value)) {
+        errorText = 'Por favor, ingrese solo letras (incluyendo acentos) en el campo de consulta.';
+        isFormValid = false;
+      }
+    }
+
+    btnBuscar.disabled = !isFormValid;
+  }
+
+  function validarConsulta() {
+    validarBusqueda();
+  }
+</script>
