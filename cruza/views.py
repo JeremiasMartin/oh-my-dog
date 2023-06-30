@@ -56,7 +56,7 @@ def editar_perfil_mascota_cruza(request, id_publicacion):
 
     if request.method == 'POST':
         form = CruzaForm(request.POST, request.FILES)
-        if form.is_valid():
+        if form.is_valid() or 'foto' not in request.FILES:
             perro_publicacion.nombre = form.cleaned_data.get('nombre')
             perro_publicacion.tamanio = form.cleaned_data.get('tamanio')
             perro_publicacion.sexo = form.cleaned_data.get('sexo')
@@ -64,7 +64,7 @@ def editar_perfil_mascota_cruza(request, id_publicacion):
             perro_publicacion.edad = form.cleaned_data.get('edad')
             perro_publicacion.raza = form.cleaned_data.get('raza')
             foto = form.cleaned_data.get('foto')
-            if foto:  # Check if a new photo is uploaded
+            if foto:
                 perro_publicacion.foto = foto
             perro_publicacion.save()
             if (perro_publicacion.sexo == 'H'):
