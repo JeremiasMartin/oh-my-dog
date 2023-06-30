@@ -47,11 +47,17 @@
             alert('Por favor, completa el campo "Periodo de Celo" para perros hembra.');
             return false;
         }
+            // Validación de número entero mayor a 0
+        if (edad< 1) {
+            alert('Por favor, ingrese un número entero mayor a 0 en el campo "Edad".');
+            return false;
+        }
+        
         return true; // todo ok
     }
     
     // Validar campos en tiempo real
-    var formInputs = document.querySelectorAll('input[type="text"], select');
+    var formInputs = document.querySelectorAll('input[type="text"], input[type="number"], select');
     var btnRegistrar = document.getElementById('btn-registrar');
     var periodoCeloField = document.getElementById('id_periodo_celo');
     var periodoCeloLabel = document.querySelector('label[for="id_periodo_celo"]');
@@ -98,6 +104,10 @@
             sexo.trim() !== '' &&
             fotoFiles.length === 1;
 
+        if (edad < 1) {
+            isFormValid = false;
+        }
+
         if (sexo === 'H') {
             periodoCeloField.style.display = 'block';
             periodoCeloLabel.innerHTML = 'Periodo de Celo<span class="required">*</span>';
@@ -115,6 +125,13 @@
     
     // Validar campos al cargar la página
     validarCampos();
+    var notaSpan = document.createElement('span');
+    notaSpan.innerText = 'Por favor ingrese la edad en meses';
+    
+    var inputField = document.getElementById('id_edad');
+    notaSpan.style.fontStyle = 'italic';
+    // Inserta la nota despues del input
+    inputField.parentNode.insertBefore(notaSpan, inputField.nextSibling);
 </script>
 
 {% endblock %}

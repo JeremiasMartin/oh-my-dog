@@ -39,6 +39,8 @@
                                     <img class='foto-cruza' src="{{ cruza.id_perro_publicacion.foto.url }}" alt="foto cruza"> 
                                 </div> 
                                 <hr>
+                                <p class="card-text" id="edad"><i class="fa-solid fa-calendar-days" style="color: #e4a64e;"></i> Edad: {{ cruza.id_perro_publicacion.edad }}</p>
+                                <hr>
                                 <p class="card-text"><i class="fa-solid fa-dog" style="color: #e4a64e;"></i> Raza: {{ cruza.id_perro_publicacion.raza }}</p>
                                 <hr>
                                 <p class="card-text"><i class="fa-solid fa-ruler-vertical"style="color: #e4a64e;"></i> Tamaño: {{ cruza.id_perro_publicacion.tamanio }}</p>
@@ -85,7 +87,7 @@
                                 <li class='page-item'>
                                     <a href="?page={{i}}" class="page-link">{{i}}</a>
                                 </li>
-                            {% endif%}
+                            {% endif %}
                         {% endfor %}
                         {% if cruzas.has_next %}
                             <li class="page-item">
@@ -107,5 +109,42 @@
         <p>Todavía no cuenta con perros en el Servicio de Cruza.</p>
     </div>
 {% endif %}
+
+<script>
+    function calcular_edad(edad) {
+        var edadMeses = parseInt(edad);
+        if (edadMeses === 1) {
+            console.log(edadMeses + " mes")
+            return edadMeses + " mes";
+        } else if (edadMeses > 11) {
+            var edadAños = Math.floor(edadMeses / 12);
+            if (edadAños === 1) {
+                console.log(edadAños + " año")
+                return edadAños + " año";
+            } else {
+                console.log(edadAños + " años")
+                return edadAños + " años";
+            }
+        } else {
+            console.log(edadMeses + " meses")
+            return edadMeses + " meses";
+        }
+        console.log("FUERA")
+    }
+    window.onload = function() {
+        var edadElements = document.querySelectorAll('#edad');
+        for (var i = 0; i < edadElements.length; i++) {
+            var edadElement = edadElements[i];
+            var edadValue = edadElement.innerText.trim().replace('Edad:', '');
+            var calculatedEdad = calcular_edad(edadValue);
+            var iconElement = document.createElement('i');
+            iconElement.className = 'fa-solid fa-calendar-days';
+            iconElement.style.color = '#e4a64e';
+            edadElement.innerHTML = '';
+            edadElement.appendChild(iconElement);
+            edadElement.appendChild(document.createTextNode(' Edad: ' + calculatedEdad));
+        }
+    };
+</script>    
 
 {% endblock %}
