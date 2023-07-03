@@ -1,0 +1,24 @@
+{% extends "OhMyDogApp/base.html" %}
+
+{% block content %}
+<h2>Publicaciones de mis perros encontrados</h2>
+{% if publicaciones %}
+  <ul>
+  {% for publicacion in publicaciones %}
+    <li>
+      <strong>Nombre:</strong> {{ publicacion.id_perro_publicacion.nombre }}<br>
+      <strong>Tamaño:</strong> {{ publicacion.id_perro_publicacion.get_tamanio_display }}<br>
+      <strong>Sexo:</strong> {{ publicacion.id_perro_publicacion.get_sexo_display }}<br>
+      <strong>Color:</strong> {{ publicacion.id_perro_publicacion.color }}<br>
+      <strong>Edad:</strong> {{ publicacion.id_perro_publicacion.edad }}<br>
+      <strong>Raza:</strong> {{ publicacion.id_perro_publicacion.raza }}<br>
+      <strong>Descripción:</strong> {{ publicacion.descripcion }}<br>
+      <strong>Foto:</strong> <img src="{{ publicacion.id_perro_publicacion.foto.url }}" alt="Foto del perro"><br>
+    </li>
+  {% endfor %}
+</ul>
+{% else %}
+    <p>No hay resultados</p>
+  {% endif %}
+{% endblock %}
+

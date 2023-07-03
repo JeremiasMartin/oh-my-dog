@@ -1,0 +1,17 @@
+{% extends 'OhMyDogApp/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="card mb-4">
+    <div class="card-body">
+      <h5 class="card-title">Publique aquí el perro que encontró para ayudarlo a encontrar a su familia</h5>
+    </div>
+  </div>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form|crispy }} 
+    <button type="submit" class="btn btn-primary">Guardar</button>
+  </form>
+
+
+{% endblock %}

@@ -95,4 +95,32 @@ class PublicarPerroPerdidoForm(forms.Form):
             tipo_publicacion=self.cleaned_data['tipo_publicacion']
         )
 
+class CargarPerroEncontradoForm(forms.Form):
+    nombre = forms.CharField(max_length=100, required=False)
+    tamanio = forms.ChoiceField(choices=Perro_publicacion.opciones_tamanio)
+    sexo = forms.ChoiceField(choices=Perro_publicacion.SEXO_CHOICES)
+    color = forms.CharField(max_length=100)
+    edad_aproximada = forms.CharField(max_length=100)
+    raza = forms.CharField(max_length=100)
+    descripcion = forms.CharField(widget=forms.Textarea(attrs={'rows': 4, 'cols': 40}))
+    foto = forms.ImageField()
 
+    def save(self, user):
+        perro_publicacion = Perro_publicacion.objects.create(
+            nombre=self.cleaned_data['nombre'],
+            tamanio=self.cleaned_data['tamanio'],
+            sexo=self.cleaned_data['sexo'],
+            color=self.cleaned_data['color'],
+            edad=self.cleaned_data['edad_aproximada'],
+            raza=self.cleaned_data['raza'],
+            foto=self.cleaned_data['foto'],
+            activo=True
+        )
+
+        publicacion = Publicacion.objects.create(
+            descripcion=self.cleaned_data['descripcion'],
+            id_usuario=user,
+            id_perro_publicacion=perro_publicacion,
+            activo=True,
+            tipo_publicacion='Encontrado'
+        )

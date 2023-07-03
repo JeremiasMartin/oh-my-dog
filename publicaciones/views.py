@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .forms import AdopcionForm, PostulacionForm, EditarAdopcionForm, PublicarPerroPerdidoForm
+from .forms import AdopcionForm, PostulacionForm, EditarAdopcionForm, PublicarPerroPerdidoForm, CargarPerroEncontradoForm
 from .models import *
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -432,4 +432,41 @@ def publicar_perro_perdido(request):
 
 def listar_perros_perdidos(request):
     perros_perdidos = Publicacion.objects.filter(id_perro_publicacion__activo=True, tipo_publicacion='Perdidos')
-    return render(request, 'listar_perros_perdidos.html', {'perros_perdidos': perros_perdidos})
+    return render(request, 'listar_perros.html', {'perros': paginar(request, perros_perdidos, 3)})
+
+
+
+
+
+def cargar_perro_encontrado(request):
+    if request.method == 'POST':
+        form = CargarPerroEncontradoForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save(request.user)
+            return redirect('/')
+    else:
+        form = CargarPerroEncontradoForm()
+
+    return render(request, 'cargar_perro_encontrado.html', {'form': form})
+
+
+
+def listar_perros_encontrados(request):
+    perros_encontrados = Publicacion.objects.filter(id_perro_publicacion__activo=True, tipo_publicacion='Encontrado')
+    return render(request, 'listar_perros.html', {'perros': paginar(request, perros_encontrados, 3)})
+
+
+
+
+@login_required
+def listar_mis_perros_encontrados(request):
+    usuario = request.user  # Obtener el usuario autenticado
+
+    # Filtrar las publicaciones por el usuario actual
+    publicaciones = Publicacion.objects.filter(id_usuario_id=usuario, tipo_publicacion='Encontrado')
+
+    context = {
+        'publicaciones': publicaciones
+    }
+
+    return render(request, 'listar_mis_perros_encontrados.html', context)

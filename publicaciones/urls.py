@@ -15,4 +15,7 @@ urlpatterns = [
     path('editar_adopcion/<int:adopcion_id>/', views.editar_adopcion, name='editar_adopcion'),
     path('publicar_perro_perdido/', views.publicar_perro_perdido, name='publicar_perro_perdido'),
     path('listar_perros_perdidos/', views.listar_perros_perdidos, name='listar_perros_perdidos'),
+    path('cargar_perro_encontrado/', views.cargar_perro_encontrado, name='cargar_perro_encontrado'),
+    path('listar_perros_encontrados/', views.listar_perros_encontrados, name='listar_perros_encontrados'),
+    path('listar_mis_perros_encontrados/', views.listar_mis_perros_encontrados, name='listar_mis_perros_encontrados'),
 ]
