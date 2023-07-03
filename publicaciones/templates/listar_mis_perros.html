@@ -1,0 +1,124 @@
+{% extends 'OhMyDogApp/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<section id="showcase-inner" class="py-4">
+  <div class="container">
+    <div class="row text-center">
+      <div class="col-md-12">
+        <h2 class="display-4">Mis Publicaciones </h2>
+      </div>
+    </div>
+  </div>
+</section>
+<section id="listado" class="py-4">
+  <div class="container">
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <div id="msg-{{ message.tags }}"class="alert alert-{{ message.tags }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    {% if publicaciones %}
+        {% include 'filtros_perros.html' %} 
+        <div class="card-deck">
+          {% for publicacion in publicaciones %}
+            <div class="col-md-4 mb-4">
+              <div class="card h-80">
+                <div class="card-body">
+                  {% if publicacion.id_perro_publicacion.nombre %}
+                  <div class="listing-heading text-center">
+                    <h5 class="card-title">{{ publicacion.id_perro_publicacion.nombre }}</h5>
+                  </div>
+                  <hr>
+                  {% endif %}
+                  <p class="card-text"><strong>Tamaño:</strong> {{ publicacion.id_perro_publicacion.tamanio }}</p>
+                  <hr>
+                  <p class="card-text"><strong>Sexo:</strong> {{ publicacion.id_perro_publicacion.get_sexo_display }}</p>
+                  <p class="card-text"><strong>Color:</strong> {{ publicacion.id_perro_publicacion.color }}</p>
+                  <hr>
+                  <p class="card-text"><strong>Edad:</strong> {{ publicacion.id_perro_publicacion.edad }}</p>
+                  <hr>
+                  <p class="card-text"><strong>Raza:</strong> {{ publicacion.id_perro_publicacion.raza }}</p>
+                  <hr>
+                  <p class="card-text"><strong>Descripcion:</strong> {{publicacion.descripcion }}</p>
+                  <hr>
+                  <div class="foto-cruza">
+                    <img class='foto-cruza' src="{{ publicacion.id_perro_publicacion.foto.url }}" alt="foto publicacion">
+                  </div> 
+
+                  <!-- Ver postulantes -->
+                {% if adopcion.adoptante and adopcion.id_publicacion.id_usuario_id != request.user.id %}
+                <div class="alert alert-success">¡Adoptado!</div>
+                {% endif %}
+              
+              <!-- Editar publicación -->
+              {% if adopcion.adoptante and adopcion.id_publicacion.id_usuario_id == request.user.id %}
+              <div class="alert alert-success">Esta publicación ya tiene adoptante y no se puede editar.</div>
+                <a class="btn btn-primary btn-block" href="{% url 'listar_postulantes_adopcion' adopcion.id %}">Ver
+              {% elif adopcion.id_publicacion.id_usuario_id == request.user.id %}
+                <a class="btn btn-primary btn-block" href="{% url 'listar_postulantes_adopcion' adopcion.id %}">Ver
+                <a href="{% url 'editar_adopcion' adopcion.id %}" class="btn btn-primary btn-block">Editar Publicac
+              {% endif %}
+
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+    {% else %}
+      <div id="sin-resultados">  
+        <!-- Mostrar el mensaje de "No hay resultados" -->
+        <p>No has realizado publicaciones .</p>
+      </div>
+    {% endif %}
+  </div>
+<!-- Paginacion -->
+  <div class="container">
+      <div class="row">
+          <div class="col-md-12">
+              {% if publicacion.has_other_pages %}
+                  <ul class="pagination">
+                      {% if publicacion.has_previous %}
+                          <li class='page-item'>
+                            <a href="?page={{publicacion.previous_page_number}}" class="page-link">&laquo;
+                            </a> 
+                          </li>
+                      {% else %}
+                          <li class= "page-item disabled">
+                            <a class="page-link">&laquo;
+                            </a> 
+                          </li>
+                      {% endif %}
+                      {% for i in publicacion.paginator.page_range %}
+                          {% if adopciones.number == i %}
+                              <li class='page-item active'>
+                                  <a class="page-link">{{i}}</a> 
+                              </li>
+                          {% else %}
+                              <li class='page-item'>
+                                  <a href="?page={{i}}" class="page-link">{{i}}</a>
+                              </li>
+                          {% endif%}
+                      {% endfor %}
+                      {% if adopciones.has_next %}
+                          <li class="page-item">
+                              <a href="?page={{adopciones.next_page_number}}" class="page-link">&raquo;</a>
+                          </li>
+                      {% else %}
+                          <li class="page-item disabled">
+                              <a class="page-link">&raquo;</a>
+                          </li>
+                      {% endif %}
+                  </ul>
+              {% endif %}
+          </div>
+      </div>
+  </div>
+</section>
+{% endblock %}
+

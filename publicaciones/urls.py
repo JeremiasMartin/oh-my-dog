@@ -18,4 +18,7 @@ urlpatterns = [
     path('cargar_perro_encontrado/', views.cargar_perro_encontrado, name='cargar_perro_encontrado'),
     path('listar_perros_encontrados/', views.listar_perros_encontrados, name='listar_perros_encontrados'),
     path('listar_mis_perros_encontrados/', views.listar_mis_perros_encontrados, name='listar_mis_perros_encontrados'),
+    path('listar_mis_perros_perdidos/', views.listar_mis_perros_perdidos, name='listar_mis_perros_perdidos'),
+   
+
 ]
