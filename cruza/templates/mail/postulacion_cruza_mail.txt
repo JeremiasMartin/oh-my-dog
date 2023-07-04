@@ -1,0 +1,25 @@
+¡Coincidencia encontrada para {{mascota}}!
+
+Hola {{owner}},
+
+¡Tenemos buenas noticias! Hemos encontrado una coincidencia para {{mascota}} y creemos que podría ser una excelente oportunidad para la cruza.
+
+Aquí tienes los detalles de la mascota:
+
+Nombre: {{mascota_interesada.nombre}}
+Raza: {{mascota_interesada.raza}}
+Tamaño: {{mascota_interesada.tamanio}}
+Edad: {{edad}}
+Sexo: {{mascota_interesada.get_sexo_display}}
+
+Y aquí tienes los detalles del dueño del perro:
+
+Nombre: {{interesado.nombre}}
+Apellido: {{interesado.apellido}}
+Email: {{interesado.email}}
+Telefono: {{interesado.telefono}}
+
+Ahora es el momento de ponerse en contacto entre ustedes para discutir los siguientes pasos y acordar los detalles de la cruza.
+
+Saludos,
+Veterinaria Oh My Dog! 
