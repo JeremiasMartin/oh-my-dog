@@ -99,8 +99,8 @@ def editar_perfil_mascota_cruza(request, id_publicacion):
         })
     return render(request, 'editar_mascota_cruza.html', {'form': form})
 
-def cambiar_estado_publicacion(id_publicacion):
-    publicacion = get_object_or_404(Publicacion,id=id_publicacion)
+def cambiar_estado_publicacion(request, id_publicacion):
+    publicacion = Publicacion.objects.get(id=id_publicacion)
     if(publicacion.activo):
         publicacion.activo = False
     else:
@@ -188,12 +188,8 @@ def ordenar_raza_edad(publicaciones, raza, edad):
     return list(misma_raza) + list(diferente_raza)
 
 def ordenar_edad(publicaciones, edad):
-    print("ANTES DEL ANOTATE")
-    ordenadas = sorted(publicaciones, key=lambda p: distancia_edad(p.id, edad))
-    print(ordenadas)
-    print("DESPUES DEL ANOTATE")
-    return ordenadas
-
+    return sorted(publicaciones, key=lambda p: distancia_edad(p.id, edad))
+     
 def agregar_tipo_a_lista(publicaciones,tipo):
     return [{'publicacion': publicacion, 'tipo': tipo} for publicacion in publicaciones]
 
