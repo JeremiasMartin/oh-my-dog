@@ -94,12 +94,18 @@
             alert('Por favor, completa el campo "Periodo de Celo" para perros hembra.');
             return false;
         }
+        
+        // Validación de número entero mayor a 0
+        if (edad< 1) {
+            alert('Por favor, ingrese un número entero mayor a 0 en el campo "Edad".');
+            return false;
+        }
 
         return true; // todo ok
     }
     
     // Validar campos en tiempo real
-    var formInputs = document.querySelectorAll('input[type="text"], select');
+    var formInputs = document.querySelectorAll('input[type="text"], input[type="number"], select');
     var btnConfirmar = document.getElementById('btn-confirmar');
     var periodoCeloField = document.getElementById('id_periodo_celo');
     var periodoCeloLabel = document.getElementById('celo_label');
@@ -140,6 +146,10 @@
             color.trim() !== '' &&
             regex.test(color) &&
             sexo.trim() !== '';
+        
+        if (edad < 1) {
+            isFormValid = false;
+        }
 
         var hrElement = document.querySelector('#celo_label ~ hr');
         if (sexo === 'H') {
