@@ -54,7 +54,12 @@
                                 <p class="card-text"><i class="fa-solid fa-palette" style="color: #e4a64e;"></i> Color: {{ cruza.id_perro_publicacion.color }}</p>
                                 <hr>
                                 <a href="{% url 'Editar_mascota_cruza' cruza.id_perro_publicacion_id %}" class="btn btn-primary btn-block">Editar Información</a>
-                                <a href="#" class="btn btn-primary btn-block">Ver Recomendados</a>
+                                {% if cruza.activo %}
+                                <a href="{% url 'Recomendados' cruza.id %}" class="btn btn-primary btn-block">Ver Recomendados</a>
+                                <a href="{% url 'Cambiar_estado_publicacion' cruza.id %}" class="btn btn-primary btn-block">Dar de Baja</a>
+                                {% else %}
+                                <a href="{% url 'Cambiar_estado_publicacion' cruza.id %}" class="btn btn-primary btn-block">Dar de Alta</a>
+                                {% endif%}
                             </div>
                         </div>
                     </div>
