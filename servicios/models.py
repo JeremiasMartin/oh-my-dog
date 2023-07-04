@@ -35,10 +35,25 @@ class Guardia(models.Model):
 class Campaña(models.Model):
     nombre = models.CharField(max_length=100, blank=False, null=False, default='')
     motivo = models.CharField(max_length=300, blank=False, null=False, default='')
+    objetivo = models.IntegerField(blank=False, null=False)
+    recaudado = models.IntegerField(blank=False, null=False , default=0)
     fechaInicio = models.DateField(blank=False, null=False)
     fechaFin = models.DateField(blank=False, null=False)
 
     class Meta:
         verbose_name = 'campañas'
         db_table = 'servicios_campañas'
+
+
+class Donacion(models.Model):
+    nombre = models.CharField(max_length=100, blank=True, null=True, default='')
+    apellido = models.CharField(max_length=100, blank=True, null=True, default='')
+    email = models.EmailField('Mail', max_length=254, blank=True, null=False) 
+    monto = models.IntegerField(blank=False, null=False)
+    fecha = models.DateField(blank=False, null=False)
+    campaña = models.ForeignKey(Campaña, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = 'donaciones'
+        db_table = 'servicios_donaciones'
 

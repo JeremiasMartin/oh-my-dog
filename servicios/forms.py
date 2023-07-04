@@ -4,6 +4,7 @@ from leaflet.forms.widgets import LeafletWidget
 from .models import Personal
 from .models import Guardia
 from .models import Campaña
+from .models import Donacion
 
 class PersonalForm(forms.ModelForm):
     ubicacion = gis_forms.PointField(widget=LeafletWidget())
@@ -74,10 +75,28 @@ class CampañaForm(forms.ModelForm):
     
     class Meta:
         model = Campaña
-        fields = ('nombre', 'motivo', 'fechaInicio', 'fechaFin')
+        fields = ('nombre', 'motivo', 'objetivo', 'fechaInicio', 'fechaFin')
     
     def save(self, commit=True):
         campaña = super().save(commit=False)
         if commit:
             campaña.save()
         return campaña
+    
+class DonacionForm(forms.ModelForm):
+        
+        class Meta:
+            model = Donacion
+            fields = ('email', 'monto')
+
+        def __init__(self, *args, **kwargs):
+            user = kwargs.pop('user', None)
+            super().__init__(*args, **kwargs)
+            if user and user.is_authenticated:
+                del self.fields['email']    
+        
+        def save(self, commit=True):
+            donacion = super().save(commit=False)
+            if commit:
+                donacion.save()
+            return donacion
