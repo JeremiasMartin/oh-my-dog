@@ -259,6 +259,8 @@ def registrar_atencion(request, id_mascota):
                                 )
                             
             if not tiene_error:
+                if perro.cliente.id.descuento: # Si el cliente posee descuento
+                    perro.cliente.id.descuento = False
                 atencion.save()
                 messages.success(request, 'Atención registrada exitosamente')
                 return redirect(f'/perros/registrar-atencion/{perro.id}/')

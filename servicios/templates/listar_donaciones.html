@@ -7,7 +7,7 @@
     <div class="container">
       <div class="row text-center">
         <div class="col-md-12">
-          <h2 class="display-4">Listado de Clientes</h2>
+          <h2 class="display-4">Mis donaciones</h2>
         </div>
       </div>
     </div>
@@ -15,40 +15,22 @@
 <!-- Listado -->
 <section id="listado" class="py-4">
     <div class="container">
-        {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-            <div id="msg-{{ message.tags }}"class="alert alert-{{ message.tags }}">
-                {{ message }}
-            </div>
-            {% endfor %}
-        </ul>
-        {% endif %}
-        
-        {% if clientes %}
-            {% include 'admin/filtros_cliente.html' %} 
+        {% if donaciones %}
             <div class="card-deck">
-                {% for cliente in clientes %}
+                {% for donacion in donaciones %}
                     <div class="col-md-4 mb-4">
                         <div class="card h-100">
                             <div class="card-body">
                                 <div class="listing-heading text-center">
-                                    <h5 class="card-title">{{ cliente }}</h5>
-                                </div>
+                                    <h5 class="card-title">Campaña "{{ donacion.campaña.nombre }}"</h5>
+                                </div><br>
+                                <p style="font-size: 14px; text-align: center;">{{donacion.campaña.motivo}}</p>
                                 <hr>
-                                <p class="card-text text-wrap"><i class="fa-solid fa-envelope" style="color: #e4a64e;"></i> Email: {{ cliente.user.email }}</p>
+                                <p class="card-text"><i class="fa-solid fa-id-card" style="color: #e4a64e;"></i> Fecha de donación: {{ donacion.fecha }}</p>
                                 <hr>
-                                <p class="card-text"><i class="fa-solid fa-id-card" style="color: #e4a64e;"></i> Dni: {{ cliente.user.dni }}</p>
-                                <hr>
-                                <p class="card-text"><i class="fa-solid fa-phone-volume" style="color: #e4a64e;"></i> Teléfono: {{ cliente.user.telefono }}</p>
-                                <hr>
-                                {% if cliente.user.descuento %}
-                                <div class="alert alert-info" style="text-align:center">Posee descuento</div>
-                                {% endif %}
-                                <div style="display: flex; flex-direction: column; align-items: center;"class="d-flex flex-column">
-                                    <a href= "{% url 'perros:Registro_mascota' cliente.cliente_id %}" class="btn btn-primary btn-block">Agregar Mascota</a>
-                                    <a href= "{% url 'perros:Listar_mascotas_cliente' cliente.user_id %}" class="btn btn-primary btn-block">Ver Mascotas</a>
-                                </div>
+                                <p class="card-text"><i class="fa-solid fa-id-card" style="color: #e4a64e;"></i> Monto: ${{ donacion.monto }}</p>
+                                <a class="btn btn-primary btn-block" href="{% url 'Descargar_comprobante' donacion.id %}">Descargar Comprobante</a>
+
                             </div>
                         </div>
                     </div>
@@ -64,11 +46,11 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-            {% if clientes.has_other_pages %}
+            {% if donaciones.has_other_pages %}
                 <ul class="pagination">
-                    {% if clientes.has_previous %}
+                    {% if donaciones.has_previous %}
                         <li class='page-item'>
-                           <a href="?page={{clientes.previous_page_number}}" class="page-link">&laquo;
+                           <a href="?page={{donaciones.previous_page_number}}" class="page-link">&laquo;
                            </a> 
                         </li>
                     {% else %}
@@ -77,8 +59,8 @@
                            </a> 
                         </li>
                     {% endif %}
-                    {% for i in clientes.paginator.page_range %}
-                        {% if clientes.number == i %}
+                    {% for i in donaciones.paginator.page_range %}
+                        {% if donaciones.number == i %}
                             <li class='page-item active'>
                                 <a class="page-link">{{i}}</a> 
                             </li>
@@ -88,9 +70,9 @@
                             </li>
                         {% endif%}
                     {% endfor %}
-                    {% if clientes.has_next %}
+                    {% if donaciones.has_next %}
                         <li class="page-item">
-                            <a href="?page={{clientes.next_page_number}}" class="page-link">&raquo;</a>
+                            <a href="?page={{donaciones.next_page_number}}" class="page-link">&raquo;</a>
                         </li>
                     {% else %}
                         <li class="page-item disabled">

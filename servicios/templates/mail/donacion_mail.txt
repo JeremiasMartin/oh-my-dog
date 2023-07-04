@@ -1,0 +1,8 @@
+¡Su donación para la campaña "{{campaña}}" ha sido exitosa!
+
+A continuación se adjunta el comprobante de pago.
+
+¡Muchas gracias por ayudarnos a ayudar!
+
+
+Oh My Dog!

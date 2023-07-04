@@ -1,5 +1,6 @@
 from django.db import models
 from usuarios.models import Usuario
+from django.utils import timezone
 
 class Perro_publicacion(models.Model):
     nombre = models.CharField('Nombre', max_length=100, blank=True, null=True)
@@ -34,6 +35,7 @@ class Publicacion(models.Model):
     id_perro_publicacion = models.OneToOneField(Perro_publicacion, on_delete=models.CASCADE)
     activo = models.BooleanField(default=True)
     tipo_publicacion = models.CharField(max_length=20, blank=False, null=False)
+    fecha_ultima_modificacion = models.DateTimeField('Fecha Publicacion', default=timezone.now)
 
 
 

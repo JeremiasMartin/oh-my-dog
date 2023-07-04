@@ -140,6 +140,7 @@
                 <ul class="dropdown-menu">
                   <li><a class="dropdown-item" href="{%url 'Cargar_campaña' %}">Cargar Campaña</a></li>
                   <li><a class="dropdown-item" href="{%url 'Listar_campañas' %}">Ver Campañas</a></li>
+                  <li><a class="dropdown-item" href="{%url 'Listar_donaciones' %}">Mis Donaciones</a></li>
                 </ul>
             </li>
             {% else %}
@@ -152,7 +153,7 @@
                   </a>
                   <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="{%url 'Listar_campañas' %}">Ver Campañas</a></li>
-                    <li><a class="dropdown-item" href="#">Mis Donaciones</a></li>
+                    <li><a class="dropdown-item" href="{%url 'Listar_donaciones' %}">Mis Donaciones</a></li>
                   </ul>
               </li>
                 <!-- Mascotas cliente -->
