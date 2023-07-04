@@ -42,6 +42,9 @@
                                 <hr>
                                 <p class="card-text"><i class="fa-solid fa-phone-volume" style="color: #e4a64e;"></i> Teléfono: {{ cliente.user.telefono }}</p>
                                 <hr>
+                                {% if cliente.user.descuento %}
+                                <div class="alert alert-info" style="text-align:center">Posee descuento</div>
+                                {% endif %}
                                 <div style="display: flex; flex-direction: column; align-items: center;"class="d-flex flex-column">
                                     <a href= "{% url 'perros:Registro_mascota' cliente.cliente_id %}" class="btn btn-primary btn-block">Agregar Mascota</a>
                                     <a href= "{% url 'perros:Listar_mascotas_cliente' cliente.user_id %}" class="btn btn-primary btn-block">Ver Mascotas</a>
