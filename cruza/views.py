@@ -101,10 +101,7 @@ def editar_perfil_mascota_cruza(request, id_publicacion):
 
 def cambiar_estado_publicacion(request, id_publicacion):
     publicacion = Publicacion.objects.get(id=id_publicacion)
-    if(publicacion.activo):
-        publicacion.activo = False
-    else:
-        publicacion.activo = True
+    publicacion.activo = not publicacion.activo
     publicacion.save()
 
     return redirect('Mis_mascotas_cruza')
