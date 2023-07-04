@@ -1,0 +1,89 @@
+{% extends "OhMyDogApp/base.html" %}
+
+{% load static %}
+
+{% block content %}
+<section id="showcase-inner" class="py-5 text-black">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-md-12">
+          <h2 class="display-4">Mis donaciones</h2>
+        </div>
+      </div>
+    </div>
+  </section>
+<!-- Listado -->
+<section id="listado" class="py-4">
+    <div class="container">
+        {% if donaciones %}
+            <div class="card-deck">
+                {% for donacion in donaciones %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="listing-heading text-center">
+                                    <h5 class="card-title">Campaña "{{ donacion.campaña.nombre }}"</h5>
+                                </div><br>
+                                <p style="font-size: 14px; text-align: center;">{{donacion.campaña.motivo}}</p>
+                                <hr>
+                                <p class="card-text"><i class="fa-solid fa-id-card" style="color: #e4a64e;"></i> Fecha de donación: {{ donacion.fecha }}</p>
+                                <hr>
+                                <p class="card-text"><i class="fa-solid fa-id-card" style="color: #e4a64e;"></i> Monto: ${{ donacion.monto }}</p>
+                                <a class="btn btn-primary btn-block" href="{% url 'Descargar_comprobante' donacion.id %}">Descargar Comprobante</a>
+
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>    
+            {% else %}
+                <div id="sin-resultados">
+                    <p>No Hay Resultados</p>
+                </div>
+            {% endif %}
+    </div>
+    <!-- Paginacion -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+            {% if donaciones.has_other_pages %}
+                <ul class="pagination">
+                    {% if donaciones.has_previous %}
+                        <li class='page-item'>
+                           <a href="?page={{donaciones.previous_page_number}}" class="page-link">&laquo;
+                           </a> 
+                        </li>
+                    {% else %}
+                        <li class= "page-item disabled">
+                           <a class="page-link">&laquo;
+                           </a> 
+                        </li>
+                    {% endif %}
+                    {% for i in donaciones.paginator.page_range %}
+                        {% if donaciones.number == i %}
+                            <li class='page-item active'>
+                                <a class="page-link">{{i}}</a> 
+                            </li>
+                        {% else %}
+                            <li class='page-item'>
+                                <a href="?page={{i}}" class="page-link">{{i}}</a>
+                            </li>
+                        {% endif%}
+                    {% endfor %}
+                    {% if donaciones.has_next %}
+                        <li class="page-item">
+                            <a href="?page={{donaciones.next_page_number}}" class="page-link">&raquo;</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a class="page-link">&raquo;</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            {% endif %}
+            </div>
+        </div>
+    </div>
+  </section>
+  
+{% endblock %}

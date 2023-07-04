@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Comprobante de Adopción</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f9f9f9;
+            font-family: Arial, sans-serif;
+        }
+
+        h2 {
+            color: #333333;
+        }
+
+        strong {
+            color: #ff9900;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border: 1px solid #dddddd;
+        }
+        
+        .header {
+            background-color: #00a8e0;
+            color: #ffffff;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .content {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header" style="font-size:20px">
+            <h2>Comprobante de Donación</h2>
+        </div>
+        <div class="content" style="font-size: 15px">
+            Estimado(a) {% if nombre_donador %}{{ nombre_donador }}{% endif %},
+            tu donación para la campaña "{{ campaña }}" ha sido realizada con éxito.
+            <br> A continuación, se detallan los datos de la donación:
+            <hr>
+            Campaña: "{{ campaña }}"
+            <br>
+            Monto: ${{ monto }}
+            <br>
+            Fecha de donación: {{ fecha }}
+            <br><br>
+            Datos del donante:
+            <br>
+            <strong>Correo electrónico:</strong> {{ email_donador }}
+            {% if request.user.is_authenticated %}
+            <br>
+            <strong>Nombre:</strong> {{ nombre_donador }} {{ apellido_donador }}
+            {% endif %}
+            <br>
+            <hr>
+            <br>
+            Muchas gracias por tu colaboración.
+            <br><br>
+            Atentamente,
+            ¡Oh My Dog!
+        </div>
+    </div>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,11 +1,22 @@
-<!DOCTYPE html>
-<head>
+{% extends "OhMyDogApp/base.html" %}
 
+{% load static %}
+
+{% block content %}
+<head>
     <script src="https://sdk.mercadopago.com/js/v2"></script>
 </head>
-
 <body>
-
-{{payment}}
-
+    <form method="post">
+        {% csrf_token %}
+        {% if user.is_authenticated %}
+        Monto: {{ form.monto }}
+        {% else %}
+            Email: {{ form.email }}
+            Monto: {{ form.monto }}
+        {% endif %}
+        <button type="submit">Continuar</button>
+    </form>
+    {{ payment }}
 </body>
+{% endblock %}

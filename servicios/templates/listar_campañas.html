@@ -41,12 +41,16 @@
                                 <hr>
                                 <p class="card-text"><i class="fa-solid fa-id-card" style="color: #e4a64e;"></i> Fin: {{ campaña.fechaFin }}</p>
                                 <hr>
+                                <br>
+                                <p class="card-text"><i class="fa-solid fa-id-card" style="color: #e4a64e;"></i> Recaudado: ${{ campaña.recaudado }}</p>
+                                <br>
+                                <p class="card-text"><i class="fa-solid fa-id-card" style="color: #e4a64e;"></i> Objetivo a recaudar: ${{ campaña.objetivo }}</p>
                                 <div style="display: flex; flex-direction: column; align-items: center;"class="d-flex flex-column">
                                     {% if user.is_staff %}
                                     <a href= "{% url 'Editar_campaña' campaña.id %}" class="btn btn-primary btn-block">Editar Campaña</a>
                                     {% endif %}
-                                    {% if campaña.fechaInicio|date:"Y-m-d" <= fechaHoy|date:"Y-m-d" and campaña.fechaFin|date:"Y-m-d" >= fechaHoy|date:"Y-m-d" %}
-                                        <a href= "{% url 'Donar' %}" class="btn btn-primary btn-block">Donar</a>
+                                    {% if campaña.fechaInicio|date:"Y-m-d" <= fechaHoy|date:"Y-m-d" %}
+                                        <a href= "{% url 'Donar' campaña.id %}" class="btn btn-primary btn-block">Donar</a>
                                     {% else %}
                                     <br>
                                         <div class="alert alert-info">Todavía no comenzó la colecta de donación</div>
