@@ -19,6 +19,10 @@ urlpatterns = [
     path('listar_perros_encontrados/', views.listar_perros_encontrados, name='listar_perros_encontrados'),
     path('listar_mis_perros_encontrados/', views.listar_mis_perros_encontrados, name='listar_mis_perros_encontrados'),
     path('listar_mis_perros_perdidos/', views.listar_mis_perros_perdidos, name='listar_mis_perros_perdidos'),
+    path('contactarse_perro_perdido/<int:id>/', views.contactarse_perro_perdido, name='contactarse_perro_perdido'),
+
+
    
+
 
 ]

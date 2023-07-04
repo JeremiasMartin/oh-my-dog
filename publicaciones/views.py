@@ -478,3 +478,75 @@ def listar_mis_perros_perdidos(request):
     return render(request, 'listar_mis_perros.html', context)
 
 
+def contactarse_perro_perdido(request, id):
+    publicacion = get_object_or_404(Publicacion, id_perro_publicacion_id=id, tipo_publicacion='Perdidos')
+   
+   
+
+    esRegistrado = request.user.is_authenticated
+    if esRegistrado:
+        usuario = request.user
+        if Postulacion.objects.filter(publicacion=id, email=usuario.email).exists():
+            messages.error(request, 'Ya te has comunicado para esta publicación de perro perdido.')
+            return redirect('listar_perro_perdidos', publicacion_id=id)
+    else:
+        email_postulante = request.POST.get('email')
+
+        if publicacion.usuario.email == email_postulante:
+            messages.error(request, 'No puedes contactarse con su propia publicacion.')
+            return render(request, 'comunicarse_perro.html', {'success_message': 'Postulación enviada'})
+
+        if Postulacion.objects.filter(publicacion=id, email=email_postulante).exists():
+            messages.error(request, 'Ya te has comunicado para esta publicación de perro perdido.')
+            return redirect('listar_perros_perdidos', publicacion_id=id)
+
+    if request.method == 'POST':
+        form = PostulacionForm(request.POST, esRegistrado=esRegistrado)
+        if form.is_valid():
+            postulacion = form.save(commit=False)
+            postulacion.publicacion_adopcion = publicacion
+
+            if esRegistrado:
+                postulacion.nombre = usuario.nombre
+                postulacion.apellido = usuario.apellido
+                postulacion.email = usuario.email
+                postulacion.telefono = usuario.telefono
+
+            postulacion.save()
+
+            subject = 'Postulación Exitosa'
+            from_email = 'Ejtech <%s>' % settings.EMAIL_HOST_USER
+            to_email = postulacion.email if esRegistrado else form.cleaned_data.get('email')
+            reply_to_email = 'noreply@ejtechsoft.com'
+
+            nombre_postulante = postulacion.nombre if esRegistrado else form.cleaned_data.get('nombre')
+
+            context = {
+                'nombre_postulante': nombre_postulante,
+                'nombre_perro': postulacion.publicacion_adopcion.nombre,
+            }
+
+            text_content = get_template('mail/postulacion_mail.txt')
+            html_content = get_template('mail/postulacion_mail.html')
+            text_content = text_content.render(context)
+            html_content = html_content.render(context)
+
+            email = EmailMultiAlternatives(subject, text_content, from_email, to=[to_email,], reply_to=[reply_to_email,])
+            email.mixed_subtype = 'related'
+            email.content_subtype = 'html'
+            email.attach_alternative(html_content, 'text/html')
+            email.send(fail_silently=False)
+
+            enviar_postulante_a_publicador(postulacion, form.cleaned_data.get('mensaje'))
+            messages.success(request, 'Postulación enviada')
+
+            if esRegistrado:
+                return redirect('listar_perros_perdidos', publicacion_id=id)
+            else:
+                return redirect('listar_perros_perdidos', publicacion_id=id)
+
+    else:
+        form = PostulacionForm()
+
+    return render(request, 'postularse_perro_perdido.html', {'form': form, 'publicacion_id': id, 'esRegistrado': esRegistrado})
+
