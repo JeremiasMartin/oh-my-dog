@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    /* Estilos generales */
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      background-color: #f7f7f7;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      border: 4px solid;
+      border-image: linear-gradient(to right, #007bff, #ffa500) 1; /* Bordes que fusionan celeste y naranja */
+      border-image-slice: 1;
+    }
+
+    /* Estilos específicos del correo */
+    .header {
+      text-align: center;
+      padding-bottom: 20px;
+    }
+
+    .header h1 {
+      color: #333;
+      font-size: 24px;
+      margin: 0;
+    }
+
+    .content {
+      padding: 20px;
+      color: #555;
+      background-color: #cfe8e3; /* Fondo verde agua */
+    }
+
+    .button {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 4px;
+    }
+
+    .footer {
+      text-align: center;
+      color: #999;
+      font-size: 12px;
+      padding-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Has recibido información sobre tu publicación en ohmydog</h1>
+    </div>
+    <div class="content">
+      <p>A continuación te dejamos los datos de contacto de quien te envió información sobre tu publicación para que puedas contactarte:</p>
+      <p><strong>Nombre:</strong> {{ nombre_postulante }}</p>
+      <p><strong>Apellido:</strong> {{ apellido_postulante }}</p>
+      <p><strong>Email:</strong> {{ email_postulante }}</p>
+      <p><strong>Teléfono:</strong> {{ telefono_postulante }}</p>
+      <p><strong>Mensaje:</strong> {{ mensaje }}</p>
+      <p>Gracias,</p>
+      <p>El equipo de EJTech</p>
+    </div>
+    <div class="footer">
+      
+    </div>
+  </div>
+</body>
+</html>

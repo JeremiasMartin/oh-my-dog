@@ -516,8 +516,8 @@ def contactarse_perro_perdido(request, id):
 
             postulacion.save()
 
-            enviar_postulante_a_publicadorPerdidos(postulacion, form.cleaned_data.get('mensaje'))
-            messages.success(request, 'Postulación enviada')
+            enviar_DatosDeQuienSeComunico(postulacion, form.cleaned_data.get('mensaje'))
+            messages.success(request, 'Información enviada, a la brevedad el dueño de la publicación se contactará contigo.')
             return redirect('listar_perros_perdidos')
 
     else:
@@ -527,28 +527,23 @@ def contactarse_perro_perdido(request, id):
 
            
 
-  
-  
-
-  
-  
-
-
-
-def enviar_postulante_a_publicadorPerdidos(postulacion, mensaje):
-    subject = 'Información recibida'
+def enviar_DatosDeQuienSeComunico(postulacion, mensaje):
+    subject = 'Información Recibida'
     from_email = 'Ejtech <%s>' % settings.EMAIL_HOST_USER
     to_email = postulacion.publicacion_perdidos.id_usuario.email
     reply_to_email = postulacion.email
 
     nombre_postulante = postulacion.nombre
-
     context = {
-        'nombre_postulante': nombre_postulante,
-        'mensaje': mensaje,
-    }
+    'nombre_postulante': nombre_postulante,
+    'apellido_postulante': postulacion.apellido,
+    'email_postulante': postulacion.email,
+    'telefono_postulante': postulacion.telefono,
+    'mensaje': mensaje,
+}
 
-    html_content = get_template('mail/postulacion_mailPerdidosEncontrados.html')
+
+    html_content = get_template('mail/datos_mailPerdidosEncontrados.html')
     html_content = html_content.render(context)
 
     email = EmailMultiAlternatives(subject, '', from_email, [to_email], reply_to=[reply_to_email])
