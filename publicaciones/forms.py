@@ -131,13 +131,3 @@ class PostulacionPerrosForm(forms.ModelForm):
     class Meta:
         model = PostulacionPerdidosEncontrados
         fields = ['nombre', 'apellido', 'email', 'telefono', 'mensaje']
-        exclude = []
-
-    def __init__(self, *args, **kwargs):
-        esRegistrado = kwargs.pop('esRegistrado', False)
-        super().__init__(*args, **kwargs)
-
-        if not esRegistrado:
-            self.fields['nombre'].required = True
-            self.fields['apellido'].required = True
-            self.fields['telefono'].required = True

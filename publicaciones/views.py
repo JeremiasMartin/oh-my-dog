@@ -478,11 +478,6 @@ def listar_mis_perros_perdidos(request):
     return render(request, 'listar_mis_perros.html', context)
 
 
-
-from .models import PostulacionPerdidosEncontrados
-
-from django.contrib import messages
-
 def contactarse_perro_perdido(request, id):
     publicacion = get_object_or_404(Publicacion, id=id, tipo_publicacion='Perdidos')
 
@@ -492,7 +487,7 @@ def contactarse_perro_perdido(request, id):
         if publicacion.id_usuario == usuario:
             messages.error(request, 'No puedes contactarte con tu propia publicación.')
             return redirect('listar_perros_perdidos')
-        if PostulacionPerdidosEncontrados.objects.filter(id=id, email=usuario.email).exists():
+        if PostulacionPerdidosEncontrados.objects.filter(publicacion_perdidos=publicacion, email=usuario.email).exists():
             messages.error(request, 'Ya te has comunicado para esta publicación de perro perdido.')
             return redirect('listar_perros_perdidos')
     else:
@@ -507,9 +502,7 @@ def contactarse_perro_perdido(request, id):
             return redirect('listar_perros_perdidos')
 
     if request.method == 'POST':
-        print("estoy aca")
-        form = PostulacionPerrosForm(request.POST, esRegistrado=esRegistrado)
-
+        form = PostulacionPerrosForm(request.POST)
         if form.is_valid():
             postulacion = form.save(commit=False)
             postulacion.publicacion_perdidos = publicacion
@@ -522,6 +515,14 @@ def contactarse_perro_perdido(request, id):
 
             postulacion.save()
 
+            postulacion_perdido_encontrado = PostulacionPerdidosEncontrados.objects.create(
+                publicacion_perdidos=postulacion,
+                nombre=postulacion.nombre,
+                apellido=postulacion.apellido,
+                email=postulacion.email,
+                telefono=postulacion.telefono
+            )
+
             subject = 'Postulación Exitosa'
             from_email = 'Ejtech <%s>' % settings.EMAIL_HOST_USER
             to_email = postulacion.email if esRegistrado else form.cleaned_data.get('email')
@@ -531,7 +532,7 @@ def contactarse_perro_perdido(request, id):
 
             context = {
                 'nombre_postulante': nombre_postulante,
-                'nombre_perro': postulacion.publicacion_perdidos.nombre,
+                'nombre_perro': publicacion.nombre,
             }
 
             text_content = get_template('mail/postulacion_mail.txt')
@@ -539,7 +540,7 @@ def contactarse_perro_perdido(request, id):
             text_content = text_content.render(context)
             html_content = html_content.render(context)
 
-            email = EmailMultiAlternatives(subject, text_content, from_email, to=[to_email,], reply_to=[reply_to_email,])
+            email = EmailMultiAlternatives(subject, text_content, from_email, to=[to_email], reply_to=[reply_to_email])
             email.mixed_subtype = 'related'
             email.content_subtype = 'html'
             email.attach_alternative(html_content, 'text/html')
@@ -548,12 +549,9 @@ def contactarse_perro_perdido(request, id):
             enviar_postulante_a_publicador(postulacion, form.cleaned_data.get('mensaje'))
             messages.success(request, 'Postulación enviada')
 
-            if esRegistrado:
-                return redirect('listar_perros_perdidos')
-            else:
-                return redirect('listar_perros_perdidos')
+            return redirect('listar_perros_perdidos')
 
     else:
-        form = PostulacionPerrosForm(esRegistrado=esRegistrado)
+        form = PostulacionPerrosForm()
 
     return render(request, 'Contactar_perro.html', {'form': form, 'publicacion_id': id, 'esRegistrado': esRegistrado})
