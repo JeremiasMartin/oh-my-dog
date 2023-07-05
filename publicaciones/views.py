@@ -478,6 +478,7 @@ def listar_mis_perros_perdidos(request):
     return render(request, 'listar_mis_perros.html', context)
 
 
+
 def contactarse_perro_perdido(request, id):
     publicacion = get_object_or_404(Publicacion, id=id, tipo_publicacion='Perdidos')
 
@@ -515,43 +516,41 @@ def contactarse_perro_perdido(request, id):
 
             postulacion.save()
 
-            postulacion_perdido_encontrado = PostulacionPerdidosEncontrados.objects.create(
-                publicacion_perdidos=postulacion,
-                nombre=postulacion.nombre,
-                apellido=postulacion.apellido,
-                email=postulacion.email,
-                telefono=postulacion.telefono
-            )
-
-            subject = 'Postulación Exitosa'
-            from_email = 'Ejtech <%s>' % settings.EMAIL_HOST_USER
-            to_email = postulacion.email if esRegistrado else form.cleaned_data.get('email')
-            reply_to_email = 'noreply@ejtechsoft.com'
-
-            nombre_postulante = postulacion.nombre if esRegistrado else form.cleaned_data.get('nombre')
-
-            context = {
-                'nombre_postulante': nombre_postulante,
-                'nombre_perro': publicacion.nombre,
-            }
-
-            text_content = get_template('mail/postulacion_mail.txt')
-            html_content = get_template('mail/postulacion_mail.html')
-            text_content = text_content.render(context)
-            html_content = html_content.render(context)
-
-            email = EmailMultiAlternatives(subject, text_content, from_email, to=[to_email], reply_to=[reply_to_email])
-            email.mixed_subtype = 'related'
-            email.content_subtype = 'html'
-            email.attach_alternative(html_content, 'text/html')
-            email.send(fail_silently=False)
-
-            enviar_postulante_a_publicador(postulacion, form.cleaned_data.get('mensaje'))
+            enviar_postulante_a_publicadorPerdidos(postulacion, form.cleaned_data.get('mensaje'))
             messages.success(request, 'Postulación enviada')
-
             return redirect('listar_perros_perdidos')
 
     else:
         form = PostulacionPerrosForm()
 
     return render(request, 'Contactar_perro.html', {'form': form, 'publicacion_id': id, 'esRegistrado': esRegistrado})
+
+           
+
+  
+  
+
+  
+  
+
+
+
+def enviar_postulante_a_publicadorPerdidos(postulacion, mensaje):
+    subject = 'Información recibida'
+    from_email = 'Ejtech <%s>' % settings.EMAIL_HOST_USER
+    to_email = postulacion.publicacion_perdidos.id_usuario.email
+    reply_to_email = postulacion.email
+
+    nombre_postulante = postulacion.nombre
+
+    context = {
+        'nombre_postulante': nombre_postulante,
+        'mensaje': mensaje,
+    }
+
+    html_content = get_template('mail/postulacion_mailPerdidosEncontrados.html')
+    html_content = html_content.render(context)
+
+    email = EmailMultiAlternatives(subject, '', from_email, [to_email], reply_to=[reply_to_email])
+    email.attach_alternative(html_content, 'text/html')
+    email.send(fail_silently=False)
