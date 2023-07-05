@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .forms import AdopcionForm, PostulacionForm, EditarAdopcionForm, PublicarPerroPerdidoForm, CargarPerroEncontradoForm
+from .forms import AdopcionForm, PostulacionForm, EditarAdopcionForm, PublicarPerroPerdidoForm, CargarPerroEncontradoForm, PostulacionPerrosForm
 from .models import *
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -481,31 +481,38 @@ def listar_mis_perros_perdidos(request):
 
 from .models import PostulacionPerdidosEncontrados
 
+from django.contrib import messages
+
 def contactarse_perro_perdido(request, id):
-    publicacion = get_object_or_404(Publicacion, id_perro_publicacion_id=id, tipo_publicacion='Perdidos')
+    publicacion = get_object_or_404(Publicacion, id=id, tipo_publicacion='Perdidos')
 
     esRegistrado = request.user.is_authenticated
     if esRegistrado:
         usuario = request.user
-        if PostulacionPerdidosEncontrados.objects.filter(id_publicacion=id, email=usuario.email).exists():
+        if publicacion.id_usuario == usuario:
+            messages.error(request, 'No puedes contactarte con tu propia publicación.')
+            return redirect('listar_perros_perdidos')
+        if PostulacionPerdidosEncontrados.objects.filter(id=id, email=usuario.email).exists():
             messages.error(request, 'Ya te has comunicado para esta publicación de perro perdido.')
-            return redirect('listar_perro_perdidos', publicacion_id=id)
+            return redirect('listar_perros_perdidos')
     else:
         email_postulante = request.POST.get('email')
 
-        if publicacion.usuario.email == email_postulante:
+        if publicacion.id_usuario.email == email_postulante:
             messages.error(request, 'No puedes contactarte con tu propia publicación.')
-            return render(request, 'comunicarse_perro.html', {'success_message': 'Postulación enviada'})
+            return redirect('listar_perros_perdidos')
 
-        if PostulacionPerdidosEncontrados.objects.filter(id_publicacion=id, email=email_postulante).exists():
+        if PostulacionPerdidosEncontrados.objects.filter(publicacion_perdidos=publicacion, email=email_postulante).exists():
             messages.error(request, 'Ya te has comunicado para esta publicación de perro perdido.')
-            return redirect('listar_perros_perdidos', publicacion_id=id)
+            return redirect('listar_perros_perdidos')
 
     if request.method == 'POST':
-        form = PostulacionForm(request.POST, esRegistrado=esRegistrado)
+        print("estoy aca")
+        form = PostulacionPerrosForm(request.POST, esRegistrado=esRegistrado)
+
         if form.is_valid():
             postulacion = form.save(commit=False)
-            postulacion.id_publicacion = publicacion
+            postulacion.publicacion_perdidos = publicacion
 
             if esRegistrado:
                 postulacion.nombre = usuario.nombre
@@ -524,7 +531,7 @@ def contactarse_perro_perdido(request, id):
 
             context = {
                 'nombre_postulante': nombre_postulante,
-                'nombre_perro': postulacion.id_publicacion.nombre,
+                'nombre_perro': postulacion.publicacion_perdidos.nombre,
             }
 
             text_content = get_template('mail/postulacion_mail.txt')
@@ -542,11 +549,11 @@ def contactarse_perro_perdido(request, id):
             messages.success(request, 'Postulación enviada')
 
             if esRegistrado:
-                return redirect('listar_perros_perdidos', publicacion_id=id)
+                return redirect('listar_perros_perdidos')
             else:
-                return redirect('listar_perros_perdidos', publicacion_id=id)
+                return redirect('listar_perros_perdidos')
 
     else:
-        form = PostulacionForm()
+        form = PostulacionPerrosForm(esRegistrado=esRegistrado)
 
-    return render(request, 'postularse_perro_perdido.html', {'form': form, 'publicacion_id': id, 'esRegistrado': esRegistrado})
+    return render(request, 'Contactar_perro.html', {'form': form, 'publicacion_id': id, 'esRegistrado': esRegistrado})

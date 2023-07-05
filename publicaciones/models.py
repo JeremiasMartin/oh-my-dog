@@ -75,18 +75,14 @@ class Adopcion(models.Model):
 
 
 
-
-
 class PostulacionPerdidosEncontrados(models.Model):
-    id_publicacion = models.ForeignKey(Publicacion, on_delete=models.CASCADE)
-    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
-    mensaje = models.TextField()
+    publicacion_perdidos = models.ForeignKey('Publicacion', on_delete=models.CASCADE, related_name='postulaciones')
     email = models.EmailField('Mail', unique=False, max_length=254, blank=True, null=False) 
     mensaje = models.TextField('Mensaje', blank=False, null=False)
     nombre = models.CharField('Nombre', max_length=20, blank=False, null=False, default='')
     apellido = models.CharField('Apellido', max_length=20, blank=False, null=False, default='')
     telefono = models.BigIntegerField('Telefono', blank=False, null=False, default=0)
 
-
     class Meta:
-         db_table = 'postulacionPerdidosEncontrados'
+        db_table = 'postulacionPerdidosEncontrados'
+

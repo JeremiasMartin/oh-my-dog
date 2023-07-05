@@ -1,7 +1,7 @@
 
 from django import forms
 from .models import Perro_publicacion, Publicacion
-from .models import Postulacion
+from .models import Postulacion, PostulacionPerdidosEncontrados
 
 class AdopcionForm(forms.ModelForm):
     origen = forms.CharField(max_length=100, widget=forms.Textarea(attrs={'rows': 4, 'cols': 40}))
@@ -124,3 +124,20 @@ class CargarPerroEncontradoForm(forms.Form):
             activo=True,
             tipo_publicacion='Encontrado'
         )
+
+
+
+class PostulacionPerrosForm(forms.ModelForm):
+    class Meta:
+        model = PostulacionPerdidosEncontrados
+        fields = ['nombre', 'apellido', 'email', 'telefono', 'mensaje']
+        exclude = []
+
+    def __init__(self, *args, **kwargs):
+        esRegistrado = kwargs.pop('esRegistrado', False)
+        super().__init__(*args, **kwargs)
+
+        if not esRegistrado:
+            self.fields['nombre'].required = True
+            self.fields['apellido'].required = True
+            self.fields['telefono'].required = True
