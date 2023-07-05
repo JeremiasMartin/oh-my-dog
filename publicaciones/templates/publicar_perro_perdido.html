@@ -1,16 +1,102 @@
 {% extends 'OhMyDogApp/base.html' %}
-{% load static %}
 {% load crispy_forms_tags %}
+{% load static %}
 {% block content %}
-<div class="card mb-4">
-  <div class="card-body">
-    <h5 class="card-title">Publique su perro perdido aquí para que le  ayudemos a encontrarlo</h5>
+  <h1 style="text-align: center; margin-top: 10px;">Cargar Perro Perdido</h1>
+  <div style="width: 75%; margin: auto; text-align: center; max-width: 800px;">
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title">Publique su perro perdido aquí para que le  ayudemos a encontrarlo</h5>
+      </div>
+    </div>
   </div>
-</div>
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form|crispy }} 
-    <button type="submit">Publicar</button>
-  </form>
-  
-  {% endblock %}
+  <div class="container" style="background-color: #e9ecef; border-radius: 10px; padding: 20px; max-width: 800px;">
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div style="width: 100%; margin: auto;">
+        {{ form|crispy }} 
+        <button type="submit" class="btn btn-primary" id="btn-publicar">Publicar</button>
+      </div>
+    </form>
+  </div>
+
+<script>
+  function validarFormulario() {
+      var nombre = document.getElementById('id_nombre').value;
+      var raza = document.getElementById('id_raza').value;
+      var color = document.getElementById('id_color').value;
+      var tamanio = document.getElementById('id_tamanio').value;
+      var edad = document.getElementById('id_edad').value;
+      var sexo = document.getElementById('id_sexo').value;
+      var descripcion = document.getElementById('descripcion').value;
+
+      // Validación de campos vacíos
+      if (nombre.trim() === '' 
+          || edad.trim() === '' 
+          || raza.trim() === '' 
+          || color.trim() === '' 
+          || tamanio.trim() === '' 
+          || sexo.trim() === '' 
+          || descripcion.trim() === '') {
+        alert('Por favor, completa todos los campos obligatorios.');
+        return false;
+      }
+          
+      // Validación de campos no numéricos
+      var regex = /^[a-zA-Z\s]+$/; // Expresión regular para solo letras y espacios
+      if (!regex.test(nombre)|| !regex.test(raza) || !regex.test(color)) {
+        alert('Los campos "Nombre", "Raza" y "Color" no pueden contener números.');
+        return false;
+      }
+
+      return true; // todo ok
+  }
+    
+  // Validar campos en tiempo real
+  var formInputs = document.querySelectorAll('input, select, textarea');
+  var btnConfirmar = document.getElementById('btn-publicar');
+  var fotoField = document.getElementById('id_foto');
+
+  formInputs.forEach(function (input) {
+      input.addEventListener('input', function () {
+        validarCampos();
+      });
+  });
+
+  fotoField.addEventListener('change', function () {
+    validarCampos();
+  });
+
+  function validarCampos() {
+      var nombre = document.getElementById('id_nombre').value;
+      var raza = document.getElementById('id_raza').value;
+      var color = document.getElementById('id_color').value;
+      var tamanio = document.getElementById('id_tamanio').value;
+      var edad = document.getElementById('id_edad').value;
+      var sexo = document.getElementById('id_sexo').value;
+      var descripcion = document.getElementById('descripcion').value;
+      var fotoFiles = fotoField.files;
+
+      var regex = /^[a-zA-Z\s]*$/; // Expresión regular para solo letras y espacios
+      
+      var isFormValid =
+        nombre.trim() !== '' &&
+        regex.test(nombre) &&
+        edad.trim() !== '' &&
+        raza.trim() !== '' &&
+        tamanio.trim() !== '' &&
+        regex.test(raza) &&
+        color.trim() !== '' &&
+        regex.test(color) &&
+        descripcion.trim() !== '' &&
+        sexo.trim() !== '' &&
+        fotoFiles.length === 1;
+          
+      btnConfirmar.disabled = !isFormValid;
+  }
+
+    // Validar campos al cargar la página
+    validarCampos();
+</script>
+
+{% endblock %}

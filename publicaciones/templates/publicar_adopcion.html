@@ -11,9 +11,10 @@
         {{ message }}
       </div>
   {% endfor %}
+<div class="container" style="background-color: #e9ecef; border-radius: 10px; padding: 20px; max-width: 800px;">
   <form method="POST">
     {% csrf_token %}
-    <div style="width: 75%; margin: auto;">
+    <div style="width: 100%; margin: auto;">
         {{ form|crispy }}
       <!-- Campos adicionales de Publicacion -->
       {{ form.instance.id_perro_publicacion.descripcion.label_tag }} {{ form.instance.id_perro_publicacion.descripcion }}
@@ -22,7 +23,7 @@
       <button type="submit" id="btn-subir" class="btn btn-success">Subir</button>
     </div>
   </form>
-
+</div>
 <script>
     function validarFormulario() {
       var nombre = document.getElementById('id_nombre').value;
