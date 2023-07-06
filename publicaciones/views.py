@@ -603,7 +603,7 @@ def finalizar_publicacion(request, id_publicacion):
 
 
 def contactarse_perro_perdido(request, id):
-    publicacion = get_object_or_404(Publicacion, id=id, tipo_publicacion='Perdidos')
+    publicacion = get_object_or_404(Publicacion, id=id)
 
     esRegistrado = request.user.is_authenticated
     if esRegistrado:
