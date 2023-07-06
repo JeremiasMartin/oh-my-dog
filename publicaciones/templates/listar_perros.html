@@ -7,36 +7,42 @@
   <div class="container">
     <div class="row text-center">
       <div class="col-md-12">
-        <h2 class="display-4">Publicaciones Generales</h2>
+        <h2 class="display-4">Publicaciones de Perros {% if request.path == '/publicaciones/listar_perros_perdidos/'%} Perdidos {% else %} Encontrados {% endif %}</h2>
       </div>
     </div>
   </div>
 </section>
 
 <!-- Listado -->
-{% if messages %}
+<section id="listado" class="py-4">
   <div class="container">
-    <ul class="messages">
-      {% for message in messages %}
-        <div id="msg-{{ message.tags }}" class="alert alert-{{ message.tags }}">
-          {{ message }}
-        </div>
-      {% endfor %}
-    </ul>
-  </div>
-{% endif %}
+    {% if messages %}
+      <div class="container">
+        <ul class="messages">
+          {% for message in messages %}
+            <div id="msg-{{ message.tags }}" class="alert alert-{{ message.tags }}">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
 
-{% if perros %}
-  {% include 'filtros_perros.html' %}
-  <section id="listado" class="py-4">
-    <div class="container">
+    {% if perros %}
+    {% include 'filtros_perros.html' %}
       <div class="row">
         {% for publicacion in perros %}
           <div class="col-md-4 mb-4">
             <div class="card h-80">
               <div class="card-body">
+                {% if publicacion.id_perro_publicacion.nombre %}
                 <div class="listing-heading text-center">
                   <h5 class="card-title">{{ publicacion.id_perro_publicacion.nombre }}</h5>
+                </div>
+                <hr>
+                {% endif %}
+                <div class="foto-cruza">
+                  <img class="foto-cruza" src="{{ publicacion.id_perro_publicacion.foto.url }}" alt="foto publicacion">
                 </div>
                 <hr>
                 <p class="card-text"><strong>Tamaño:</strong> {{ publicacion.id_perro_publicacion.tamanio }}</p>
@@ -51,69 +57,78 @@
                 <hr>
                 <p class="card-text"><strong>Descripcion:</strong> {{ publicacion.descripcion }}</p>
                 <hr>
-                <div class="foto-cruza">
-                  <img class="foto-cruza" src="{{ publicacion.id_perro_publicacion.foto.url }}" alt="foto publicacion">
-                </div>
-
-                <a href="{% url 'contactarse_perro_perdido' id=publicacion.id_perro_publicacion_id %}" class="btn btn-primary btn-block">Contactarse</a>
-
-
-
-
-
-
+                {% if publicacion.activo %}
+                  {% if request.user.id == publicacion.id_usuario.id %}
+                    <a href="{% url 'editar_publicacion' publicacion.id %}" class="btn btn-primary btn-block">Editar Publicacion</a>
+                    <a href="{% url 'finalizar_publicacion' publicacion.id %}" class="btn btn-primary btn-block"> 
+                      {% if 'perdidos/' in request.path %} 
+                        Encontrado 
+                      {% else %} 
+                        Reencontrado con su dueño 
+                      {%endif%}
+                    </a>
+                  {% else %}
+                    <a href="{% url 'contactarse_perro_perdido' id=publicacion.id_perro_publicacion_id %}" class="btn btn-primary btn-block">Contactarse</a>
+                  {% endif %}
+                {% else %}
+                  {% if 'perdidos/' in request.path %}
+                    <div class="alert alert-success">¡Encontrado!</div>
+                  {% else %}
+                    <div class="alert alert-success">Reencontrado con su dueño!</div>
+                  {% endif %}
+                {% endif %}
               </div>
             </div>
           </div>
         {% endfor %}
       </div>
-    </div>
-  </section>
-{% else %}
-  <div id="sin-resultados">
-    <!-- Mostrar el mensaje de "No hay resultados" -->
-    <p>No hay publicaciones de perros perdidos.</p>
+    {% else %}
+      <div id="sin-resultados">
+        <!-- Mostrar el mensaje de "No hay resultados" -->
+        <p>No hay publicaciones de perros {% if request.path == '/publicaciones/listar_perros_perdidos/'%} perdidos{% else %} encontrados{% endif %}.</p>
+      </div>
+    {% endif %}
   </div>
-{% endif %}
 
-<!-- Paginacion -->
-<div class="container">
-  <div class="row">
-    <div class="col-md-12">
-      {% if perros.has_other_pages %}
-        <ul class="pagination">
-          {% if perros.has_previous %}
-            <li class="page-item">
-              <a href="?page={{ perros.previous_page_number }}" class="page-link">&laquo;</a>
-            </li>
-          {% else %}
-            <li class="page-item disabled">
-              <a class="page-link">&laquo;</a>
-            </li>
-          {% endif %}
-          {% for i in perros.paginator.page_range %}
-            {% if perros.number == i %}
-              <li class="page-item active">
-                <a class="page-link">{{ i }}</a>
+  <!-- Paginacion -->
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        {% if perros.has_other_pages %}
+          <ul class="pagination">
+            {% if perros.has_previous %}
+              <li class="page-item">
+                <a href="?page={{ perros.previous_page_number }}" class="page-link">&laquo;</a>
               </li>
             {% else %}
-              <li class="page-item">
-                <a href="?page={{ i }}" class="page-link">{{ i }}</a>
+              <li class="page-item disabled">
+                <a class="page-link">&laquo;</a>
               </li>
             {% endif %}
-          {% endfor %}
-          {% if perros.has_next %}
-            <li class="page-item">
-              <a href="?page={{ perros.next_page_number }}" class="page-link">&raquo;</a>
-            </li>
-          {% else %}
-            <li class="page-item disabled">
-              <a class="page-link">&raquo;</a>
-            </li>
-          {% endif %}
-        </ul>
-      {% endif %}
+            {% for i in perros.paginator.page_range %}
+              {% if perros.number == i %}
+                <li class="page-item active">
+                  <a class="page-link">{{ i }}</a>
+                </li>
+              {% else %}
+                <li class="page-item">
+                  <a href="?page={{ i }}" class="page-link">{{ i }}</a>
+                </li>
+              {% endif %}
+            {% endfor %}
+            {% if perros.has_next %}
+              <li class="page-item">
+                <a href="?page={{ perros.next_page_number }}" class="page-link">&raquo;</a>
+              </li>
+            {% else %}
+              <li class="page-item disabled">
+                <a class="page-link">&raquo;</a>
+              </li>
+            {% endif %}
+          </ul>
+        {% endif %}
+      </div>
     </div>
   </div>
-</div>
+</section>
 {% endblock %}

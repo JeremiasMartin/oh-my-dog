@@ -74,7 +74,7 @@
                     </a>
                     <ul class="dropdown-menu ">
                         <!-- Aca va link de este parecido a este "/publicaciones/cargar_perro_encontrado/"" -->
-                        <li><a class="dropdown-item" href="/publicaciones/cargar_perro_encontrado/">Cargar Perro Encontrados</a></li>
+                        <li><a class="dropdown-item" href="/publicaciones/cargar_perro_encontrado/">Cargar Perro Encontrado</a></li>
                         <!-- Aca va link de este parecido a este "listar_encontrados" -->
                         <li><a class="dropdown-item" href="/publicaciones/listar_perros_encontrados/">Publicaciones Encontrados</a></li>
                         <!-- Aca va link de este parecido a este "listar_mis_encontrados" -->
@@ -188,20 +188,15 @@
         </li>
       </ul>
     {% else %}
-    <li class="nav-item {% if request.path == '/servicios/mapa/' %}current_page_item{% endif %}">
-      <a class="nav-link" href="{% url 'Listar_guardias' %}">Guardias</a>
-    </li>
+      <li class="nav-item {% if request.path == '/servicios/mapa/' %}current_page_item{% endif %}">
+        <a class="nav-link" href="{% url 'Listar_guardias' %}">Guardias</a>
+      </li>
       <li class="nav-item {% if request.path == '/servicios/mapa/' %}current_page_item{% endif %}">
         <a class="nav-link" href="{% url 'Mapa' %}">Mapa de Servicios</a>
       </li>
-      <li class="nav-item dropdown {% if request.path == '/servicios/listar_campañas/' %}current_page_item{%endif %}">
-        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Campañas
-        </a>
-        <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="{%url 'Listar_campañas' %}">Ver Campañas</a></li>
-        </ul>
-    </li>
+      <li class="nav-item {% if request.path == '/servicios/listar_campañas/' %}current_page_item{%endif %}">
+        <a class="nav-link" href="{% url 'Listar_campañas' %}">Campañas</a>
+      </li> 
       <!-- Login -->
       <li class="nav-item {% if request.path == '/usuarios/login/' %}current_page_item{% endif %}">
         <a class="btn btn-primary" href="{% url 'Login' %}">

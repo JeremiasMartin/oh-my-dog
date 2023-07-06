@@ -3,18 +3,21 @@
 {% load crispy_forms_tags %}
 {% block content %}
 
-<section id="showcase-inner" class="py-4">
+<section id="showcase-inner" class="py-5 text-black">
   <div class="container">
     <div class="row text-center">
       <div class="col-md-12">
-        <h2 class="display-4">Mis Publicaciones </h2>
+        <h2 class="display-4">Mis Publicaciones Perros {% if request.path == '/publicaciones/listar_mis_perros_perdidos/' %} Perdidos {% else %} Encontrados {% endif %}</h2>
       </div>
     </div>
   </div>
 </section>
+
+<!-- Listado -->
 <section id="listado" class="py-4">
   <div class="container">
     {% if messages %}
+    <div class="container">
       <ul class="messages">
         {% for message in messages %}
           <div id="msg-{{ message.tags }}"class="alert alert-{{ message.tags }}">
@@ -22,10 +25,12 @@
           </div>
         {% endfor %}
       </ul>
+    </div>
     {% endif %}
+
     {% if publicaciones %}
         {% include 'filtros_perros.html' %} 
-        <div class="card-deck">
+        <div class="row">
           {% for publicacion in publicaciones %}
             <div class="col-md-4 mb-4">
               <div class="card h-80">
@@ -34,11 +39,16 @@
                   <div class="listing-heading text-center">
                     <h5 class="card-title">{{ publicacion.id_perro_publicacion.nombre }}</h5>
                   </div>
-                  <hr>
                   {% endif %}
+                  <hr>
+                  <div class="foto-cruza">
+                    <img class='foto-cruza' src="{{ publicacion.id_perro_publicacion.foto.url }}" alt="foto publicacion">
+                  </div>
+                  <hr>
                   <p class="card-text"><strong>Tamaño:</strong> {{ publicacion.id_perro_publicacion.tamanio }}</p>
                   <hr>
                   <p class="card-text"><strong>Sexo:</strong> {{ publicacion.id_perro_publicacion.get_sexo_display }}</p>
+                  <hr>
                   <p class="card-text"><strong>Color:</strong> {{ publicacion.id_perro_publicacion.color }}</p>
                   <hr>
                   <p class="card-text"><strong>Edad:</strong> {{ publicacion.id_perro_publicacion.edad }}</p>
@@ -47,24 +57,20 @@
                   <hr>
                   <p class="card-text"><strong>Descripcion:</strong> {{publicacion.descripcion }}</p>
                   <hr>
-                  <div class="foto-cruza">
-                    <img class='foto-cruza' src="{{ publicacion.id_perro_publicacion.foto.url }}" alt="foto publicacion">
-                  </div> 
-
-                  <!-- Ver postulantes -->
-                {% if adopcion.adoptante and adopcion.id_publicacion.id_usuario_id != request.user.id %}
-                <div class="alert alert-success">¡Adoptado!</div>
-                {% endif %}
-              
-              <!-- Editar publicación -->
-              {% if adopcion.adoptante and adopcion.id_publicacion.id_usuario_id == request.user.id %}
-              <div class="alert alert-success">Esta publicación ya tiene adoptante y no se puede editar.</div>
-                <a class="btn btn-primary btn-block" href="{% url 'listar_postulantes_adopcion' adopcion.id %}">Ver
-              {% elif adopcion.id_publicacion.id_usuario_id == request.user.id %}
-                <a class="btn btn-primary btn-block" href="{% url 'listar_postulantes_adopcion' adopcion.id %}">Ver
-                <a href="{% url 'editar_adopcion' adopcion.id %}" class="btn btn-primary btn-block">Editar Publicac
-              {% endif %}
-
+                  {% if publicacion.activo %}
+                    <a href="{% url 'editar_publicacion' publicacion.id %}" class="btn btn-primary btn-block">Editar Publicacion</a>
+                    <a href="{% url 'finalizar_publicacion' publicacion.id %}" class="btn btn-primary btn-block"> 
+                      Marcar como {% if request.path == '/publicaciones/listar_mis_perros_perdidos/' %} Encontrado 
+                                  {% else %} Reencontrado con su dueño 
+                                  {%endif%}
+                    </a>
+                  {% else %}
+                    {% if request.path == '/publicaciones/listar_mis_perros_perdidos/' %}
+                      <div class="alert alert-success">¡Encontrado!</div>
+                    {% else %}
+                      <div class="alert alert-success">¡Reencontrado con su dueño!</div>
+                    {% endif %}
+                  {% endif %}
                 </div>
               </div>
             </div>
@@ -72,8 +78,7 @@
         </div>
     {% else %}
       <div id="sin-resultados">  
-        <!-- Mostrar el mensaje de "No hay resultados" -->
-        <p>No has realizado publicaciones .</p>
+        <p>No has realizado publicaciones de perros {% if request.path == '/publicaciones/listar_mis_perros_perdidos/'%} perdidos{% else %} encontrados{% endif %}.</p>
       </div>
     {% endif %}
   </div>
