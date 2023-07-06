@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
-from .forms import AdopcionForm, PostulacionForm, EditarAdopcionForm, PublicarPerroPerdidoForm, CargarPerroEncontradoForm, PostulacionPerrosForm
+from .forms import AdopcionForm, PostulacionForm, EditarAdopcionForm, PublicarPerroPerdidoForm, CargarPerroEncontradoForm
+from .forms import EditarPublicacionForm, PostulacionPerrosForm
 from .models import *
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -72,7 +73,7 @@ def listar_mis_publicaciones_adopcion(request):
         'tamanio_consulta': request.GET.get('tamanio-consulta'),
     }
     if any(value for value in filtros.values()):
-        adopciones = buscar_mascotas(request, filtros, adopciones)
+        adopciones = buscar_mascotas_adopcion(request, filtros, adopciones)
 
     tamanio_opciones = (
         ('Pequeño', 'Pequeño'),
@@ -100,7 +101,7 @@ def listar_adopciones(request):
         'tamanio_consulta': request.GET.get('tamanio-consulta'),
     }
     if any(value for value in filtros.values()):
-        adopciones = buscar_mascotas(request, filtros, adopciones)
+        adopciones = buscar_mascotas_adopcion(request, filtros, adopciones)
 
     tamanio_opciones = (
         ('Pequeño', 'Pequeño'),
@@ -334,8 +335,7 @@ def buscar_postulaciones(request, filtros, postulaciones):
     return postulaciones_filtradas
 
 
-
-def buscar_mascotas(request, filtros, adopciones):
+def buscar_mascotas_adopcion(request, filtros, adopciones):
     print("FILTRO",filtros)
     adopciones_filtradas = adopciones
     
@@ -421,62 +421,185 @@ def publicar_perro_perdido(request):
         if form.is_valid():
             form.save(request.user)
             
-            return redirect('/')
+            return redirect('listar_mis_perros_perdidos')
     else:
         form = PublicarPerroPerdidoForm()
 
     return render(request, 'publicar_perro_perdido.html', {'form': form})
-
-
-
-
-def listar_perros_perdidos(request):
-    perros_perdidos = Publicacion.objects.filter(id_perro_publicacion__activo=True, tipo_publicacion='Perdidos')
-    return render(request, 'listar_perros.html', {'perros': paginar(request, perros_perdidos, 3)})
-
-
-
-
 
 def cargar_perro_encontrado(request):
     if request.method == 'POST':
         form = CargarPerroEncontradoForm(request.POST, request.FILES)
         if form.is_valid():
             form.save(request.user)
-            return redirect('/')
+            return redirect('listar_mis_perros_encontrados')
     else:
         form = CargarPerroEncontradoForm()
 
     return render(request, 'cargar_perro_encontrado.html', {'form': form})
 
+def editar_publicacion(request, id_publicacion):
+    publicacion = get_object_or_404(Publicacion, id=id_publicacion)
+    perro_publicacion = get_object_or_404(Perro_publicacion, id=publicacion.id_perro_publicacion_id)
+    
+    path_anterior = request.META.get('HTTP_REFERER')
 
+    if request.method == 'POST':
+        form = EditarPublicacionForm(request.POST, request.FILES or None)
+        if form.is_valid() or 'foto' not in request.FILES:
+            path_anterior = request.POST.get('path_anterior', '/')
+            
+            perro_publicacion.nombre = form.cleaned_data.get('nombre')
+            perro_publicacion.tamanio = form.cleaned_data.get('tamanio')
+            perro_publicacion.sexo = form.cleaned_data.get('sexo')
+            perro_publicacion.color = form.cleaned_data.get('color')
+            perro_publicacion.edad = form.cleaned_data.get('edad')
+            perro_publicacion.raza = form.cleaned_data.get('raza')
+            foto = form.cleaned_data.get('foto')
+            if foto:
+                perro_publicacion.foto = foto
+            perro_publicacion.save()
+            
+            publicacion.descripcion = form.cleaned_data.get('descripcion')
+            publicacion.fecha_ultima_modificacion = datetime.datetime.now()
+            publicacion.save()
+
+            messages.success(request, "¡Información actualizada correctamente!")
+            return redirect(path_anterior)
+    else:
+        form = EditarPublicacionForm(initial={
+            'nombre': perro_publicacion.nombre,
+            'tamanio': perro_publicacion.tamanio,
+            'sexo': perro_publicacion.sexo,
+            'color': perro_publicacion.color,
+            'edad': perro_publicacion.edad,
+            'raza': perro_publicacion.raza,
+            'foto': perro_publicacion.foto,
+            'descripcion': publicacion.descripcion,
+        })
+    context = {
+        'form': form,
+        'path_anterior': path_anterior
+    }
+
+    return render(request, 'editar_publicacion.html', context)
+
+
+def listar_perros_perdidos(request):
+    perros_perdidos = Publicacion.objects.filter(id_perro_publicacion__activo=True, tipo_publicacion='Perdidos')
+    filtros = {
+        'raza_consulta': request.GET.get('raza-consulta'),
+        'sexo_consulta': request.GET.get('sexo-consulta'),
+        'tamanio_consulta': request.GET.get('tamanio-consulta'),
+    }
+    if any(value for value in filtros.values()):
+        perros_perdidos = buscar_mascotas(request, filtros, perros_perdidos)
+
+    tamanio_opciones = (
+        ('Pequeño', 'Pequeño'),
+        ('Mediano', 'Mediano'),
+        ('Grande', 'Grande'),
+    )
+    sexo_opciones = (
+        ('M', 'Macho'),
+        ('H', 'Hembra')
+    )
+    contexto = {
+        "perros": paginar(request, perros_perdidos, 3),
+        "opciones_tamanios": tamanio_opciones,
+        'opciones_sexo': sexo_opciones
+    }
+    return render(request, 'listar_perros.html', contexto)
 
 def listar_perros_encontrados(request):
     perros_encontrados = Publicacion.objects.filter(id_perro_publicacion__activo=True, tipo_publicacion='Encontrado')
-    return render(request, 'listar_perros.html', {'perros': paginar(request, perros_encontrados, 3)})
+    filtros = {
+        'raza_consulta': request.GET.get('raza-consulta'),
+        'sexo_consulta': request.GET.get('sexo-consulta'),
+        'tamanio_consulta': request.GET.get('tamanio-consulta'),
+    }
+    if any(value for value in filtros.values()):
+        perros_encontrados = buscar_mascotas(request, filtros, perros_encontrados)
 
-
-
+    tamanio_opciones = (
+        ('Pequeño', 'Pequeño'),
+        ('Mediano', 'Mediano'),
+        ('Grande', 'Grande'),
+    )
+    sexo_opciones = (
+        ('M', 'Macho'),
+        ('H', 'Hembra')
+    )
+    contexto = {
+        "perros": paginar(request, perros_encontrados, 3),
+        "opciones_tamanios": tamanio_opciones,
+        'opciones_sexo': sexo_opciones
+    }
+    return render(request, 'listar_perros.html', contexto)
 
 @login_required
 def listar_mis_perros_encontrados(request):
     usuario = request.user  # Obtener el usuario autenticado
     publicaciones = Publicacion.objects.filter(id_usuario_id=usuario, tipo_publicacion='Encontrado')
-    context = {
-        'publicaciones': publicaciones
+    filtros = {
+        'raza_consulta': request.GET.get('raza-consulta'),
+        'sexo_consulta': request.GET.get('sexo-consulta'),
+        'tamanio_consulta': request.GET.get('tamanio-consulta'),
     }
-    return render(request, 'listar_mis_perros.html', context)
+    if any(value for value in filtros.values()):
+        publicaciones = buscar_mascotas(request, filtros, publicaciones)
 
+    tamanio_opciones = (
+        ('Pequeño', 'Pequeño'),
+        ('Mediano', 'Mediano'),
+        ('Grande', 'Grande'),
+    )
+    sexo_opciones = (
+        ('M', 'Macho'),
+        ('H', 'Hembra')
+    )
+    contexto = {
+        "publicaciones": paginar(request, publicaciones, 3),
+        "opciones_tamanios": tamanio_opciones,
+        'opciones_sexo': sexo_opciones
+    }
+    return render(request, 'listar_mis_perros.html', contexto)
 
 @login_required
 def listar_mis_perros_perdidos(request):
     usuario = request.user  # Obtener el usuario autenticado
     publicaciones = Publicacion.objects.filter(id_usuario_id=usuario, tipo_publicacion='Perdidos')
-    context = {
-        'publicaciones': publicaciones
+    filtros = {
+        'raza_consulta': request.GET.get('raza-consulta'),
+        'sexo_consulta': request.GET.get('sexo-consulta'),
+        'tamanio_consulta': request.GET.get('tamanio-consulta'),
     }
-    return render(request, 'listar_mis_perros.html', context)
+    if any(value for value in filtros.values()):
+        publicaciones = buscar_mascotas(request, filtros, publicaciones)
 
+    tamanio_opciones = (
+        ('Pequeño', 'Pequeño'),
+        ('Mediano', 'Mediano'),
+        ('Grande', 'Grande'),
+    )
+    sexo_opciones = (
+        ('M', 'Macho'),
+        ('H', 'Hembra')
+    )
+    contexto = {
+        "publicaciones": paginar(request, publicaciones, 3),
+        "opciones_tamanios": tamanio_opciones,
+        'opciones_sexo': sexo_opciones
+    }
+    return render(request, 'listar_mis_perros.html', contexto)
+
+
+def finalizar_publicacion(request, id_publicacion):
+    publicacion = Publicacion.objects.get(id=id_publicacion)
+    publicacion.activo = not publicacion.activo
+    publicacion.save()
+    path_anterior = request.META.get('HTTP_REFERER')
+    return redirect(path_anterior)
 
 
 def contactarse_perro_perdido(request, id):
@@ -485,9 +608,6 @@ def contactarse_perro_perdido(request, id):
     esRegistrado = request.user.is_authenticated
     if esRegistrado:
         usuario = request.user
-        if publicacion.id_usuario == usuario:
-            messages.error(request, 'No puedes contactarte con tu propia publicación.')
-            return redirect('listar_perros_perdidos')
         if PostulacionPerdidosEncontrados.objects.filter(publicacion_perdidos=publicacion, email=usuario.email).exists():
             messages.error(request, 'Ya te has comunicado para esta publicación de perro perdido.')
             return redirect('listar_perros_perdidos')
@@ -503,7 +623,7 @@ def contactarse_perro_perdido(request, id):
             return redirect('listar_perros_perdidos')
 
     if request.method == 'POST':
-        form = PostulacionPerrosForm(request.POST)
+        form = PostulacionPerrosForm(request.POST, esRegistrado=esRegistrado)
         if form.is_valid():
             postulacion = form.save(commit=False)
             postulacion.publicacion_perdidos = publicacion
@@ -517,7 +637,7 @@ def contactarse_perro_perdido(request, id):
             postulacion.save()
 
             enviar_DatosDeQuienSeComunico(postulacion, form.cleaned_data.get('mensaje'))
-            messages.success(request, 'Información enviada, a la brevedad el dueño de la publicación se contactará contigo.')
+            messages.success(request, 'Información enviada, ¡gracias por tu colaboración en la búsqueda!')
             return redirect('listar_perros_perdidos')
 
     else:
@@ -535,12 +655,12 @@ def enviar_DatosDeQuienSeComunico(postulacion, mensaje):
 
     nombre_postulante = postulacion.nombre
     context = {
-    'nombre_postulante': nombre_postulante,
-    'apellido_postulante': postulacion.apellido,
-    'email_postulante': postulacion.email,
-    'telefono_postulante': postulacion.telefono,
-    'mensaje': mensaje,
-}
+        'nombre_postulante': nombre_postulante,
+        'apellido_postulante': postulacion.apellido,
+        'email_postulante': postulacion.email,
+        'telefono_postulante': postulacion.telefono,
+        'mensaje': mensaje,
+    }
 
 
     html_content = get_template('mail/datos_mailPerdidosEncontrados.html')
@@ -549,3 +669,26 @@ def enviar_DatosDeQuienSeComunico(postulacion, mensaje):
     email = EmailMultiAlternatives(subject, '', from_email, [to_email], reply_to=[reply_to_email])
     email.attach_alternative(html_content, 'text/html')
     email.send(fail_silently=False)
+
+
+def buscar_mascotas(request, filtros, publicaciones):
+    print("FILTRO",filtros)
+    publicaciones_filtradas = publicaciones
+    
+    if filtros['raza_consulta']:
+        consulta = filtros['raza_consulta']
+        publicaciones_filtradas = publicaciones_filtradas.filter(id_perro_publicacion__raza__icontains=unidecode(consulta))
+        
+    if filtros['sexo_consulta']:
+        consulta = filtros['sexo_consulta']
+        publicaciones_filtradas = publicaciones_filtradas.filter(id_perro_publicacion__sexo=consulta)
+    
+    if filtros['tamanio_consulta']:
+        consulta = filtros['tamanio_consulta']
+        publicaciones_filtradas = publicaciones_filtradas.filter(id_perro_publicacion__tamanio=consulta)
+    
+    if  not publicaciones_filtradas:
+        messages.add_message(request, messages.ERROR, 'No hay perros para la búsqueda realizada')
+        publicaciones_filtradas = publicaciones
+
+    return publicaciones_filtradas

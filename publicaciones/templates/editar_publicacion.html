@@ -1,0 +1,163 @@
+{% extends 'OhMyDogApp/base.html' %}
+{% load static %}
+{% block content %}
+
+<h1 style="text-align: center; margin-top: 10px;">Editar Publicación</h1>
+
+<div class="container">
+  {% for message in messages %}
+    <div id="msg" class="alert alert-{{ message.tags }}">
+      {{ message }}
+    </div>
+  {% endfor %}
+  <div class="card-deck justify-content-center">
+    <div class="col-md-6 mb-5">
+      <div class="card h-100">
+        <div class="card-body">
+          <div class="listing-heading text-center">
+            <h5 class="card-title" style="margin-bottom:10px">Publicación Perro 
+                {% if 'perdidos/' in path_anterior %} Perdido 
+                {% else %} Encontrado 
+                {% endif %}
+            </h5>
+          </div>
+          <form method="post" action="" style="color: black;" enctype='multipart/form-data' onsubmit="return validarFormulario()">
+            {% csrf_token %}
+            <p class="card-text">
+              <i class="fa-solid fa-dog" style="color: #e4a64e;"></i>
+              Nombre{% if 'perdidos/' in path_anterior %}*{% endif %}: {{ form.nombre }}
+            </p>
+            <hr>
+            <p class="card-text">
+              <i class="fa-solid fa-ruler-vertical" style="color: #e4a64e;"></i>
+              Tamaño*: {{ form.tamanio }}
+            </p>
+            <hr>
+            <p class="card-text">
+              <i class="fa-solid fa-palette" style="color: #e4a64e;"></i>
+              Color*: {{ form.color }}
+            </p>
+            <hr>
+            <p class="card-text">
+              <i class="fa-solid fa-calendar-days" style="color: #e4a64e;"></i>
+              Edad*: {{ form.edad }}
+            </p>
+            <hr>
+            <p class="card-text">
+              <i class="fa-solid fa-dog" style="color: #e4a64e;"></i>
+              Raza*: {{ form.raza }}
+            </p>
+            <hr>
+            <p class="card-text">
+              <i class="fa-solid fa-paw" style="color: #e4a64e;"></i>
+              Sexo*: {{ form.sexo }}
+            </p>
+            <hr>
+            <p class="card-text">
+              <i class="fa-solid fa-comment" style="color: #e4a64e;"></i>
+              Descripci&oacute;n*: 
+              <br>
+              {{ form.descripcion }}
+            </p>
+            <hr>
+            <p class="card-text">
+                <i class="fa-solid fa-image" style="color: #e4a64e;"></i> Foto: 
+            </p>
+            <p>{{ form.foto }}</p>
+            <hr>
+            <button type="submit" id="btn-confirmar" class="btn btn-success">Confirmar</button>
+            <a href={{ path_anterior }} class="btn btn-primary">Cancelar</a>
+            <!-- para poder saber el url anterior, ya que se puede acceder desde dos partes-->
+            <input type="hidden" name="path_anterior" value="{{ path_anterior }}" id="path_anterior"></input>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    function validarFormulario() {
+        var path_anterior = document.getElementById('path_anterior').value;
+        var raza = document.getElementById('id_raza').value;
+        var color = document.getElementById('id_color').value;
+        var tamanio = document.getElementById('id_tamanio').value;
+        var edad = document.getElementById('id_edad').value;
+        var sexo = document.getElementById('id_sexo').value;
+        var descripcion = document.getElementById('id_descripcion').value;
+
+        // Validación de campos vacíos
+        if (edad.trim() === '' 
+            || raza.trim() === '' 
+            || color.trim() === '' 
+            || tamanio.trim() === '' 
+            || sexo.trim() === '' 
+            || descripcion.trim() === '') {
+            alert('Por favor, completa todos los campos obligatorios.');
+            return false;
+        }
+        
+        // Validación de campos no numéricos
+        var regex = /^[a-zA-Z\s]+$/; // Expresión regular para solo letras y espacios
+        if (!regex.test(raza) || !regex.test(color)) {
+            alert('Los campos "Raza" y "Color" no pueden contener números.');
+            return false;
+        }
+        if (path_anterior.includes('perdidos')) {
+          var nombre = document.getElementById('id_nombre').value;
+          if(nombre.trim() === ''){
+            alert('Por favor, ingresa un nombre para el perro.');
+            return false;
+          } else if(!regex.test(nombre)){
+            alert('El campo "Nombre" no puede contener números.');
+            return false;
+          }
+        }
+
+        return true; // todo ok
+    }
+    
+    // Validar campos en tiempo real
+    var formInputs = document.querySelectorAll('input, select, textarea');
+    var btnConfirmar = document.getElementById('btn-confirmar');
+    
+    formInputs.forEach(function (input) {
+        input.addEventListener('input', function () {
+        validarCampos();
+        });
+    });
+
+    function validarCampos() {
+        var path_anterior = document.getElementById('path_anterior').value;
+        var raza = document.getElementById('id_raza').value;
+        var color = document.getElementById('id_color').value;
+        var tamanio = document.getElementById('id_tamanio').value;
+        var edad = document.getElementById('id_edad').value;
+        var sexo = document.getElementById('id_sexo').value;
+        var descripcion = document.getElementById('id_descripcion').value;
+
+        var regex = /^[a-zA-Z\s]*$/; // Expresión regular para solo letras y espacios
+    
+        var isFormValid =
+            edad.trim() !== '' &&
+            raza.trim() !== '' &&
+            tamanio.trim() !== '' &&
+            regex.test(raza) &&
+            color.trim() !== '' &&
+            regex.test(color) &&
+            descripcion.trim() !== '' &&
+            sexo.trim() !== '';
+
+        if (path_anterior.includes('perdidos')) {
+          var nombre = document.getElementById('id_nombre').value;
+          isFormValid = isFormValid && nombre.trim() !== '' && regex.test(nombre);
+        }
+
+        btnConfirmar.disabled = !isFormValid;
+    }
+
+    // Validar campos al cargar la página
+    validarCampos();
+</script>
+
+{% endblock %}

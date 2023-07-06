@@ -68,13 +68,17 @@ class EditarAdopcionForm(forms.ModelForm):
 class PublicarPerroPerdidoForm(forms.Form):
     
     nombre = forms.CharField(max_length=100)
-    tamanio = forms.ChoiceField(choices=Perro_publicacion.opciones_tamanio)
+    tamanio = forms.ChoiceField(choices=Perro_publicacion.opciones_tamanio, label='Tamaño')
     sexo = forms.ChoiceField(choices=Perro_publicacion.SEXO_CHOICES)
     color = forms.CharField(max_length=100)
     edad = forms.CharField(max_length=100)
     raza = forms.CharField(max_length=100)
+    descripcion = forms.CharField(widget=forms.Textarea(attrs={'rows': 4, 
+                                                               'cols': 40,
+                                                               'id': 'descripcion',
+                                                               'placeholder': 'Por favor, proporcione toda la información adicional relevante sobre su perro perdido. Evite incluir datos privados en su publicación.'}),
+                                  label='Descripción')
     foto = forms.ImageField()
-    descripcion = forms.CharField(widget=forms.Textarea)
     tipo_publicacion = forms.CharField(max_length=20, initial='Perdidos', widget=forms.HiddenInput)
 
     def save(self, user):
@@ -97,12 +101,16 @@ class PublicarPerroPerdidoForm(forms.Form):
 
 class CargarPerroEncontradoForm(forms.Form):
     nombre = forms.CharField(max_length=100, required=False)
-    tamanio = forms.ChoiceField(choices=Perro_publicacion.opciones_tamanio)
+    tamanio = forms.ChoiceField(choices=Perro_publicacion.opciones_tamanio, label='Tamaño')
     sexo = forms.ChoiceField(choices=Perro_publicacion.SEXO_CHOICES)
     color = forms.CharField(max_length=100)
     edad_aproximada = forms.CharField(max_length=100)
     raza = forms.CharField(max_length=100)
-    descripcion = forms.CharField(widget=forms.Textarea(attrs={'rows': 4, 'cols': 40}))
+    descripcion = forms.CharField(widget=forms.Textarea(attrs={'rows': 4, 
+                                                               'cols': 40,
+                                                               'id': 'descripcion',
+                                                               'placeholder': 'Por favor, proporcione toda la información adicional relevante sobre el perro encontrado. Evite incluir datos privados en su publicación.'}),
+                                  label='Descripción')
     foto = forms.ImageField()
 
     def save(self, user):
@@ -125,9 +133,27 @@ class CargarPerroEncontradoForm(forms.Form):
             tipo_publicacion='Encontrado'
         )
 
+class CustomImageWidget(forms.ClearableFileInput):
+    def render(self, name, value, attrs=None, renderer=None):
+        return super().render(name, value, attrs=attrs, renderer=renderer)
 
+class EditarPublicacionForm(forms.ModelForm):
+    descripcion = forms.CharField(max_length=400, widget=forms.Textarea(attrs={'rows': 4, 'cols': 40}),required=True, label='Descripción')
+    foto = forms.ImageField(widget=CustomImageWidget, required=True)
+    class Meta:
+        model = Perro_publicacion
+        fields = ['nombre', 'tamanio', 'sexo', 'color', 'edad', 'raza']
 
 class PostulacionPerrosForm(forms.ModelForm):
     class Meta:
         model = PostulacionPerdidosEncontrados
         fields = ['nombre', 'apellido', 'email', 'telefono', 'mensaje']
+
+    def __init__(self, *args, **kwargs):
+        esRegistrado = kwargs.pop('esRegistrado', False)
+        super(PostulacionPerrosForm, self).__init__(*args, **kwargs)
+
+        if esRegistrado:
+            self.fields.pop('nombre')
+            self.fields.pop('apellido')
+            self.fields.pop('telefono')
