@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from usuarios.models import Cliente, Usuario
+from servicios.models import Donacion
 from .models import *
 from .forms import *
 from servicios.forms import PersonalForm
@@ -82,6 +83,12 @@ def registrar_cliente(request):
             cliente = Cliente.objects.create(
                 user=usuario,
             )
+
+            if (Donacion.objects.filter(email=usuario.email).exists()):
+                print("DONÓ SIN ESTAR REGISTRADO")
+                usuario.descuento = True
+                usuario.save()
+                
             subject = 'Registro de Usuario Exitoso'
             from_email = 'Ejtech <%s>' % (settings.EMAIL_HOST_USER)
             to_email = '%s' % (form.cleaned_data.get('email'))
