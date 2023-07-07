@@ -5,6 +5,7 @@ from .models import Personal
 from .models import Guardia
 from .models import Campaña
 from .models import Donacion
+from django.forms.widgets import DateInput
 
 class PersonalForm(forms.ModelForm):
     ubicacion = gis_forms.PointField(widget=LeafletWidget())
@@ -72,11 +73,20 @@ class GuardiaForm(forms.ModelForm):
         return guardia
     
 class CampañaForm(forms.ModelForm):
-    
+
     class Meta:
         model = Campaña
         fields = ('nombre', 'motivo', 'objetivo', 'fechaInicio', 'fechaFin')
-    
+        labels = {
+            'fechaInicio': 'Fecha de Inicio',
+            'fechaFin': 'Fecha de Fin',
+        }
+        widgets = {
+            'fechaInicio': DateInput(attrs={'type': 'date'}),
+            'fechaFin': DateInput(attrs={'type': 'date'}),
+        }
+
+        
     def save(self, commit=True):
         campaña = super().save(commit=False)
         if commit:

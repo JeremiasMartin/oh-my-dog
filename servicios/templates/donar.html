@@ -5,18 +5,109 @@
 {% block content %}
 <head>
     <script src="https://sdk.mercadopago.com/js/v2"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        form {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-top:20px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .campaña-nombre {
+            word-wrap: break-word;
+        }
+    </style>
 </head>
+
 <body>
-    <form method="post">
-        {% csrf_token %}
-        {% if user.is_authenticated %}
-        Monto: {{ form.monto }}
-        {% else %}
-            Email: {{ form.email }}
-            Monto: {{ form.monto }}
-        {% endif %}
-        <button type="submit">Continuar</button>
-    </form>
+    <div class="container">
+        <form method="post">
+            <div class="form-group">
+                <h3 class="campaña-nombre" style="text-align: center;">Donación para la campaña <strong>{{ campaña.nombre }}</strong></h3>
+            </div>
+            {% csrf_token %}
+            {% if not user.is_authenticated %}
+                <label for="id_email">Email:</label>
+                {{ form.email }}
+            {% endif %}
+            <label for="id_monto">Monto:</label>
+            {{ form.monto }}
+            <button type="submit" class="btn btn-success" id="btn-continuar">Continuar</button>
+        </form>
+    </div>
     {{ payment }}
 </body>
+
+<script>
+    function validarFormulario() {
+        var email = document.getElementById('id_email').value;
+        var monto = document.getElementById('id_monto').value;
+
+        if (email.trim() === '' || monto.trim() === '') {
+            alert('Por favor, complete todos los campos.');
+            return false;
+        }
+
+        var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!email.match(emailPattern)) {
+            alert('Ingresa un email válido.');
+            return false;
+        }
+
+        if(monto < 1){
+          alert('El monto a donar no puede ser menor a 0');
+            return false;
+        }
+
+        return true;
+    }
+
+    var formInputs = document.querySelectorAll('input[type="email"], input[type="number"]');
+    var btnContinuar = document.getElementById('btn-continuar');
+    
+    formInputs.forEach(function (input) {
+      input.addEventListener('input', function () {
+        validarCampos();
+      });
+    });
+
+    function validarCampos() {
+        var email = document.getElementById('id_email').value;
+        var monto = document.getElementById('id_monto').value;
+
+        var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        var isFormValid =
+            email.trim() !== '' &&
+            email.match(emailPattern) &&
+            monto.trim() !== '' &&
+            monto > 0;
+        
+        btnContinuar.disabled = !isFormValid;
+    }
+
+    // Validar campos al cargar la página
+    validarCampos();
+</script>
 {% endblock %}

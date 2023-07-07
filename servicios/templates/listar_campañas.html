@@ -3,15 +3,18 @@
 {% load static %}
 
 {% block content %}
-<section id="showcase-inner" class="py-5 text-black">
-    <div class="container">
-      <div class="row text-center">
-        <div class="col-md-12">
-          <h2 class="display-4">Listado de campañas</h2>
-        </div>
-      </div>
+<div class="container">
+    <div class="col-lg-8 offset-lg-2 col-xl-12 offset-xl-0 bg-light p-4 my-4 text-center">
+        <h1 class="display-4 text-center">Campañas de donación</h1>
+        <hr>
+        <p class="lead">Sumate a nuestras campañas para ayudar a perros en diferentes situaciones. 
+            Tu donación marca la diferencia.
+        </p>
+        <p class="lead fw-normal">
+            ¡Tu apoyo es fundamental!
+        </p> 
     </div>
-  </section>
+</div>
 <!-- Listado -->
 <section id="listado" class="py-4">
     <div class="container">
@@ -41,20 +44,20 @@
                                 <hr>
                                 <p class="card-text"><i class="fa-solid fa-id-card" style="color: #e4a64e;"></i> Fin: {{ campaña.fechaFin }}</p>
                                 <hr>
-                                <br>
                                 <p class="card-text"><i class="fa-solid fa-id-card" style="color: #e4a64e;"></i> Recaudado: ${{ campaña.recaudado }}</p>
                                 <br>
                                 <p class="card-text"><i class="fa-solid fa-id-card" style="color: #e4a64e;"></i> Objetivo a recaudar: ${{ campaña.objetivo }}</p>
+                                <hr>
                                 <div style="display: flex; flex-direction: column; align-items: center;"class="d-flex flex-column">
-                                    {% if user.is_staff %}
+                                {% if user.is_staff %}
                                     <a href= "{% url 'Editar_campaña' campaña.id %}" class="btn btn-primary btn-block">Editar Campaña</a>
-                                    {% endif %}
-                                    {% if campaña.fechaInicio|date:"Y-m-d" <= fechaHoy|date:"Y-m-d" %}
-                                        <a href= "{% url 'Donar' campaña.id %}" class="btn btn-primary btn-block">Donar</a>
-                                    {% else %}
+                                {% endif %}
+                                {% if campaña.fechaInicio|date:"Y-m-d" <= fechaHoy|date:"Y-m-d" %}
+                                    <a href= "{% url 'Donar' campaña.id %}" class="btn btn-primary btn-block">Donar</a>
+                                {% else %}
                                     <br>
-                                        <div class="alert alert-info">Todavía no comenzó la colecta de donación</div>
-                                    {% endif %}
+                                    <div class="alert alert-info">Todavía no comenzó la colecta de donación</div>
+                                {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -63,7 +66,7 @@
             </div>    
             {% else %}
                 <div id="sin-resultados">
-                    <p>No Hay Resultados</p>
+                    <p>No hay campañas disponibles</p>
                 </div>
             {% endif %}
     </div>

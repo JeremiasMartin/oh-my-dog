@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from .models import Personal
-from django.core.paginator import Paginator
 from .forms import *
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
@@ -23,7 +22,7 @@ import tempfile
 from django.core.mail import EmailMultiAlternatives
 import xhtml2pdf.pisa as pisa
 from django.http import HttpResponse
-
+from usuarios.models import Usuario
 
 def listar_personal(request):
     personal = Personal.objects.all()
@@ -174,7 +173,14 @@ def editar_campaña(request, campaña_id):
             messages.success(request, "¡Campaña editada correctamente!")
             return redirect('Listar_campañas')
     else:
-        form = CampañaForm(instance=campaña)
+        initial_values = {
+            'nombre': campaña.nombre,
+            'motivo': campaña.motivo,
+            'objetivo': campaña.objetivo,
+            'fechaInicio': campaña.fechaInicio.strftime('%Y-%m-%d'), 
+            'fechaFin': campaña.fechaFin.strftime('%Y-%m-%d'), 
+        }
+        form = CampañaForm(initial=initial_values)
 
     context = {'form': form}
     return render(request, 'editar_campaña.html', context)
@@ -270,16 +276,20 @@ def donacion_exitosa(request, campaña_id, monto):
             pdf_file.seek(0)
             email.attach('comprobante_donacion.pdf', pdf_file.read(), 'application/pdf')
 
+    
     email.send(fail_silently=False)
     
     if request.user.is_authenticated:
         request.user.descuento = True
         request.user.save()
+        return redirect('Listar_donaciones')
+    elif Usuario.objects.filter(email = to_email):
+        user = Usuario.objects.get(email=to_email)
+        user.descuento = True
+        user.save()
+        
+    return redirect('Listar_campañas')
     
-    else:
-        return redirect('/')
-
-    return redirect('Listar_donaciones')
 
 
 def listar_donaciones(request):
