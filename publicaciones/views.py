@@ -602,25 +602,41 @@ def finalizar_publicacion(request, id_publicacion):
     return redirect(path_anterior)
 
 
-def contactarse_perro_perdido(request, id):
+def contactarse_perro(request, id):
     publicacion = get_object_or_404(Publicacion, id=id)
-
     esRegistrado = request.user.is_authenticated
+
+    #para redirigir al listado de perros correspondientes
+    path_previo = request.META.get('HTTP_REFERER')
+    if ('perdidos' in path_previo) or ('encontrados' in path_previo):
+        print("VENGO DEL LISTAR")
+        request.session['first_path'] = path_previo
+        
+
+    first_path = request.session.get('first_path')
+    print("PRINCIPIO FUNCION: previo", path_previo)
+    print("PRINCIPIO FUNCION: final", first_path)
+    mensaje = 'Ya te has comunicado para esta publicación de perro {}.'
+    if 'perdidos' in first_path:
+        mensaje = mensaje.format('perdido')
+    else:
+        mensaje = mensaje.format('encontrado')
+
     if esRegistrado:
         usuario = request.user
         if PostulacionPerdidosEncontrados.objects.filter(publicacion_perdidos=publicacion, email=usuario.email).exists():
-            messages.error(request, 'Ya te has comunicado para esta publicación de perro perdido.')
-            return redirect('listar_perros_perdidos')
+            messages.error(request, mensaje)
+            return redirect(path_previo)
     else:
         email_postulante = request.POST.get('email')
 
         if publicacion.id_usuario.email == email_postulante:
             messages.error(request, 'No puedes contactarte con tu propia publicación.')
-            return redirect('listar_perros_perdidos')
+            return redirect(path_previo)
 
         if PostulacionPerdidosEncontrados.objects.filter(publicacion_perdidos=publicacion, email=email_postulante).exists():
-            messages.error(request, 'Ya te has comunicado para esta publicación de perro perdido.')
-            return redirect('listar_perros_perdidos')
+            messages.error(request, mensaje)
+            return redirect(path_previo)
 
     if request.method == 'POST':
         form = PostulacionPerrosForm(request.POST, esRegistrado=esRegistrado)
@@ -635,15 +651,20 @@ def contactarse_perro_perdido(request, id):
                 postulacion.telefono = usuario.telefono
 
             postulacion.save()
-
             enviar_DatosDeQuienSeComunico(postulacion, form.cleaned_data.get('mensaje'))
             messages.success(request, 'Información enviada, ¡gracias por tu colaboración en la búsqueda!')
-            return redirect('listar_perros_perdidos')
+            return redirect(first_path)
 
     else:
         form = PostulacionPerrosForm()
-
-    return render(request, 'Contactar_perro.html', {'form': form, 'publicacion_id': id, 'esRegistrado': esRegistrado})
+    print("FINAL PREVIO:", path_previo)
+    print("FINAL FUNCION: final", first_path)
+    context = {
+        'form': form,
+        'publicacion_id': id,
+        'esRegistrado': esRegistrado
+    }
+    return render(request, 'Contactar_perro.html', context)
 
            
 

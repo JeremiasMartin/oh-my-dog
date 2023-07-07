@@ -68,7 +68,7 @@
                       {%endif%}
                     </a>
                   {% else %}
-                    <a href="{% url 'contactarse_perro_perdido' id=publicacion.id_perro_publicacion_id %}" class="btn btn-primary btn-block">Contactarse</a>
+                    <a href="{% url 'contactarse_perro' id=publicacion.id_perro_publicacion_id %}" class="btn btn-primary btn-block">Contactarse</a>
                   {% endif %}
                 {% else %}
                   {% if 'perdidos/' in request.path %}
