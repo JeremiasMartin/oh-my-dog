@@ -3,21 +3,34 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
+  <div style="width: 75%; margin: auto; text-align: center; max-width: 800px; margin-top:20px">
+    <div class="card mb-4">
+      <div class="card-body">
+        <h2 class="card-title">Registrar Atención</h5>
+        <h5 class="card-title">Mascota: {{perro}}</h5>
+      </div>
+    </div>
+  </div>
   {% if messages %}
-    <ul class="messages" style="margin-top:10px">
+  <div style="justify-content: center;">
+    <ul class="messages" style="text-align: center; margin-top:10px; padding: 20px; max-width: 900px;">
       {% for message in messages %}
         <div id="msg-{{ message.tags }}" class="alert alert-{{ message.tags }}">
           {{ message }}
         </div>
       {% endfor %}
-    </ul>
+  </ul>
   {% endif %}
-  <form method="post" id="registrar-atencion-form">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" id="btn-guardar" disabled>Guardar</button>
-    <a href='/perros/listar-mascotas-cliente/{{ perro.cliente.user_id }}/' class="btn btn-primary">Cancelar</a>
-  </form>
+  <div style="margin-top:20px">
+    <div class="container" style="background-color: #e9ecef; border-radius: 10px; padding: 20px; max-width: 800px;">
+      <form method="post" id="registrar-atencion-form">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-success" id="btn-guardar" disabled>Guardar</button>
+        <a href='/perros/listar-mascotas-cliente/{{ perro.cliente.user_id }}/' class="btn btn-primary">Cancelar</a>
+      </form>
+    </div>
+  </div>
 
 <script>
   const form = document.getElementById('registrar-atencion-form');

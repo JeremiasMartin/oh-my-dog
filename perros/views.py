@@ -12,7 +12,8 @@ from unidecode import unidecode
 
 
 def listar_mascotas_cliente(request, cliente_id):
-    mascotas = Perro.objects.filter(cliente_id__user_id=cliente_id)
+    cliente = Cliente.objects.get(cliente_id=cliente_id)
+    mascotas = Perro.objects.filter(cliente_id=cliente_id)
     filtros = {
         'raza_consulta': request.GET.get('raza-consulta'),
         'sexo_consulta': request.GET.get('sexo-consulta'),
@@ -31,6 +32,7 @@ def listar_mascotas_cliente(request, cliente_id):
         ('Hembra','Hembra'),
     )
     contexto = {
+        "cliente": cliente,
         "mascotas":paginar(request, mascotas, 6),
         "opciones_tamanios": tamanio_opciones,
         "opciones_sexo": opciones_sexo,
@@ -259,8 +261,9 @@ def registrar_atencion(request, id_mascota):
                                 )
                             
             if not tiene_error:
-                if perro.cliente.id.descuento: # Si el cliente posee descuento
-                    perro.cliente.id.descuento = False
+                if perro.cliente.user.descuento: # Si el cliente posee descuento
+                    perro.cliente.user.descuento = False
+                    perro.cliente.user.save()
                 atencion.save()
                 messages.success(request, 'Atención registrada exitosamente')
                 return redirect(f'/perros/registrar-atencion/{perro.id}/')
