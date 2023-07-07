@@ -13,30 +13,31 @@
   </section>
 <!-- Listado -->
 <section id="listado" class="py-4">
-    <div class="container" style='background-color:#c6dbef; border: 1px solid #ccc;border-radius: 10px;padding: 20px;'>
-        {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-            <div id="msg-{{ message.tags }}"class="alert alert-{{ message.tags }}">
-                {{ message }}
-            </div>
-            {% endfor %}
-        </ul>
-        {% endif %}
-
-  <form method="post" action="{% url 'Contacto' personal_id=person.id %}">
-    {% csrf_token %}
-    <div>
-      <label for="consulta">Consulta:</label>
-      <textarea id="consulta" name="consulta" rows="4" cols="50" class='form-control'></textarea>
-    </div>
-    {% if not user.is_authenticated %}
-    <div>
-      <label for="email">Correo electrónico:</label>
-      <input type="email" id="email" name="email" class='form-control'>
-    </div>
-    {% endif %}
-    <button type="submit" class='btn btn-primary'>Enviar</button>
-  </form>
+  <div class="container">
+  {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+        <div id="msg-{{ message.tags }}"class="alert alert-{{ message.tags }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </ul>
+  {% endif %}
+  </div>
+  <div class="container" style='background-color:#c6dbef; border: 1px solid #ccc;border-radius: 10px;padding: 20px;'>
+    <form method="post" action="{% url 'Contacto' personal_id=person.id %}">
+      {% csrf_token %}
+      <div>
+        <label for="consulta">Consulta:</label>
+        <textarea id="consulta" name="consulta" rows="4" cols="50" class='form-control'></textarea>
+      </div>
+      {% if not user.is_authenticated %}
+      <div>
+        <label for="email">Correo electrónico:</label>
+        <input type="email" id="email" name="email" class='form-control'>
+      </div>
+      {% endif %}
+      <button type="submit" class='btn btn-primary'>Enviar</button>
+    </form>
 </section>
 {% endblock %}
