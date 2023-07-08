@@ -26,10 +26,12 @@ class Personal(models.Model):
         return self.nombre
 
 class Guardia(models.Model):
-    descripcion = models.TextField()
+    fecha = models.DateField(blank=False, null=False)
+    veterinaria = models.CharField(blank=False, null=False, default='')
 
     class Meta:
-        verbose_name = 'guardias'
+        verbose_name = 'guardia'
+        verbose_name_plural = 'guardias'
         db_table = 'servicios_guardias'
 
 class Campaña(models.Model):

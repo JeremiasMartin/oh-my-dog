@@ -23,6 +23,7 @@ from django.core.mail import EmailMultiAlternatives
 import xhtml2pdf.pisa as pisa
 from django.http import HttpResponse
 from usuarios.models import Usuario
+from django.views.decorators.csrf import csrf_exempt
 
 def listar_personal(request):
     personal = Personal.objects.all()
@@ -133,24 +134,41 @@ def cargar_guardia(request):
     return render(request, 'cargar_guardia.html', context)
 
 
-def listar_guardias(request):
+@csrf_exempt
+def calendar_events(request):
+    form = GuardiaForm()
+
+    if request.method == 'POST':
+        form = GuardiaForm(request.POST)
+        if form.is_valid():
+            form.save()
+            print('ENTRA')
+
     guardias = Guardia.objects.all()
-    return render(request, 'listar_guardias.html', {"guardias":guardias, "fecha":datetime.datetime.now()})
+    events = []
 
-def editar_guardia(request):
-    guardia = Guardia.objects.first()
+    for guardia in guardias:
+        event = {
+            'id': guardia.id,
+            'title': guardia.veterinaria,
+            'start': guardia.fecha.strftime('%Y-%m-%d')
+        }
+        events.append(event)
 
+    return render(request, 'listar_guardias.html', {'events': events, 'form': form})
+
+
+
+def editar_guardia(request, pk):
+    guardia = get_object_or_404(Guardia, pk=pk)
     if request.method == 'POST':
         form = GuardiaForm(request.POST, instance=guardia)
         if form.is_valid():
             form.save()
-            messages.success(request, "¡Guardia editada correctamente!")
-            return redirect('Listar_guardias')
+            return redirect('calendar_events')
     else:
         form = GuardiaForm(instance=guardia)
-
-    context = {'form': form}
-    return render(request, 'editar_guardia.html', context)
+    return render(request, 'editar_guardia.html', {'form': form})
 
 def cargar_campaña(request):
     if request.method == 'POST':

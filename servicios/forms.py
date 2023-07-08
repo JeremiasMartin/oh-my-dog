@@ -64,13 +64,7 @@ class GuardiaForm(forms.ModelForm):
     
     class Meta:
         model = Guardia
-        fields = ('descripcion',)
-    
-    def save(self, commit=True):
-        guardia = super().save(commit=False)
-        if commit:
-            guardia.save()
-        return guardia
+        fields = ('fecha','veterinaria')
     
 class CampañaForm(forms.ModelForm):
 
