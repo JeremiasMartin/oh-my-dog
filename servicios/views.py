@@ -24,6 +24,7 @@ import xhtml2pdf.pisa as pisa
 from django.http import HttpResponse
 from usuarios.models import Usuario
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 
 def listar_personal(request):
     personal = Personal.objects.all()
@@ -117,6 +118,7 @@ def mapa(request):
 
     return render(request, 'mapa.html', context)
 
+@login_required
 def cargar_guardia(request):
     guardia = Guardia.objects.first()
 
@@ -158,7 +160,7 @@ def calendar_events(request):
     return render(request, 'listar_guardias.html', {'events': events, 'form': form})
 
 
-
+@login_required
 def editar_guardia(request, pk):
     guardia = get_object_or_404(Guardia, pk=pk)
     if request.method == 'POST':

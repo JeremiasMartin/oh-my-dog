@@ -1,14 +1,17 @@
-{% extends "OhMyDogApp/base.html" %}
-
-{% block content %}
-
-<h1>Cargar Guardia</h1>
-
-<form method="post">
-  {% csrf_token %}
-  <textarea id="id_descripcion" name="descripcion" style="width: 400px; height: 200px;">{{ form.descripcion.value }}</textarea>
-  <br><br>
-  <button type="submit">Guardar</button>
-</form>
-
-{% endblock %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Agregar Guardia</title>
+</head>
+<body>
+    <h1>Agregar Guardia</h1>
+    <form method="post" action="{% url 'cargar_guardia' %}">
+        {% csrf_token %}
+        <label for="fecha">Fecha:</label>
+        <input type="date" id="fecha" name="fecha" required><br>
+        <label for="descripcion">Descripción:</label>
+        <textarea id="descripcion" name="descripcion"></textarea><br>
+        <button type="submit">Agregar Guardia</button>
+    </form>
+</body>
+</html>
