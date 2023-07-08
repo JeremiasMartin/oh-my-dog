@@ -420,7 +420,7 @@ def publicar_perro_perdido(request):
         form = PublicarPerroPerdidoForm(request.POST, request.FILES)
         if form.is_valid():
             form.save(request.user)
-            
+            messages.success(request, 'Publicación de perro perdido exitosa')
             return redirect('listar_mis_perros_perdidos')
     else:
         form = PublicarPerroPerdidoForm()
@@ -432,6 +432,7 @@ def cargar_perro_encontrado(request):
         form = CargarPerroEncontradoForm(request.POST, request.FILES)
         if form.is_valid():
             form.save(request.user)
+            messages.success(request, 'Publicación de perro encontrado exitosa')
             return redirect('listar_mis_perros_encontrados')
     else:
         form = CargarPerroEncontradoForm()
