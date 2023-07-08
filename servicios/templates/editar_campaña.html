@@ -14,67 +14,72 @@
   </form>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <script>
-    function validarFormulario() {
-        var nombre = document.getElementById('id_nombre').value;
-        var motivo = document.getElementById('id_motivo').value;
-        var objetivo = document.getElementById('id_objetivo').value;
-        var fechaInicio = document.getElementById('id_fechaInicio').value;
-        var fechaFin = document.getElementById('id_fechaFin').value;
+  function validarFormulario() {
+    var nombre = document.getElementById('id_nombre').value;
+    var motivo = document.getElementById('id_motivo').value;
+    var objetivo = document.getElementById('id_objetivo').value;
+    var fechaInicio = document.getElementById('id_fechaInicio').value;
+    var fechaFin = document.getElementById('id_fechaFin').value;
 
-        if (nombre.trim() === '' || motivo.trim() === '' || objetivo.trim() === '' || fechaInicio.trim() === '' || fechaFin.trim() === '') {
-            alert('Por favor, complete todos los campos.');
-            return false;
-        }
-
-        if (new Date(fechaInicio) > new Date(fechaFin)) {
-            alert('La fecha de inicio no puede ser futura a la fecha de fin');
-            return false;
-        }
-
-        if(objetivo < 1){
-          alert('El objetivo no puede ser $0');
-            return false;
-        }
-        
-        return true;
+    if (nombre.trim() === '' || motivo.trim() === '' || objetivo.trim() === '' || fechaInicio.trim() === '' || fechaFin.trim() === '') {
+      alert('Por favor, complete todos los campos.');
+      return false;
     }
 
-    var formInputs = document.querySelectorAll('input[type="text"], input[type="number"], input[type="date"]');
-    var btnGuardar = document.getElementById('btn-guardar');
+    var selectedDate = moment(fechaInicio).startOf('day');
+      
+    if (selectedDate.isAfter(moment(fechaFin).startOf('day'))) {
+      alert('La fecha de inicio no puede ser posterior a la fecha de fin.');
+      return false;
+    }
     
-    formInputs.forEach(function (input) {
-      input.addEventListener('input', function () {
-        validarCampos();
-      });
-    });
-
-    function validarCampos() {
-        var nombre = document.getElementById('id_nombre').value;
-        var motivo = document.getElementById('id_motivo').value;
-        var objetivo = document.getElementById('id_objetivo').value;
-        var fechaInicio = document.getElementById('id_fechaInicio').value;
-        var fechaFin = document.getElementById('id_fechaFin').value;
-
-        var isFormValid =
-            nombre.trim() !== '' &&
-            motivo.trim() !== '' &&
-            objetivo.trim() !== '' &&
-            fechaInicio.trim() !== '' &&
-            fechaFin.trim() !== '';
-        
-        if (new Date(fechaInicio) > new Date(fechaFin)) {
-            isFormValid = false;
-        }
-
-        if(objetivo < 1){
-          isFormValid = false;
-        }
-
-        btnGuardar.disabled = !isFormValid;
+    if (objetivo < 1) {
+      alert('El objetivo no puede ser $0');
+      return false;
     }
 
-    // Validar campos al cargar la página
-    validarCampos();
+    return true;
+  }
+
+  var formInputs = document.querySelectorAll('input[type="text"], input[type="number"], input[type="date"]');
+  var btnGuardar = document.getElementById('btn-guardar');
+  
+  formInputs.forEach(function (input) {
+    input.addEventListener('input', function () {
+      validarCampos();
+    });
+  });
+
+  function validarCampos() {
+    var nombre = document.getElementById('id_nombre').value;
+    var motivo = document.getElementById('id_motivo').value;
+    var objetivo = document.getElementById('id_objetivo').value;
+    var fechaInicio = document.getElementById('id_fechaInicio').value;
+    var fechaFin = document.getElementById('id_fechaFin').value;
+
+    var isFormValid =
+      nombre.trim() !== '' &&
+      motivo.trim() !== '' &&
+      objetivo.trim() !== '' &&
+      fechaInicio.trim() !== '' &&
+      fechaFin.trim() !== '';
+    
+    var selectedDate = moment(fechaInicio).startOf('day');
+    
+    if (selectedDate.isAfter(moment(fechaFin).startOf('day'))) {
+      isFormValid = false;
+    }
+
+    if (objetivo < 1) {
+      isFormValid = false;
+    }
+
+    btnGuardar.disabled = !isFormValid;
+  }
+
+  // Validar campos al cargar la página
+  validarCampos();
 </script>
 {% endblock %}
