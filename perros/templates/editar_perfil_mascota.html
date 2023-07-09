@@ -63,7 +63,7 @@
                         </p>  
                         <hr>
                           <button type="submit" id="btn-registrar" class="btn btn-success">Confirmar</button>
-                          <a href="{% url 'perros:Listar_mascotas_cliente' cliente_id=perro.cliente.user_id %}" class="btn btn-primary">Cancelar</a>
+                          <a href="{% url 'perros:Listar_mascotas_cliente' user_id=perro.cliente.user_id %}" class="btn btn-primary">Cancelar</a>
                     </form>
                 </div>
             </div>
