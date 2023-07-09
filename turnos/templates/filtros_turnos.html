@@ -15,12 +15,16 @@
     <input type="text" class="search-input" id='dni-input' name="dni-consulta" placeholder="DNI">
     <input type="text" class="search-input" id='nombre_apellido-input' name="nombre_apellido-consulta" placeholder="Nombre Apellido">
     <button type="submit" id="btn-buscar" class="search-button">Buscar</button>
-    <a href="{{request.path}}" class="search-button" style="text-decoration: none;color: white;">Mostrar todos</a>
+    <a href="{{request.path}}" class="search-button" style="text-decoration: none;color: white;" id='btn-todos'>Mostrar todos</a>
   </form>
 </div>
 
 <script>
-  var consultaFecha = document.getElementById('fecha-input');
+  var element = document.getElementById('btn-todos');
+  var path = element.getAttribute('href');
+  if (!path.includes('dia')) {
+    var consultaFecha = document.getElementById('fecha-input');
+  }
   var consultaAtencion = document.getElementById('atencion-input');
   var consultaDNI = document.getElementById('dni-input');
   var consultaNomApe = document.getElementById('nombre_apellido-input');
@@ -29,19 +33,32 @@
     var turnoBuscarForm = document.getElementById('turno-buscar');
     var currentUrl = new URL(window.location.href);
     turnoBuscarForm.action = currentUrl.pathname + currentUrl.search;
-
     // Setea con los parametros previos
-    consultaFecha.value = currentUrl.searchParams.get('fecha-consulta') || '';
+    if (!path.includes('dia')) {
+      consultaFecha.value = currentUrl.searchParams.get('fecha-consulta') || '';
+    }
     consultaAtencion.value = currentUrl.searchParams.get('atencion-consulta') || '';
     consultaDNI.value = currentUrl.searchParams.get('dni-consulta') || '';
     consultaNomApe.value = currentUrl.searchParams.get('nombre_apellido-consulta') || '';
-
+    toggleAtencionOption();
     validarBusqueda();
   });
 
   var btnBuscar = document.getElementById('btn-buscar');
   var errorText = '';
+  if (!path.includes('dia')) {
+    consultaFecha.addEventListener('input', validarConsulta);
 
+    consultaFecha.addEventListener('mouseenter', function() {
+    if (btnBuscar.disabled) {
+      consultaFecha.title = errorText;
+    }
+    });
+
+    consultaFecha.addEventListener('mouseleave', function() {
+      consultaFecha.title = '';
+    });
+  }
   consultaAtencion.addEventListener('input', validarConsulta);
   consultaDNI.addEventListener('input', validarConsulta);
   consultaNomApe.addEventListener('input', validarConsulta);
@@ -81,12 +98,16 @@
 
     var numeros = /^[0-9]+$/;
     var regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
-    
-    if(consultaDNI.value === '' && consultaNomApe.value === '' && consultaAtencion.value  == '' && consultaFecha.value === ''){
+
+    if(consultaDNI.value === '' && consultaNomApe.value === '' && consultaAtencion.value  === ''){
       isFormValid = false;
     }
 
-    if(consultaDNI.value != ''){
+    if (!path.includes('dia')) {
+      isFormValid = isFormValid || consultaFecha.value !== '';
+    }
+
+    if(consultaDNI.value !== ''){
       var dni = consultaDNI.value;
       if (dni.length < 7) {
         errorText = 'Por favor, ingrese un DNI con al menos 7 dígitos.';
@@ -99,7 +120,7 @@
       }
     }
         
-    if(consultaNomApe.value != ''){
+    if(consultaNomApe.value !== ''){
       if (!regex.test(consultaNomApe.value)) {
         errorText = 'Por favor, ingrese solo letras (incluyendo acentos) en el campo de consulta.';
         isFormValid = false;
@@ -119,8 +140,9 @@
   });
 
   function toggleAtencionOption(selectElement) {
-    var atencionOption = selectElement.querySelector('option[value=""]');
-    var selectedOption = selectElement.value;
+    var consultaAtencion = document.getElementById('atencion-input');
+    var atencionOption = consultaAtencion.querySelector('option[value=""]');
+    var selectedOption = consultaAtencion.value;
 
     if (selectedOption !== '') {
       atencionOption.hidden = false;
