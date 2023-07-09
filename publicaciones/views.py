@@ -513,7 +513,7 @@ def listar_perros_perdidos(request):
     return render(request, 'listar_perros.html', contexto)
 
 def listar_perros_encontrados(request):
-    perros_encontrados = Publicacion.objects.filter(id_perro_publicacion__activo=True, tipo_publicacion='Encontrado')
+    perros_encontrados = Publicacion.objects.filter(id_perro_publicacion__activo=True, tipo_publicacion='Encontrados')
     filtros = {
         'raza_consulta': request.GET.get('raza-consulta'),
         'sexo_consulta': request.GET.get('sexo-consulta'),
@@ -541,7 +541,7 @@ def listar_perros_encontrados(request):
 @login_required
 def listar_mis_perros_encontrados(request):
     usuario = request.user  # Obtener el usuario autenticado
-    publicaciones = Publicacion.objects.filter(id_usuario_id=usuario, tipo_publicacion='Encontrado')
+    publicaciones = Publicacion.objects.filter(id_usuario_id=usuario, tipo_publicacion='Encontrados')
     filtros = {
         'raza_consulta': request.GET.get('raza-consulta'),
         'sexo_consulta': request.GET.get('sexo-consulta'),
