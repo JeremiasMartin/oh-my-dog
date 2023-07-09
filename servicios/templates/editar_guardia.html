@@ -1,15 +1,44 @@
 {% extends "OhMyDogApp/base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
+  <h1 style="text-align: center; margin-top:10px;">Editar Campaña</h1>
+  <br>
+  <div class="container" style="background-color: #e9ecef; border-radius: 10px; padding: 20px; max-width: 800px;">
+    <form method="post" id="campaignForm">
+      {% csrf_token %}
+      {{ form|crispy }}
+      <a href="/servicios/calendar-events/" class="btn btn-primary">Cancelar</a>
+      <button id="guardiaButton" type="submit" class="btn btn-success" disabled>Guardar cambios</button>
+    </form>
+  </div>
 
-<h1 style="text-align: center; margin-top:10px;">Editar Campaña</h1>
-<br>
-<div class="container" style="background-color: #e9ecef; border-radius: 10px; padding: 20px; max-width: 800px;">
-<form method="post">
-  {% csrf_token %}
-  {{ form|crispy }}
-  <a href="/servicios/calendar-events/" class="btn btn-primary">Cancelar</a>
-  <button type="submit" class="btn btn-success">Guardar cambios</button>
-</form>
-</div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var guardiaButton = document.getElementById('guardiaButton');
+        var form = document.querySelector('form');
+
+        form.addEventListener('submit', function(event) {
+          if (form.elements['fecha'].value === '' || form.elements['veterinaria'].value === '') {
+            event.preventDefault();
+            return false;
+          }
+        });
+
+        var fecha = document.getElementById('id_fecha');
+        var veterinaria = document.getElementById('id_veterinaria');
+
+        fecha.addEventListener('input', validateFields);
+        veterinaria.addEventListener('input', validateFields);
+
+        function validateFields() {
+          if (fecha.value !== '' && veterinaria.value !== '') {
+            guardiaButton.disabled = false;
+          } else {
+            guardiaButton.disabled = true;
+          }
+        }
+
+        validateFields();
+      });
+  </script>
 {% endblock %}
