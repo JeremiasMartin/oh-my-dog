@@ -11,9 +11,9 @@ from turnos.views import paginar
 from unidecode import unidecode
 
 
-def listar_mascotas_cliente(request, cliente_id):
-    cliente = Cliente.objects.get(cliente_id=cliente_id)
-    mascotas = Perro.objects.filter(cliente_id=cliente_id)
+def listar_mascotas_cliente(request, user_id):
+    cliente = Cliente.objects.get(user=user_id)
+    mascotas = Perro.objects.filter(cliente_id=cliente.cliente_id)
     filtros = {
         'raza_consulta': request.GET.get('raza-consulta'),
         'sexo_consulta': request.GET.get('sexo-consulta'),
