@@ -130,7 +130,7 @@ class CargarPerroEncontradoForm(forms.Form):
             id_usuario=user,
             id_perro_publicacion=perro_publicacion,
             activo=True,
-            tipo_publicacion='Encontrado'
+            tipo_publicacion='Encontrados'
         )
 
 class CustomImageWidget(forms.ClearableFileInput):

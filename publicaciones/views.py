@@ -610,13 +610,10 @@ def contactarse_perro(request, id):
     #para redirigir al listado de perros correspondientes
     path_previo = request.META.get('HTTP_REFERER')
     if ('perdidos' in path_previo) or ('encontrados' in path_previo):
-        print("VENGO DEL LISTAR")
         request.session['first_path'] = path_previo
         
 
     first_path = request.session.get('first_path')
-    print("PRINCIPIO FUNCION: previo", path_previo)
-    print("PRINCIPIO FUNCION: final", first_path)
     mensaje = 'Ya te has comunicado para esta publicación de perro {}.'
     if 'perdidos' in first_path:
         mensaje = mensaje.format('perdido')
@@ -658,8 +655,6 @@ def contactarse_perro(request, id):
 
     else:
         form = PostulacionPerrosForm()
-    print("FINAL PREVIO:", path_previo)
-    print("FINAL FUNCION: final", first_path)
     context = {
         'form': form,
         'publicacion_id': id,
@@ -670,14 +665,24 @@ def contactarse_perro(request, id):
            
 
 def enviar_DatosDeQuienSeComunico(postulacion, mensaje):
-    subject = 'Información Recibida'
+    nombre_perro = postulacion.publicacion_perdidos.id_perro_publicacion.nombre
+    tipo_publicacion = postulacion.publicacion_perdidos.tipo_publicacion
+    
+    subject = "Información sobre "
+    if nombre_perro:
+        subject += f"{nombre_perro} de tus "
+    else:
+        subject += "tu publicación de"
+    subject += f" Perros {tipo_publicacion} Recibida"
     from_email = 'Ejtech <%s>' % settings.EMAIL_HOST_USER
     to_email = postulacion.publicacion_perdidos.id_usuario.email
     reply_to_email = postulacion.email
 
-    nombre_postulante = postulacion.nombre
+    
     context = {
-        'nombre_postulante': nombre_postulante,
+        'perro': nombre_perro,
+        'tipo_publicacion': tipo_publicacion,
+        'nombre_postulante': postulacion.nombre,
         'apellido_postulante': postulacion.apellido,
         'email_postulante': postulacion.email,
         'telefono_postulante': postulacion.telefono,

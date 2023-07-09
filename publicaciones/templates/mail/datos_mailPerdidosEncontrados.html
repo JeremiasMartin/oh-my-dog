@@ -59,7 +59,7 @@
 <body>
   <div class="container">
     <div class="header">
-      <h1>Has recibido información sobre tu publicación en ohmydog</h1>
+      <h1>Has recibido información sobre{% if perro %} {{perro}} {% else %} tu publicación {% endif %}de Perros {{tipo_publicacion}} en ohmydog</h1>
     </div>
     <div class="content">
       <p>A continuación te dejamos los datos de contacto de quien te envió información sobre tu publicación para que puedas contactarte:</p>
@@ -68,8 +68,8 @@
       <p><strong>Email:</strong> {{ email_postulante }}</p>
       <p><strong>Teléfono:</strong> {{ telefono_postulante }}</p>
       <p><strong>Mensaje:</strong> {{ mensaje }}</p>
-      <p>Gracias,</p>
-      <p>El equipo de EJTech</p>
+      <br>
+      <p>Veterinaria Oh My Dog!</p>
     </div>
     <div class="footer">
       

@@ -104,7 +104,7 @@
                     </ul>
                 </li>
                 <!-- Dropdown Turnos -->
-                <li class="nav-item dropdown {% if request.path == '/turnos/listar_turnos_pendientes/' or request.path == '/turnos/listar_turnos_confirmados/' %}current_page_item{% endif %}">
+                <li class="nav-item dropdown {% if request.path == '/turnos/listar_turnos_pendientes/' or request.path == '/turnos/listar_turnos_confirmados/' or request.path == '/turnos/listar_confirmados_dia/' %}current_page_item{% endif %}">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Turnos
                     </a>
@@ -114,7 +114,7 @@
                     </ul>
                 </li>
                 <!-- Servicio paseador/etc  -->
-                <li class="nav-item dropdown {% if request.path == '/usuarios/registrar_personal/' %}current_page_item{%endif %}">
+                <li class="nav-item dropdown {% if request.path == '/usuarios/registrar_personal/' or request.path == '/servicios/listar_personal/' or request.path == '/servicios/mapa/'%}current_page_item{%endif %}">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Servicio de terceros
                     </a>
@@ -124,24 +124,29 @@
                         <li><a class="dropdown-item" href="{% url 'Mapa' %}">Mapa de Servicios</a></li>
                     </ul>
                 </li>
-                <li class="nav-item {% if request.path == '/servicios/listar_guardias/' %}current_page_item{%endif %}">
-                  <li><a class="nav-link" href="{% url 'calendar_events' %}">Guardias</a></li>
+                <!-- Guardias  -->
+                <li class="nav-item {% if request.path == '/servicios/calendar-events/' or request.path|slice:":19" == '/servicios/guardias' %}current_page_item{%endif %}">
+                  <a class="nav-link" href="{% url 'calendar_events' %}">Guardias</a>
                 </li>
-              <li class="nav-item dropdown {% if request.path == '/servicios/listar_campañas/' %}current_page_item{%endif %}">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Campañas
-                </a>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="{%url 'Cargar_campaña' %}">Cargar Campaña</a></li>
-                  <li><a class="dropdown-item" href="{%url 'Listar_campañas' %}">Ver Campañas</a></li>
-                  <li><a class="dropdown-item" href="{%url 'Listar_donaciones' %}">Mis Donaciones</a></li>
-                </ul>
-            </li>
+                <!-- Campañas  -->
+                <li class="nav-item dropdown {% if request.path == '/servicios/cargar_campaña/' or request.path == '/servicios/listar_campañas/' or request.path == '/servicios/listar_donaciones/'%}current_page_item{%endif %}">
+                  <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      Campañas
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{%url 'Cargar_campaña' %}">Cargar Campaña</a></li>
+                    <li><a class="dropdown-item" href="{%url 'Listar_campañas' %}">Ver Campañas</a></li>
+                    <li><a class="dropdown-item" href="{%url 'Listar_donaciones' %}">Mis Donaciones</a></li>
+                  </ul>
+                </li>
             {% else %}
+              <!-- Cliente -->
+                <!-- Mapa -->
                 <li class="nav-item {% if request.path == '/servicios/mapa/' %}current_page_item{% endif %}">
                   <a class="nav-link" href="{% url 'Mapa' %}">Mapa de Servicios</a>
                 </li>
-                <li class="nav-item dropdown {% if request.path == '/servicios/listar_campañas/' %}current_page_item{%endif %}">
+                <!-- Campañas -->
+                <li class="nav-item dropdown {% if request.path == '/servicios/listar_campañas/' or request.path == '/servicios/listar_donaciones/' %}current_page_item{%endif %}">
                   <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                       Campañas
                   </a>
@@ -149,13 +154,14 @@
                     <li><a class="dropdown-item" href="{%url 'Listar_campañas' %}">Ver Campañas</a></li>
                     <li><a class="dropdown-item" href="{%url 'Listar_donaciones' %}">Mis Donaciones</a></li>
                   </ul>
-              </li>
-              <li class="nav-item {% if request.path == '/servicios/listar_guardias/' %}current_page_item{%endif %}">
-                <li><a class="nav-link" href="{% url 'calendar_events' %}">Guardias</a></li>
-              </li>
+                </li>
+                <!-- Guardias -->
+                <li class="nav-item {% if request.path == '/servicios/calendar-events/' %}current_page_item{%endif %}">
+                  <a class="nav-link" href="{% url 'calendar_events' %}">Guardias</a>
+                </li>
                 <!-- Mascotas cliente -->
                 <li class="nav-item {% if request.path|slice:":7" == '/perros' %}current_page_item{%endif %}">
-                    <a class="nav-link" href="{% url 'perros:Listar_mascotas_cliente' user.id %}">Ver Mascotas</a>
+                  <a class="nav-link" href="{% url 'perros:Listar_mascotas_cliente' user.id %}">Ver Mascotas</a>
                 </li>  
                 <!-- Turno -->
                 <li class="nav-item {% if request.path == '/turnos/solicitar_turno/' %}current_page_item{%endif %}">
@@ -185,14 +191,17 @@
         </li>
       </ul>
     {% else %}
-      <li class="nav-item {% if request.path == '/servicios/mapa/' %}current_page_item{% endif %}">
-        <li><a class="nav-link" href="{% url 'calendar_events' %}">Guardias</a></li>
+      <!-- Guardias  -->
+      <li class="nav-item {% if request.path == '/servicios/calendar-events/' %}current_page_item{% endif %}">
+        <a class="nav-link" href="{% url 'calendar_events' %}">Guardias</a>
       </li>
+      <!-- Mapa -->
       <li class="nav-item {% if request.path == '/servicios/mapa/' %}current_page_item{% endif %}">
         <a class="nav-link" href="{% url 'Mapa' %}">Mapa de Servicios</a>
       </li>
+      <!-- Campañas -->
       <li class="nav-item {% if request.path == '/servicios/listar_campañas/' %}current_page_item{%endif %}">
-        <a class="nav-link" href="{% url 'Listar_campañas' %}">Campañas</a>
+        <a class="nav-link" href="{% url 'Listar_campañas' %}">Ver Campañas</a>
       </li> 
       <!-- Login -->
       <li class="nav-item {% if request.path == '/usuarios/login/' %}current_page_item{% endif %}">
