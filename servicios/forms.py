@@ -65,6 +65,9 @@ class GuardiaForm(forms.ModelForm):
     class Meta:
         model = Guardia
         fields = ('fecha','veterinaria')
+        widgets = {
+            'fecha': DateInput(attrs={'type': 'date'}),
+        }
     
 class CampañaForm(forms.ModelForm):
 

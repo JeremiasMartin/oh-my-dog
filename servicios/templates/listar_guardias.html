@@ -1,53 +1,81 @@
-{% extends "OhMyDogApp/base.html" %}
-{% load static %}
+  {% extends "OhMyDogApp/base.html" %}
+  {% load static %}
 
-{% block content %}
-  <head>
-    <meta charset='utf-8' />
-    <link href="{% static 'OhMyDogApp/fullcalendar/lib/main.css' %}" rel="stylesheet" />
-    <script src="{% static 'OhMyDogApp/fullcalendar/lib/main.js' %}"></script>
-    <script src="{% static 'OhMyDogApp/fullcalendar/lib/locales/es.js' %}"></script>
-  </head>
-  <body>
-    <div id="calendar" style="background-color: white;"></div>
+  {% block content %}
+    <head>
+      <meta charset='utf-8' />
+      <link href="{% static 'OhMyDogApp/fullcalendar/lib/main.css' %}" rel="stylesheet" />
+      <style>
+        .guardia-link {
+          text-decoration: none;
+          font-size: 20px;
+          font-family: Arial, sans-serif;
+        }
+        .fc-event-dot {
+          display: inline-block;
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          background-color: #25b6ff;
+          margin-right: 5px;
+        }
 
-    {% if user.is_staff %}
-    <form method="post">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <button type="submit">Cargar Guardia</button>
-    </form>
-    {% endif %}
+        .fc-day-today {
+      background: #f6f1e7 !important;
+      border: none !important;
+    
+  } 
+      </style>
+      <script src="{% static 'OhMyDogApp/fullcalendar/lib/main.js' %}"></script>
+      <script src="{% static 'OhMyDogApp/fullcalendar/lib/locales/es.js' %}"></script>
+    </head>
+    <body>
+      <div id="calendar" style="background-color: white;">
+<br>
+      {% if user.is_staff %}
+      <form method="post" style="margin-left:20px">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Cargar Guardia</button>
+      </form>
+      </div>
+      {% endif %}
 
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        var calendarEl = document.getElementById('calendar');
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-          initialView: 'dayGridMonth',
-          locale: 'es',
-          eventColor: 'light-blue',
-          eventDisplay: 'list-item',
-          events: {% autoescape off %}{{ events|safe }}{% endautoescape %},
-          eventContent: function(info) {
-            var eventTitle = info.event.title;
-            var guardiaId = info.event.id;
-            var eventLink = '/servicios/guardias/' + guardiaId + '/editar/';
-            var userIsStaff = {% if user.is_staff %}true{% else %}false{% endif %};
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          var calendarEl = document.getElementById('calendar');
+          var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            locale: 'es',
+            eventColor: 'light-blue',
+            eventDisplay: 'list-item',
+            height: '900',
+            events: {% autoescape off %}{{ events|safe }}{% endautoescape %},
+            eventContent: function(info) {
+              var eventTitle = info.event.title;
+              var guardiaId = info.event.id;
+              var eventLink = '/servicios/guardias/' + guardiaId + '/editar/';
+              var userIsStaff = {% if user.is_staff %}true{% else %}false{% endif %};
 
-            if (userIsStaff) {
-              return {
-                html: '<a href="' + eventLink + '"><div class="fc-event-dot"></div>' + eventTitle + '</a>'
-              };
-            } else {
-              return {
-                html: '<div class="fc-event-dot"></div>' + eventTitle
-              };
-            }
-          }
+              if (userIsStaff) {
+                return {
+                  html: '<a href="' + eventLink + '" class="guardia-link"><div class="fc-event-dot"></div>' + eventTitle + '</a>'
+                };
+              } else {
+                return {
+                  html: '<div class="fc-event-dot"></div>' + eventTitle
+                };
+              }
+            },
+            headerToolbar: {
+              start: '',
+              center: 'title',
+              right: 'today prev,next',
+            },
+          });
+          calendar.render();
         });
-        calendar.render();
-      });
-    </script>
-  </body>
-</html>
-{% endblock %}
+      </script>
+    </body>
+  </html>
+  {% endblock %}

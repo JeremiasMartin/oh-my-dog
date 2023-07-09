@@ -169,7 +169,11 @@ def editar_guardia(request, pk):
             form.save()
             return redirect('calendar_events')
     else:
-        form = GuardiaForm(instance=guardia)
+        initial_values = {
+            'fecha': guardia.fecha.strftime('%Y-%m-%d'),
+            'veterinaria': guardia.veterinaria,
+        }
+        form = GuardiaForm(initial=initial_values)
     return render(request, 'editar_guardia.html', {'form': form})
 
 def cargar_campaña(request):

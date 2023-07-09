@@ -1,13 +1,15 @@
 {% extends "OhMyDogApp/base.html" %}
-
+{% load crispy_forms_tags %}
 {% block content %}
 
-<h1>Editar Guardia</h1>
-
+<h1 style="text-align: center; margin-top:10px;">Editar Campaña</h1>
+<br>
+<div class="container" style="background-color: #e9ecef; border-radius: 10px; padding: 20px; max-width: 800px;">
 <form method="post">
   {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Guardar cambios</button>
+  {{ form|crispy }}
+  <a href="/servicios/calendar-events/" class="btn btn-primary">Cancelar</a>
+  <button type="submit" class="btn btn-success">Guardar cambios</button>
 </form>
-
+</div>
 {% endblock %}
