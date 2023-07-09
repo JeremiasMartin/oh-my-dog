@@ -51,6 +51,9 @@
             {% if not user.is_authenticated %}
                 <label for="id_email">Email:</label>
                 {{ form.email }}
+                <input type="hidden" id="autenticado" value="false"></input>
+            {% else %}
+                <input type="hidden" id="autenticado" value="true"></input>
             {% endif %}
             <label for="id_monto">Monto:</label>
             {{ form.monto }}
@@ -62,20 +65,32 @@
 
 <script>
     function validarFormulario() {
-        var email = document.getElementById('id_email').value;
-        var monto = document.getElementById('id_monto').value;
+        var autenticado = document.getElementById('autenticado');
+        var is_authenticated = autenticado.value === 'true';
 
-        if (email.trim() === '' || monto.trim() === '') {
+        if (!is_authenticated){
+            var email = document.getElementById('id_email').value;
+        }
+
+        var monto = document.getElementById('id_monto').value;
+        if (monto.trim() === '') {
             alert('Por favor, complete todos los campos.');
             return false;
         }
 
-        var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        if (!email.match(emailPattern)) {
-            alert('Ingresa un email válido.');
-            return false;
+        if(!is_authenticated){
+            if(email.trim() === ''){
+                alert('Por favor, complete todos los campos.');
+                return false;
+            }else{
+                var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                if (!email.match(emailPattern)) {
+                    alert('Ingresa un email válido.');
+                    return false;
+                }
+            }
         }
-
+        
         if(monto < 1){
           alert('El monto a donar no puede ser menor a 0');
             return false;
@@ -94,15 +109,24 @@
     });
 
     function validarCampos() {
-        var email = document.getElementById('id_email').value;
-        var monto = document.getElementById('id_monto').value;
+        var autenticado = document.getElementById('autenticado');
+        var is_authenticated = autenticado.value === 'true';
 
-        var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!is_authenticated){
+            var email = document.getElementById('id_email').value;
+        }
+
+        var monto = document.getElementById('id_monto').value;
         var isFormValid =
-            email.trim() !== '' &&
-            email.match(emailPattern) &&
             monto.trim() !== '' &&
             monto > 0;
+        
+        if(!is_authenticated){
+            var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if(email.trim() === '' || !email.match(emailPattern)){
+                isFormValid = false;
+            }
+        }
         
         btnContinuar.disabled = !isFormValid;
     }
