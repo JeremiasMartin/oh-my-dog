@@ -166,13 +166,13 @@ def listar_recomendados(request, id_publicacion):
 def postulantes(id_publicacion, match=False):
     postulaciones = Postulacion.objects.filter(publicacion=id_publicacion, match=match)
     postulacion_ids = postulaciones.values_list('publicacion_postulante__id', flat=True)
-    publicaciones = Publicacion.objects.filter(id__in=postulacion_ids)
+    publicaciones = Publicacion.objects.filter(id__in=postulacion_ids, activo=True)
     return publicaciones
 
 def mis_postulaciones(id_publicacion):
     postulaciones=Postulacion.objects.filter(publicacion_postulante=id_publicacion, match=False)
     postulacion_ids = postulaciones.values_list('publicacion__id', flat=True)
-    publicaciones = Publicacion.objects.filter(id__in=postulacion_ids)
+    publicaciones = Publicacion.objects.filter(id__in=postulacion_ids, activo=True)
     return publicaciones
 
 def ordenar_raza_edad(publicaciones, raza, edad):
