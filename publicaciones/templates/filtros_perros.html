@@ -2,14 +2,14 @@
 <div class="filtro">
   <form method="GET" action="" id='perro-buscar'>
     
-    <select class="search-input" id="sexo-select" name="sexo-consulta" onchange="toggleOption(this, 'Sexo')">
+    <select class="search-input" id="sexo-select" name="sexo-consulta" onchange="toggleOption('sexo-select',this, 'Sexo')">
       <option value="" selected hidden>Sexo</option>
       {% for value, display_text in opciones_sexo %}
         <option value="{{ value }}">{{ display_text }}</option>
       {% endfor %}
     </select>
 
-    <select class="search-input" id='tamanio-select' name="tamanio-consulta" onchange="toggleOption(this, 'Tamaño')">
+    <select class="search-input" id='tamanio-select' name="tamanio-consulta" onchange="toggleOption('tamanio-select',this, 'Tamaño')">
       <option value="" selected hidden>Tamaño</option>
       {% for value, display_text in opciones_tamanios %}
         <option value="{{ value }}">{{ display_text }}</option>
@@ -37,7 +37,8 @@
     consultaRaza.value = currentUrl.searchParams.get('raza-consulta') || '';
     consultaSexo.value = currentUrl.searchParams.get('sexo-consulta') || '';
     consultaTamanio.value = currentUrl.searchParams.get('tamanio-consulta') || '';
-
+    toggleOption('sexo-select', consultaSexo, 'Sexo');
+    toggleOption('tamanio-select', consultaTamanio, 'Tamaño');
     validarBusqueda();
   });
   consultaRaza.addEventListener('input', validarConsulta);
@@ -95,7 +96,8 @@
     validarBusqueda();
   }
 
-  function toggleOption(selectElement, texto) {
+  function toggleOption(id,selectElement, texto) {
+    var consultaAtencion = document.getElementById(id)
     var atencionOption = selectElement.querySelector('option[value=""]');
     var selectedOption = selectElement.value;
 

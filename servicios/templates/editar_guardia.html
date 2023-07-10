@@ -7,8 +7,8 @@
     <form method="post" id="campaignForm">
       {% csrf_token %}
       {{ form|crispy }}
-      <a href="/servicios/calendar-events/" class="btn btn-primary">Cancelar</a>
       <button id="guardiaButton" type="submit" class="btn btn-success" disabled>Guardar cambios</button>
+      <a href="/servicios/calendar-events/" class="btn btn-primary">Cancelar</a>
     </form>
   </div>
 

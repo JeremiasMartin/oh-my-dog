@@ -1,5 +1,6 @@
 {% extends "OhMyDogApp/base.html" %}
 {% load static %}
+{% load crispy_forms_tags %}
 {% block content %}
   <head>
     <meta charset='utf-8' />
@@ -7,8 +8,9 @@
     <style>
       .guardia-link {
         text-decoration: none;
-        font-size: 20px;
+        font-size: 15px;
         font-family: Arial, sans-serif;
+        white-space: pre-line;
       }
       .fc-event-dot {
         display: inline-block;
@@ -28,12 +30,12 @@
     <script src="{% static 'OhMyDogApp/fullcalendar/lib/locales/es.js' %}"></script>
   </head>
   <body>
-    <div id="calendar" style="background-color: white;">
+    <div id="calendar" style="background-color: white; margin:10px; padding: 10px;">
       <br>
       {% if user.is_staff %}
-      <form method="post" style="margin-left:20px">
+      <form method="post" style="margin-left:10px; width: 50%; background-color: #c9c9c9; margin-right:10px; padding: 20px; border-radius: 10px;">
         {% csrf_token %}
-        {{ form.as_p }}
+        {{ form|crispy }}
         <button id="guardiaButton" type="submit" class="btn btn-primary" disabled>Cargar Guardia</button>
       </form>
       {% endif %}

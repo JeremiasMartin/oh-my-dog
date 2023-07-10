@@ -15,7 +15,7 @@ def listar_mis_mascotas_cruza(request):
     for publicacion in mascotas:
         publicacion.id_perro_publicacion.edad = calcular_edad(publicacion.id)
     contexto = {
-        "cruzas":paginar(request, mascotas, 3),
+        "cruzas":paginar(request, mascotas, 6),
     }
     return render(request, 'mis_mascotas_cruza.html', contexto)
 
@@ -158,7 +158,7 @@ def listar_recomendados(request, id_publicacion):
         recomendado['publicacion'].id_perro_publicacion.edad = calcular_edad(recomendado['publicacion'].id)
     
     context={
-        'recomendados': paginar(request, recomendados, 3),
+        'recomendados': paginar(request, recomendados, 6),
         'publicacion': publicacion,
     }
     return render(request, 'listar_recomendados.html', context)
