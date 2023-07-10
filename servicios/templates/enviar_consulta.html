@@ -1,7 +1,7 @@
 {% extends 'OhMyDogApp/base.html' %}
 
 {% block content %}
-<section id="showcase-inner" class="py-5 text-black" style='padding-bottom:0px!important;'>
+  <section id="showcase-inner" class="py-5 text-black" style='padding-bottom:0px!important;'>
     <div class="container">
       <div class="row text-center">
         <div class="col-md-12">
@@ -11,33 +11,84 @@
       </div>
     </div>
   </section>
-<!-- Listado -->
-<section id="listado" class="py-4">
-  <div class="container">
-  {% if messages %}
-    <ul class="messages">
-      {% for message in messages %}
-        <div id="msg-{{ message.tags }}"class="alert alert-{{ message.tags }}">
+  <!-- Listado -->
+  <section id="listado" class="py-4">
+    <div class="container">
+      {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+        <div id="msg-{{ message.tags }}" class="alert alert-{{ message.tags }}">
           {{ message }}
         </div>
-      {% endfor %}
-    </ul>
-  {% endif %}
-  </div>
-  <div class="container" style='background-color:#c6dbef; border: 1px solid #ccc;border-radius: 10px;padding: 20px;'>
-    <form method="post" action="{% url 'Contacto' personal_id=person.id %}">
-      {% csrf_token %}
-      <div>
-        <label for="consulta">Consulta:</label>
-        <textarea id="consulta" name="consulta" rows="4" cols="50" class='form-control'></textarea>
-      </div>
-      {% if not user.is_authenticated %}
-      <div>
-        <label for="email">Correo electrónico:</label>
-        <input type="email" id="email" name="email" class='form-control'>
-      </div>
+        {% endfor %}
+      </ul>
       {% endif %}
-      <button type="submit" class='btn btn-primary'>Enviar</button>
-    </form>
-</section>
+    </div>
+    <div class="container" style='background-color:#c6dbef; border: 1px solid #ccc;border-radius: 10px;padding: 20px;'>
+      <form method="post" action="{% url 'Contacto' personal_id=person.id %}" id="contactForm">
+        {% csrf_token %}
+        <div>
+          <label for="consulta">Consulta:</label>
+          <textarea id="consulta" name="consulta" rows="4" cols="50" class='form-control'></textarea>
+        </div>
+        {% if not user.is_authenticated %}
+        <div>
+          <label for="email">Correo electrónico:</label>
+          <input type="email" id="email" name="email" class='form-control'>
+        </div>
+        {% endif %}
+        <button type="submit" class='btn btn-primary' id="submitButton" disabled>Enviar</button>
+      </form>
+    </div>
+  </section>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var contactForm = document.getElementById('contactForm');
+      var submitButton = document.getElementById('submitButton');
+
+      contactForm.addEventListener('submit', function(event) {
+        var consulta = document.getElementById('consulta').value;
+        var email = document.getElementById('email').value;
+
+        if (consulta === '' && email === '') {
+          event.preventDefault();
+          return false;
+        }
+
+        if (email !== '' && !validateEmail(email)) {
+          event.preventDefault();
+          return false;
+        }
+      });
+
+      var consultaField = document.getElementById('consulta');
+      var emailField = document.getElementById('email');
+
+      consultaField.addEventListener('input', validateFields);
+      emailField.addEventListener('input', validateFields);
+
+      function validateFields() {
+        var consulta = consultaField.value;
+        var email = emailField.value;
+
+        if (consulta !== '' && email !== '') {
+          if (email === '' || validateEmail(email)) {
+            submitButton.disabled = false;
+          } else {
+            submitButton.disabled = true;
+          }
+        } else {
+          submitButton.disabled = true;
+        }
+      }
+
+      function validateEmail(email) {
+        var re = /\S+@\S+\.\S+/;
+        return re.test(email);
+      }
+
+      validateFields();
+    });
+  </script>
 {% endblock %}

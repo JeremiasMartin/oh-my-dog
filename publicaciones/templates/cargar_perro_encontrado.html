@@ -5,6 +5,11 @@
 
   <h1 style="text-align: center; margin-top: 10px;">Cargar Perro Encontrado</h1>
   <div style="width: 75%; margin: auto; text-align: center; max-width: 800px;">
+    {% for message in messages %}
+    <div id="msg-{{ message.tags }}"class="alert alert-{{ message.tags }}">
+      {{ message }}
+    </div>
+    {% endfor %}
     <div class="card mb-4">
       <div class="card-body">
         <h5 class="card-title">Publique aquí el perro que encontró para ayudarlo a encontrar a su familia</h5>
