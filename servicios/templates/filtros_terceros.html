@@ -2,7 +2,7 @@
 <div class="filtro">
   <form method="GET" action="" id='tercero-buscar'>
     
-    <select class="search-input" id="tipo-select" name="tipo-consulta" onchange="toggleOption(this, 'Tipo')">
+    <select class="search-input" id="tipo-select" name="tipo-consulta" onchange="toggleOption('tipo-select',this, 'Tipo De Servicio')">
       <option value="" selected hidden>Tipo De Servicio</option>
       {% for value, display_text in opciones_tipo %}
         <option value="{{ value }}">{{ display_text }}</option>
@@ -30,6 +30,7 @@
     consultaTipo.value = currentUrl.searchParams.get('tipo-consulta') || '';
     consultaNombre.value = currentUrl.searchParams.get('nombre-consulta') || '';
 
+    toggleOption('tamanio-select', consultaTipo, 'Tipo de Servicio');
     validarBusqueda();
   });
 
@@ -75,5 +76,19 @@
 
   function validarConsulta() {
     validarBusqueda();
+  }
+
+  function toggleOption(id,selectElement, texto) {
+    var servicioConsulta = document.getElementById(id)
+    var servicioOption = selectElement.querySelector('option[value=""]');
+    var selectedOption = selectElement.value;
+
+    if (selectedOption !== '') {
+      servicioOption.hidden = false;
+      servicioOption.textContent = '-------';
+    } else {
+      servicioOption.hidden = true;
+      servicioOption.textContent = texto;
+    }
   }
 </script>
