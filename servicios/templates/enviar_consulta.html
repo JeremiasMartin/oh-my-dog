@@ -32,10 +32,13 @@
           <textarea id="consulta" name="consulta" rows="4" cols="50" class='form-control'></textarea>
         </div>
         {% if not user.is_authenticated %}
-        <div>
-          <label for="email">Correo electrónico:</label>
-          <input type="email" id="email" name="email" class='form-control'>
-        </div>
+          <div>
+            <label for="email">Correo electrónico:</label>
+            <input type="email" id="email" name="email" class='form-control'>
+            <input type="hidden" id="autenticado" value="false"></input>
+          </div>
+        {% else %}
+            <input type="hidden" id="autenticado" value="true"></input>
         {% endif %}
         <button type="submit" class='btn btn-primary' id="submitButton" disabled>Enviar</button>
       </form>
@@ -43,52 +46,67 @@
   </section>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      var contactForm = document.getElementById('contactForm');
-      var submitButton = document.getElementById('submitButton');
+    function validarFormulario() {
+        var autenticado = document.getElementById('autenticado');
+        var is_authenticated = autenticado.value === 'true';
 
-      contactForm.addEventListener('submit', function(event) {
+        if (!is_authenticated){
+            var email = document.getElementById('email').value;
+        }
+
         var consulta = document.getElementById('consulta').value;
-        var email = document.getElementById('email').value;
-
-        if (consulta === '' && email === '') {
-          event.preventDefault();
-          return false;
+        if (consulta.trim() === '') {
+            alert('Por favor, complete todos los campos.');
+            return false;
         }
 
-        if (email !== '' && !validateEmail(email)) {
-          event.preventDefault();
-          return false;
+        if(!is_authenticated){
+            if(email.trim() === ''){
+                alert('Por favor, complete todos los campos.');
+                return false;
+            }else{
+                var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                if (!email.match(emailPattern)) {
+                    alert('Ingresa un email válido.');
+                    return false;
+                }
+            }
         }
+        
+        return true;
+    }
+
+    var formInputs = document.querySelectorAll('input[type="email"], textarea');
+    var btnContinuar = document.getElementById('submitButton');
+    
+    formInputs.forEach(function (input) {
+      input.addEventListener('input', function () {
+        validarCampos();
       });
-
-      var consultaField = document.getElementById('consulta');
-      var emailField = document.getElementById('email');
-
-      consultaField.addEventListener('input', validateFields);
-      emailField.addEventListener('input', validateFields);
-
-      function validateFields() {
-        var consulta = consultaField.value;
-        var email = emailField.value;
-
-        if (consulta !== '' && email !== '') {
-          if (email === '' || validateEmail(email)) {
-            submitButton.disabled = false;
-          } else {
-            submitButton.disabled = true;
-          }
-        } else {
-          submitButton.disabled = true;
-        }
-      }
-
-      function validateEmail(email) {
-        var re = /\S+@\S+\.\S+/;
-        return re.test(email);
-      }
-
-      validateFields();
     });
-  </script>
+
+    function validarCampos() {
+        var autenticado = document.getElementById('autenticado');
+        var is_authenticated = autenticado.value === 'true';
+
+        if (!is_authenticated){
+            var email = document.getElementById('email').value;
+        }
+
+        var consulta = document.getElementById('consulta').value;
+        var isFormValid = consulta.trim() !== '';
+        
+        if(!is_authenticated){
+            var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if(email.trim() === '' || !email.match(emailPattern)){
+              isFormValid = false;
+            }
+        }
+        
+        btnContinuar.disabled = !isFormValid;
+    }
+
+    // Validar campos al cargar la página
+    validarCampos();
+</script>
 {% endblock %}
