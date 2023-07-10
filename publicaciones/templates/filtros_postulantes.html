@@ -11,7 +11,16 @@
   var btnBuscar = document.getElementById('btn-buscar');
   var errorText = '';
 
-  filtroSelect.addEventListener('change', validarFiltro);
+  document.addEventListener('DOMContentLoaded', function() {
+    var perroBuscarForm = document.getElementById('postulante-buscar');
+    var currentUrl = new URL(window.location.href);
+    perroBuscarForm.action = currentUrl.pathname + currentUrl.search;
+    // Setea con los parametros previos
+    consultaInput.value = currentUrl.searchParams.get('consulta') || '';
+
+    validarBusqueda();
+  });
+
   consultaInput.addEventListener('input', validarConsulta);
 
   consultaInput.addEventListener('mouseenter', function() {
@@ -35,10 +44,6 @@
     
 
     btnBuscar.disabled = !isFormValid;
-  }
-
-  function validarFiltro() {
-    validarBusqueda();
   }
 
   function validarConsulta() {
