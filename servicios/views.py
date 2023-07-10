@@ -360,7 +360,7 @@ def buscar(request, filtros, personal):
         personal_filtrados = personal_filtrados.filter(nombre__icontains=unidecode(consulta))
         
     if  not personal_filtrados:
-        messages.add_message(request, messages.ERROR, 'No hay turnos para la búsqueda realizada')
+        messages.add_message(request, messages.ERROR, 'No hay servicios de terceros para la búsqueda realizada')
         personal_filtrados = personal
 
     return personal_filtrados

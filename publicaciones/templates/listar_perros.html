@@ -60,7 +60,7 @@
                 {% if publicacion.activo %}
                   {% if request.user.id == publicacion.id_usuario.id %}
                     <a href="{% url 'editar_publicacion' publicacion.id %}" class="btn btn-primary btn-block">Editar Publicacion</a>
-                    <a href="{% url 'finalizar_publicacion' publicacion.id %}" class="btn btn-primary btn-block"> 
+                    <a href="{% url 'finalizar_publicacion' publicacion.id %}" class="btn btn-primary btn-block"> Marcar como
                       {% if 'perdidos/' in request.path %} 
                         Encontrado 
                       {% else %} 
